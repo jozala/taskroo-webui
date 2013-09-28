@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8"/>
+    <link rel="stylesheet" href="../bower_components/bootstrap/dist/css/bootstrap.css"/>
+    <link rel="stylesheet" href="../bower_components/jquery-treetable/stylesheets/jquery.treetable.theme.simple.css"/>
+    <link rel="stylesheet" href="../style/main.css"/>
+    <link rel="stylesheet" href="../style/treetable/jquery.treetable.theme.css"/>
+
+    <title>GTWeb - New Better Best</title>
+</head>
+<body >
+
+
+<div class="main-window" ng-app="GTWeb">
+    <nav id="left-sidebar" ng-controller="TagsCtrl">
+        <form id="search-form">
+            <input type="text" placeholder="Search" id="search-field" class="input"/><input type="submit"
+                                                                                            id="search-button"
+                                                                                            class="input" value=""/>
+        </form>
+        <div style="clear: both;"></div>
+        <ul>
+            <tag ng-repeat="tag in tags" data-id="{{ tag.id }}" color="{{ tag.color }}" name="{{ tag.name }}"
+                 size="5">{{ tag.name }}
+            </tag>
+        </ul>
+    </nav>
+    <section id="body">
+        <div>
+            <div id="top-bar">
+                <form id="add-task-form" class="top-box" name="task" action="" method="POST" accept-charset="utf-8">
+                    <input placeholder="What about creating new task?" type="text" name="taskInput"/>
+                    <input type="submit" value="Add" class="btn btn-primary"/>
+                </form>
+
+                <div id="view-bar" class="top-box btn-group">
+                    <button class="btn btn-primary btn-workview" data-toggle="button">Work View</button>
+                    <button class="btn btn-primary dropdown-toggle" data-toggle="dropdown">
+                        <span class="caret"></span>
+                    </button>
+                    <ul class="dropdown-menu">
+                        <li id="show-finished-tasks-button"><a href="#">Show finished tasks</a></li>
+                        <li id="show-unfinished-tasks-button" style="display: none;">
+                            <a href="#">Show unfinished tasks</a>
+                        </li>
+                    </ul>
+                </div>
+
+            </div>
+            <div id="tasksBox" class="box" ng-controller="TasksCtrl">
+                <!--<tasks-collection data="tasks"></tasks-collection>-->
+                <ul>
+                    <li><div>ab</div><div>ba</div></li>
+                </ul>
+            </div>
+        </div>
+    </section>
+</div>
+<footer>
+
+</footer>
+
+
+<script type="text/javascript" src="../bower_components/jquery/jquery.js"></script>
+<script type="text/javascript" src="../bower_components/angular/angular.js"></script>
+<script type="text/javascript" src="../js/main.js"></script>
+<script type="text/javascript" src="../js/tags.js"></script>
+<script type="text/javascript" src="../js/tasks.js"></script>
+<script type="text/javascript" src="../bower_components/jquery-ui/ui/jquery.ui.core.js"></script>
+<script type="text/javascript" src="../bower_components/jquery-ui/ui/jquery.ui.widget.js"></script>
+<script type="text/javascript" src="../bower_components/jquery-ui/ui/jquery.ui.mouse.js"></script>
+<script type="text/javascript" src="../bower_components/jquery-ui/ui/jquery.ui.draggable.js"></script>
+<script type="text/javascript" src="../bower_components/jquery-ui/ui/jquery.ui.droppable.js"></script>
+<script type="text/javascript" src="../bower_components/jquery-treetable/javascripts/src/jquery.treetable.js"></script>
+
+
+
+</body>
+</html>

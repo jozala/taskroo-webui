@@ -1,0 +1,24 @@
+{
+  "name": "GTWeb-Angular",
+  "version": "0.0.0",
+  "authors": [
+    "mariusz <mariusz@aetas.pl>"
+  ],
+  "main": "gtweb.js",
+  "license": "MIT",
+  "homepage": "aetas.pl",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "angular": "1.2",
+    "bootstrap": "~3.0.0",
+    "jquery-treetable": "~3.0.4",
+    "jquery-ui": "~1.10.3"
+  }
+}
