@@ -9,23 +9,42 @@
 <div ng-app="TabList" ng-controller="TabListCtrl">
     <tablist main-column="1" indent="15">
         <row>
-            <cell>super-before</cell>
+            <cell>1</cell>
             <cell>Main Cell</cell>
             <cell>sup-after</cell>
         </row>
         <row>
-            <cell>super-before</cell>
+            <cell>2</cell>
             <cell>Second cell</cell>
             <cell>sup-after</cell>
             <tablist>
                 <row>
-                    <cell>sub-before</cell>
-                    <cell>Second-one extra</cell>
+                    <cell>2.1</cell>
+                    <cell>Second-one</cell>
                     <cell>sub-after</cell>
                     <tablist>
                         <row>
-                            <cell>sub-sub-before</cell>
-                            <cell>Second-one extra</cell>
+                            <cell>2.1.1</cell>
+                            <cell>Second-one-one</cell>
+                            <cell>sub-after</cell>
+                        </row>
+                    </tablist>
+                </row>
+            </tablist>
+        </row>
+        <row>
+            <cell>3</cell>
+            <cell>Third cell</cell>
+            <cell>sup-after</cell>
+            <tablist>
+                <row>
+                    <cell>3.1</cell>
+                    <cell>Third-one</cell>
+                    <cell>sub-after</cell>
+                    <tablist>
+                        <row>
+                            <cell>3.1.1</cell>
+                            <cell>Third-one-one</cell>
                             <cell>sub-after</cell>
                         </row>
                     </tablist>
@@ -34,25 +53,6 @@
         </row>
     </tablist>
 </div>
-
-
-
-
-<br /><br/><br/><br/>
-
-
-
-
-<ul class="tabular-list">
-    <li><span>before</span><span>First Element</span><span>after</span></li>
-    <li><span>before</span><span>Second Element</span><span>after</span></li>
-    <li><span>before</span><span>Third Element</span><span>after</span>
-        <ul class="tabular-list">
-            <li><span>sub-before</span><span style="padding-left: 15px;">Third-one element</span><span>sub-after</span></li>
-            <li><span>sub-before</span><span style="padding-left: 15px;">Third-two element</span><span>sub-after</span></li>
-        </ul>
-    </li>
-</ul>
 
 <script type="text/javascript" src="../bower_components/jquery/jquery.js"></script>
 <script type="text/javascript" src="../bower_components/angular/angular.js"></script>

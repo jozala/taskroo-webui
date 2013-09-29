@@ -18,13 +18,10 @@
     width: 400px;
 }
 
-.tabular-list .tablist-main-column {
-    padding-left: 10px;
-}
-
 .tabular-list .tablist-expander {
     background-image: url('../static/img/treetable/expand.png');
     width: 16px;
     height: 13px;
     margin-left: -16px;
+    cursor: pointer;
 }

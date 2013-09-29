@@ -14,36 +14,36 @@ app.directive("tablist", function() {
          indent: "@"
        },
        template: "<ul class='tabular-list' ng-transclude></ul>",
-       controller: function($scope, $element, $transclude) {
+       controller: function($scope, $element) {
            this.getMainColumnNumber = function() {
                var mainColumn = $scope.mainColumn;
                if (this.getLevel() > 0) {
                    mainColumn = getMainColumnFromParent();
                }
                return mainColumn;
-           }
+           };
            this.getIndent = function() {
                var indent = $scope.indent;
                if (this.getLevel() > 0) {
                    indent = getIndentFromParent();
                }
                return indent;
-           }
+           };
            this.getLevel = function() {
                return $element.parents('ul').length;
-           }
+           };
 
            var getIndentFromParent = function() {
                return $element.parents('ul').last().attr("indent");
-           }
+           };
            var getMainColumnFromParent = function () {
                return $element.parents('ul').last().attr('main-column');
-           }
+           };
        }
    }
 });
 
-app.directive("cell", function ($compile) {
+app.directive("cell", function () {
     return {
         restrict: "E",
         require: [
@@ -52,8 +52,7 @@ app.directive("cell", function ($compile) {
         ],
         replace: true,
         transclude: true,
-        scope: {},
-        template: "<span><span style='display: inline;' ng-transclude></span></span>",
+        template: "<span><expander /><span style='display: inline;' ng-transclude></span></span>",
         link: function (scope, element, attrs, requiredControllers) {
             var tablistCtrl = requiredControllers[0];
             var rowCtrl = requiredControllers[1];
@@ -64,31 +63,38 @@ app.directive("cell", function ($compile) {
                 var levelIndentation = (indent * level) + "px";
                 element.css("padding-left", "+=" + levelIndentation);
                 element.css('width', "-=" + levelIndentation)
-                element.addClass("tablist-main-column");
             }
-            if (element.index() == mainColumnNumber && rowCtrl.hasChildren()) {
-                var expander = $compile("<expander />")(scope)
-                element.prepend(expander);
+            if (element.index() != mainColumnNumber || !rowCtrl.hasChildren()) {
+                $(".tablist-expander", element).remove();
             }
         }
     }
 });
 
-app.directive("row", function($timeout) {
+app.directive("row", function() {
     return {
         restrict: "E",
-        replace: "true",
+        replace: true,
         require: "^tablist",
         transclude: true,
-        scope: {},
+        scope: true,
         template: "<li ng-transclude></li>",
         controller: function($scope, $element) {
+            this.expanded = true;
+
             this.hasChildren = function() {
                 return $element.has("ul").length > 0
-            }
-            $scope.expand = function() {
-                alert("Fucking YeaH!");
-            }
+            };
+            this.expandRow = function() {
+                this.expanded = (!this.expanded);
+                console.log("after change: " + this.expanded);
+                console.log($element);
+                if (this.expanded == false) {
+                    $element.children("ul").hide();
+                } else {
+                    $element.children("ul").show();
+                }
+            };
         }
     }
 });
@@ -98,12 +104,15 @@ app.directive("expander", function() {
         restrict: "E",
         replace: true,
         require: "^row",
-        template: "<span ng-click='expand()' class='tablist-expander'></span>",
-        controller: function($scope, $element) {
-
+        template: "<span ng-click='expandRow()' class='tablist-expander'></span>",
+        controller: function($scope) {
+            $scope.expandRow = function() {
+                console.log($scope.rowCtrl);
+                $scope.rowCtrl.expandRow();
+            }
         },
         link: function(scope, element, attrs, rowCtrl) {
-            scope.rowCtrl = rowCtrl
+            scope.rowCtrl = rowCtrl;
         }
     }
 });
