@@ -19,9 +19,16 @@
 }
 
 .tabular-list .tablist-expander {
-    background-image: url('../static/img/treetable/expand.png');
     width: 16px;
     height: 13px;
     margin-left: -16px;
     cursor: pointer;
+}
+
+.tabular-list .expanded {
+    background-image: url('../static/img/treetable/collapse.png');
+}
+
+.tabular-list .collapsed {
+    background-image: url('../static/img/treetable/expand.png');
 }
