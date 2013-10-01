@@ -7,57 +7,17 @@
 </head>
 <body>
 <div ng-app="TabList" ng-controller="TabListCtrl">
-    <tablist main-column="1" indent="15" expanded="false">
-        <row>
-            <cell>1</cell>
-            <cell>Main Cell</cell>
-            <cell>sup-after</cell>
-        </row>
-        <row>
-            <cell>2</cell>
-            <cell>Second cell</cell>
-            <cell>sup-after</cell>
-            <tablist>
-                <row>
-                    <cell>2.1</cell>
-                    <cell>Second-one</cell>
-                    <cell>sub-after</cell>
-                    <tablist>
-                        <row>
-                            <cell>2.1.1</cell>
-                            <cell>Second-one-one</cell>
-                            <cell>sub-after</cell>
-                        </row>
-                    </tablist>
-                </row>
-                <row>
-                    <cell>2.1</cell>
-                    <cell>Second-two</cell>
-                    <cell>sub-after</cell>
-                </row>
-            </tablist>
-        </row>
-        <row>
-            <cell>3</cell>
-            <cell>Third cell</cell>
-            <cell>sup-after</cell>
-            <tablist>
-                <row>
-                    <cell>3.1</cell>
-                    <cell>Third-one</cell>
-                    <cell>sub-after</cell>
-                    <tablist>
-                        <row>
-                            <cell>3.1.1</cell>
-                            <cell>Third-one-one</cell>
-                            <cell>sub-after</cell>
-                        </row>
-                    </tablist>
-                </row>
-            </tablist>
-        </row>
+    <tablist main-column="1" indent="15" expanded="true" model="table">
+        <!--<row>-->
+            <!--<cell>{{ row.id }}</cell>-->
+            <!--<cell>{{ row.name }}</cell>-->
+            <!--<cell>{{ row.after }}</cell>-->
+            <!--<subtab model="{{ row.children }}"> </subtab>-->
+        <!--</row>-->
     </tablist>
+    <button ng-click="addRow('sasasa')">Add row</button>
 </div>
+
 
 <script type="text/javascript" src="../bower_components/jquery/jquery.js"></script>
 <script type="text/javascript" src="../bower_components/angular/angular.js"></script>

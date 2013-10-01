@@ -1,54 +1,93 @@
 var app = angular.module("TabList", []);
 
-function TabListCtrl($scope) {
+
+app.factory("TableService", function () {
+    return [
+        {"id": "1", "name": "Main Cell", "after": "sup-after", "children": []},
+        {"id": "2", "name": "Second Cell", "after": "sup-after", "children": [
+            {"id": "2.1", "name": "Second-one", "after": "sub-after", "children": [
+                {"id": "2.1.1", "name": "Second one-one", "after": "sup-after", "children": []}
+            ]},
+            {"id": "2.2", "name": "Second-two", "after": "sup-after", "children": []}
+        ]},
+        {"id": "3", "name": "Third Cell", "after": "sup-after", "children": [
+            {"id": "3.1", "name": "Third one", "after": "sub-after", "children": [
+                {"id": "3.1.1", "name": "Third one-one", "after": "sup-after", "children": []}
+            ]}
+        ]}
+    ];
+});
+
+function TabListCtrl($scope, TableService) {
+    $scope.table = TableService;
 }
 
 app.directive("tablist", function () {
     return {
         restrict: "E",
         replace: true,
-        transclude: true,
         scope: {
-            mainColumn: "@",
-            indent: "@",
-            expanded: "@"
+            mainColumn: "=",
+            indent: "=",
+            expanded: "=",
+            model: "="
         },
-        template: "<ul class='tabular-list' ng-transclude></ul>",
+        template: "<ul class='tabular-list'><row ng-repeat='row in model' row='row' main-column='mainColumn' indent='indent' expanded='expanded'></row></ul>"
+    }
+});
+
+app.directive("row", function ($compile) {
+    return {
+        restrict: "E",
+        replace: true,
+        require: "row",
+        scope: {
+            mainColumn: "=",
+            indent: "=",
+            expanded: "=",
+            row: "="
+        },
+        template: "<li><cell>{{ row.id }}</cell><cell>{{ row.name }}</cell><cell>{{ row.after }}</cell></li>",
         controller: function ($scope, $element) {
-            this.getMainColumnNumber = function () {
-                var mainColumn = $scope.mainColumn;
-                if (this.getLevel() > 0) {
-                    mainColumn = getMainColumnFromParent();
+            this.setExpandedInit = function (isExpanded) {
+                if (this.hasParent() && !isExpanded) {
+                    $element.parent("ul").hide();
                 }
-                return mainColumn;
+            };
+            this.hasParent = function () {
+                return $element.parent("ul").parent().is("li");
+            };
+            this.hasChildren = function () {
+                return $scope.row.children.length > 0;
+            };
+            this.expand = function () {
+                $scope.expanded = (!$scope.expanded);
+                if ($scope.expanded == false) {
+                    $element.children("ul").hide();
+                } else {
+                    $element.children("ul").show();
+                }
+            };
+            this.isExpanded = function () {
+                return $scope.expanded;
+            };
+            this.getMainColumnNumber = function () {
+                return $scope.mainColumn;
             };
             this.getIndent = function () {
-                var indent = $scope.indent;
-                if (this.getLevel() > 0) {
-                    indent = getIndentFromParent();
-                }
-                return indent;
+                return $scope.indent;
             };
             this.getLevel = function () {
                 return $element.parents('ul').length;
             };
-            this.isExpandedAtInit = function () {
-                var expanded = $scope.expanded === "true";
-                if (this.getLevel() > 0) {
-                    expanded = getExpandedFromParent();
-                }
-                return expanded;
+        },
+        link: function (scope, element, attrs, rowCtrl) {
+            rowCtrl.setExpandedInit(scope.expanded);
+            if (angular.isArray(scope.row.children) && scope.row.children.length > 0) {
+                $compile("<tablist model='row.children' main-column='mainColumn' indent='indent' expanded='expanded'></tablist>")(scope, function(cloned) {
+                    element.append(cloned);
+                });
             }
-
-            var getIndentFromParent = function () {
-                return $element.parents('ul').last().attr("indent");
-            };
-            var getMainColumnFromParent = function () {
-                return $element.parents('ul').last().attr('main-column');
-            };
-            var getExpandedFromParent = function () {
-                return $element.parents('ul').last().attr('expanded') === "true";
-            };
         }
     }
 });
@@ -57,69 +96,36 @@ app.directive("cell", function () {
     return {
         restrict: "E",
         require: [
-            "^tablist",
             "^row"
         ],
         replace: true,
         transclude: true,
         template: "<span><expander /><span style='display: inline;' ng-transclude></span></span>",
-        link: function (scope, element, attrs, requiredControllers) {
-            var tablistCtrl = requiredControllers[0];
-            var rowCtrl = requiredControllers[1];
-            var mainColumnNumber = tablistCtrl.getMainColumnNumber();
-            var indent = tablistCtrl.getIndent();
-            var level = tablistCtrl.getLevel();
-            if (element.index() == mainColumnNumber && level >= 1) {
-                var levelIndentation = (indent * level) + "px";
-                element.css("padding-left", "+=" + levelIndentation);
-                element.css('width', "-=" + levelIndentation)
-            }
-
-            if (element.index() != mainColumnNumber || !rowCtrl.hasChildren()) {
-                $(".tablist-expander", element).remove();
-            }
-        }
-    }
-});
-
-app.directive("row", function () {
-    return {
-        restrict: "E",
-        replace: true,
-        require: ["row", "^tablist"],
-        transclude: true,
-        scope: {},
-        template: "<li ng-transclude></li>",
-        controller: function ($scope, $element) {
-            this.setExpandedInit = function () {
-                this.expanded = $scope.tablistCtrl.isExpandedAtInit();
-                if (!this.expanded && this.hasParent()) {
-                    $element.parent("ul").hide();
-                }
-            };
-            this.hasParent = function () {
-                return $element.parent("ul").parent().is("li");
-            };
-            this.hasChildren = function () {
-                return $element.has("ul").length > 0
-            };
-            this.expand = function () {
-                this.expanded = (!this.expanded);
-                if (this.expanded == false) {
-                    $element.children("ul").hide();
-                } else {
-                    $element.children("ul").show();
-                }
-            };
-            this.isExpanded = function () {
-                return this.expanded;
+        controller: function($scope, $element) {
+            $scope.isMainColumn = function() {
+                return $scope.rowCtrl.getMainColumnNumber() == $element.index();
             }
         },
-        link: function (scope, element, attrs, ctrls) {
-            var rowCtrl = ctrls[0];
-            var tablistCtrl = ctrls[1];
-            scope.tablistCtrl = tablistCtrl;
-            rowCtrl.setExpandedInit();
+        compile: function(){
+            return{
+                post: function postLink(scope, iElement, iAttrs, controller){
+                    scope.rowCtrl = controller[0];
+                    // remove ng-transclude attribute to prevent error thrown when transcluded content is re-compiled
+                    angular.element(iElement[0].querySelectorAll('[ng-transclude]')).removeAttr('ng-transclude');
+
+                    var indent = scope.rowCtrl.getIndent();
+                    var level = scope.rowCtrl.getLevel();
+                    if (scope.isMainColumn() && level >= 1) {
+                        var levelIndentation = (indent * level) + "px";
+                        iElement.css("padding-left", "+=" + levelIndentation);
+                        iElement.css('width', "-=" + levelIndentation)
+                    }
+
+                    if (!scope.isMainColumn() || !scope.rowCtrl.hasChildren()) {
+                        $(".tablist-expander", iElement).remove();
+                    }
+                }
+            }
         }
     }
 });
