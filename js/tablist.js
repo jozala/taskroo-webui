@@ -30,13 +30,14 @@ app.directive("tablist", function () {
     return {
         restrict: "E",
         replace: true,
+        transclude: true,
         scope: {
             mainColumn: "=",
             indent: "=",
             expanded: "=",
             model: "="
         },
-        template: "<ul class='tabular-list'><row ng-repeat='row in model' row='row' main-column='mainColumn' indent='indent' expanded='expanded'></row></ul>"
+        template: "<ul class='tabular-list' ng-transclude></ul>"
     };
 });
 
@@ -45,13 +46,15 @@ app.directive("row", function ($compile) {
         restrict: "E",
         replace: true,
         require: "row",
+        transclude: true,
         scope: {
             mainColumn: "=",
             indent: "=",
             expanded: "=",
-            row: "="
+            row: "=",
+            children: "="
         },
-        template: "<li><cell>{{ row.id }}</cell><cell>{{ row.name }}</cell><cell>{{ row.after }}</cell></li>",
+        template: "<li ng-transclude></li>",
         controller: function ($scope, $element) {
             this.setExpandedInit = function (isExpanded) {
                 if (this.hasParent() && !isExpanded) {
@@ -62,7 +65,7 @@ app.directive("row", function ($compile) {
                 return $element.parent("ul").parent().is("li");
             };
             this.hasChildren = function () {
-                return $scope.row.children.length > 0;
+                return $scope.children.length > 0;
             };
             this.expand = function () {
                 $scope.expanded = (!$scope.expanded);
@@ -85,13 +88,17 @@ app.directive("row", function ($compile) {
                 return $element.parents('ul').length;
             };
         },
-        link: function (scope, element, attrs, rowCtrl) {
-            rowCtrl.setExpandedInit(scope.expanded);
-            if (angular.isArray(scope.row.children) && scope.row.children.length > 0) {
-                $compile("<tablist model='row.children' main-column='mainColumn' indent='indent' expanded='expanded'></tablist>")(scope, function(cloned) {
-                    element.append(cloned);
-                });
-            }
+        compile: function(tElement, tAttrs, transclude) {
+            return {
+                pre: function(scope, element, attrs, rowCtrl) {
+                    rowCtrl.setExpandedInit(scope.expanded);
+                    if (angular.isArray(scope.children) && scope.children.length > 0) {
+                        $compile("<tablist model='children' main-column='mainColumn' indent='indent' expanded='expanded'></tablist>")(scope, function(cloned) {
+                            element.append(cloned);
+                        });
+                    }
+                }
+            };
         }
     };
 });
