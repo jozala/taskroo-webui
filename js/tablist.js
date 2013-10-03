@@ -20,7 +20,11 @@ app.factory("TableService", function () {
 
 function TabListCtrl($scope, TableService) {
     $scope.table = TableService;
-}
+    $scope.addElement = function() {
+        var element = {"id": "1", "name": "Main Cell", "after": "sup-after", "children": []};
+        $scope.table.push(element);
+    };
+};
 
 app.directive("tablist", function () {
     return {
@@ -33,7 +37,7 @@ app.directive("tablist", function () {
             model: "="
         },
         template: "<ul class='tabular-list'><row ng-repeat='row in model' row='row' main-column='mainColumn' indent='indent' expanded='expanded'></row></ul>"
-    }
+    };
 });
 
 app.directive("row", function ($compile) {
@@ -62,7 +66,7 @@ app.directive("row", function ($compile) {
             };
             this.expand = function () {
                 $scope.expanded = (!$scope.expanded);
-                if ($scope.expanded == false) {
+                if ($scope.expanded === false) {
                     $element.children("ul").hide();
                 } else {
                     $element.children("ul").show();
@@ -89,7 +93,7 @@ app.directive("row", function ($compile) {
                 });
             }
         }
-    }
+    };
 });
 
 app.directive("cell", function () {
@@ -103,8 +107,8 @@ app.directive("cell", function () {
         template: "<span><expander /><span style='display: inline;' ng-transclude></span></span>",
         controller: function($scope, $element) {
             $scope.isMainColumn = function() {
-                return $scope.rowCtrl.getMainColumnNumber() == $element.index();
-            }
+                return $scope.rowCtrl.getMainColumnNumber() === $element.index();
+            };
         },
         compile: function(){
             return{
@@ -118,16 +122,16 @@ app.directive("cell", function () {
                     if (scope.isMainColumn() && level >= 1) {
                         var levelIndentation = (indent * level) + "px";
                         iElement.css("padding-left", "+=" + levelIndentation);
-                        iElement.css('width', "-=" + levelIndentation)
+                        iElement.css('width', "-=" + levelIndentation);
                     }
 
                     if (!scope.isMainColumn() || !scope.rowCtrl.hasChildren()) {
                         $(".tablist-expander", iElement).remove();
                     }
                 }
-            }
+            };
         }
-    }
+    };
 });
 
 app.directive("expander", function () {
@@ -139,10 +143,10 @@ app.directive("expander", function () {
         controller: function ($scope) {
             $scope.expand = function () {
                 $scope.rowCtrl.expand();
-            }
+            };
         },
         link: function (scope, element, attrs, rowCtrl) {
             scope.rowCtrl = rowCtrl;
         }
-    }
+    };
 });
