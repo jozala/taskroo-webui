@@ -68,6 +68,15 @@ app.directive("tablist", function () {
                 return $element.parents('ul').last().attr('expanded') === "true";
             };
         }
+//        compile: function(tElement, tAttrs, transclude) {
+//            return {
+//                pre: function(scope, element, attrs, controllers) {
+//                    transclude(scope, function(clone, innerScope) {
+//                        console.log(clone);
+//                    });
+//                }
+//            }
+//        }
     };
 });
 
@@ -76,7 +85,7 @@ app.directive("row", function ($compile) {
         restrict: "E",
         replace: true,
         require: ["^tablist", "row"],
-        transclude: true,
+        transclude: 'element',
         scope: {
             row: "=",
             children: "="
@@ -117,28 +126,47 @@ app.directive("row", function ($compile) {
                 return result;
             };
         },
-        compile: function(tElement, tAttrs, transclude) {
-            return {
-                pre: function(scope, element, attrs, controllers) {
-                    var tablistCtrl = controllers[0];
-                    var rowCtrl = controllers[1];
-                    scope.tablistCtrl = tablistCtrl;
-                    rowCtrl.setExpandedInit(tablistCtrl.isExpandedAtInit());
-                    if (angular.isArray(scope.children) && scope.children.length > 0) {
-                        $compile("<tablist main-column='mainColumn' indent='indent' expanded='expanded'>"+
-                                "<row children='row.children' row='row' ng-repeat='row in children'>" +
-                                    "<cell>{{ row.id }}</cell>" +
-                                    "<cell>{{ row.name }}</cell>" +
-                                    "<cell>{{ row.after }}</cell>" +
-                                "</row>" +
-                                "</tablist>")(scope, function(cloned) {
-                            element.append(cloned);
-                        });
-                        
-                    }
-                    
+        compile: function(tElement, tAttrs, linker) {
+            return function($scope, $element, $attr, $controllers) {
+                var tablistCtrl = $controllers[0];
+                var rowCtrl = $controllers[1];
+                $scope.tablistCtrl = tablistCtrl;
+                rowCtrl.setExpandedInit(tablistCtrl.isExpandedAtInit());
+                
+//                if (angular.isArray($scope.children) && $scope.children.length > 0) {
+//                    $compile("<tablist main-column='mainColumn' indent='indent' expanded='expanded'>"+
+//                            "<row children='row.children' row='row' ng-repeat='row in children'>" +
+//                                "<cell>{{ row.id }}</cell>" +
+//                                "<cell>{{ row.name }}</cell>" +
+//                                "<cell>{{ row.after }}</cell>" +
+//                            "</row>" +
+//                            "</tablist>")($scope, function(cloned) {
+//                        $element.append(cloned);
+//                    });
+
+//                }
+                
+                var parent = $element.parent();
+                var i, block, childScope;
+                var elements = [];
+                var collection = $scope.children;
+                for (i = 0; i < collection.length; i++) {
+
+                    childScope = $scope.$new();
+                    childScope['row'] = collection[i];
+                    linker(childScope, function(clone) {
+                        // clone the transcluded element, passing in the new scope.
+                        var subTablist = $("<tablist main-column='mainColumn' indent='indent' expanded='expanded'></tablist>");
+                        subTablist.append(clone);
+                        $element.append(subTablist); // add to DOM
+                        block = {};
+                        block.el = clone;
+                        block.scope = childScope;
+                        elements.push(block);
+                    });
                 }
-            };
+
+            }
         }
     };
 });
@@ -172,7 +200,7 @@ app.directive("cell", function () {
 
                     if (!scope.isMainColumn() || !rowCtrl.hasChildren()) {
                          $(".tablist-expander", iElement).remove();
-                    }
+                }
                 }
             };
         }
