@@ -70,123 +70,90 @@
     border-radius: 7px;
 }
 
-#tasksBox>table {
-    border-collapse: collapse;
-    width: 100%;
-    font-size: 10pt;
-}
-
-#tasksBox>table tr {
-    height: 32px;
-    border-bottom: 1px #FCFCFD solid;
-    vertical-align: center;
-}
-
-#tasksBox>table tr:HOVER {
-    /* 	background-color: rgba(245, 175, 57, 0.1); */
-    background-color: rgba(255, 255, 255, 0.6);
-}
-
-#tasksBox>table tbody tr:LAST-CHILD {
-    border-bottom: none;
-}
-
-#tasksBox>table tr td:FIRST-CHILD {
-    padding-left: 8px;
-}
-
-#tasksBox>table tr td:LAST-CHILD {
-    padding-right: 12px;
-}
-
 /* Task tick  */
-#tasksBox>table td.taskTick {
-    height: 24px;
-    width: 28px;
-    background: url('../static/img/task/task_tick_empty.png') no-repeat right top;
+.tabular-list .taskTick {
+    height: 29px;
+    width: 37px;
+    background: url('../static/img/task/task_tick_empty.png') no-repeat top right;
     cursor: pointer;
 }
 
-#tasksBox>table tr.taskFinished td.taskTick {
+.tabular-list .taskFinished .taskTick  {
     background-image: url('../static/img/task/task_tick_ticked.png');
 }
 
-#tasksBox>table td.taskTick:HOVER {
+.tabular-list .taskTick:HOVER {
     background-image: url('../static/img/task/task_tick_ticked.png');
 }
 
-#tasksBox>table td.taskTitle {
-    text-overflow: ellipsis;
+.tabular-list .taskTitle {
+    flex: 1;
     white-space: nowrap;
-    display: -webkit-flex;
-    -webkit-align-items: center;
-    -webkit-flex-flow: row nowrap;
-    -webkit-justify-content: flex-start;
-    display: flex;
-    align-items: center;
-    justify-content: flex-start;
-    flex-flow: row nowrap;
+    width: 100%;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
+.tabular-list .taskFinished {
+    color: red;
+}
 
 /* Task title */
-#tasksBox>table tr.taskFinished td.taskTitle {
+.tabular-list .taskFinished .taskTitle {
     text-decoration: line-through;
 }
 
 
 /* Task due date */
-#tasksBox>table td.taskDueDate {
+.tabular-list .taskDueDate {
     color: #666666;
 }
 
-#tasksBox>table td.taskSubtask {
+.tabular-list .taskAction {
     width: 30px;
-    background: url('../static/img/task/task_subtask.png') no-repeat center;
+    height: 30px;
     cursor: pointer;
+    background-repeat: no-repeat;
+    background-position: center;
 }
 
-#tasksBox>table td.taskSubtask:HOVER {
+.tabular-list .taskSubtask {
+    background-image: url('../static/img/task/task_subtask.png');
+}
+
+.tabular-list .taskSubtask:HOVER {
     background-image: url('../static/img/task/task_subtask_active.png');
 }
 
-#tasksBox>table td.taskEdit {
-    width: 30px;
-    background: url('../static/img/task/task_edit.png') no-repeat center;
-    cursor: pointer;
+.tabular-list .taskEdit {
+    background-image: url('../static/img/task/task_edit.png');
 }
 
-#tasksBox>table td.taskEdit:HOVER {
+.tabular-list .taskEdit:HOVER {
     background-image: url('../static/img/task/task_edit_active.png');
 }
 
-#tasksBox>table td.taskDel {
-    width: 30px;
-    background: url('../static/img/task/task_del.png') no-repeat center;
-    cursor: pointer;
+.tabular-list .taskDel {
+    background-image: url('../static/img/task/task_del.png');
 }
 
-#tasksBox>table td.taskDel:HOVER {
+.tabular-list .taskDel:HOVER {
     background-image: url('../static/img/task/task_del_active.png');
 }
 
 /* Tags in tasks */
-#tasksBox>table td.taskTags {
+.tabular-list .taskTags {
     width: 58px;
 }
 
-#tasksBox>table td.taskTags>div.tagIcon {
-    float: left;
+.tabular-list .taskTags .tagIcon {
     margin-right: 4px;
+    display: inline-block;
+    vertical-align: middle;
 }
 
-#tasksBox>table tr.taskFinished {
+.tabular-list .taskFinished {
     text-decoration: line-through;
-}
-
-#tasksBox>table tfoot tr {
-    height: 10px;
-    border: none;
 }
 
 
