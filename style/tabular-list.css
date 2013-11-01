@@ -3,22 +3,38 @@
 .tabular-list {
     list-style: none;
     padding: 0;
+    width: 100%;
+    font-size: 10pt;
 }
 
-.tabular-list li {
-    border-top: 1px solid #000000; /* TODO for removal - added only for development */
+.tabular-list .row {
+    margin: 0;
+    line-height: 30px;
+    vertical-align: middle;
 }
 
-.tabular-list li span {
+.tabular-list .row>span {
+    display: flex;
+    flex-flow: row nowrap;
+    align-items: stretch;
+    border-bottom: 1px #FCFCFD solid;
+}
+
+.tabular-list .row>span:HOVER {
+    background-color: rgba(255, 255, 255, 0.6);
+}
+
+.tabular-list .row:LAST-CHILD {
+    border-bottom: none;
+}
+
+.tabular-list .row .cell {
     display: inline-block;
-    width: 200px;
-}
-
-.tabular-list li span:nth-child(2) {
-    width: 400px;
+    vertical-align: middle;
 }
 
 .tabular-list .tablist-expander {
+    display: inline-block;
     width: 16px;
     height: 13px;
     margin-left: -16px;
@@ -26,9 +42,13 @@
 }
 
 .tabular-list .expanded {
-    background-image: url('../static/img/treetable/collapse.png');
+    background-image: url('../bower_components/tabularlist/static/img/treetable/collapse.png');
 }
 
 .tabular-list .collapsed {
-    background-image: url('../static/img/treetable/expand.png');
+    background-image: url('../bower_components/tabularlist/static/img/treetable/expand.png');
+}
+
+.tabular-list .main-column {
+    padding-left: 16px;
 }

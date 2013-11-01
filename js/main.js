@@ -1,4 +1,4 @@
-var app = angular.module("GTWeb", [])
+var app = angular.module("GTWeb", ["TabList"])
 
 
 app.factory("TagsService", function () {
@@ -20,7 +20,7 @@ app.factory("TagsService", function () {
 
 app.factory("TasksService", function () {
     var tasks = [
-            {"id": 118, "title": "Podatek za wynajem - Inżynierska - 107zł - powinien pójść automatyczny przelew 17 każdego miesiąca (dostałeś maila?) ", "description": "Do 20 każdego miesiąca", "finished": false, "subtasks": [], "tags": [
+            {"id": 118, "title": "Podatek za wynajem - Inżynierska - 107zł - powinien pójść automatyczny przelew 17 każdego miesiąca (dostałeś maila?) ", "description": "Do 20 każdego miesiąca", "finished": true, "subtasks": [], "tags": [
                 {"id": 24, "name": "planned", "color": "#10f028", "visibleInWorkView": false},
                 {"id": 26, "name": "bills", "color": null, "visibleInWorkView": false}
             ], "startingOn": 1379376000000, "dueDate": 1379376000000, "closedDate": null, "createdDate": 1376085600000},
