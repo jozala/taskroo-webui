@@ -1,6 +1,6 @@
 function TasksCtrl($scope, TasksService) {
     $scope.tasks = TasksService;
-    $scope.template = '<row children="task.subtasks" row="task" ng-repeat="task in children" ng-class="{\'taskFinished\': task.finished}" >' +
+    $scope.template = '<row children="task.subtasks" row="task" ng-repeat="task in children" ng-class="{\'taskFinished\': row.finished}" >' +
             '<cell class="taskTick"></cell>' +
             '<cell class="taskTags"><tag-icon ng-repeat="tag in task.tags" color="{{ tag.color }}" name="{{ tag.name }}"></tag-icon></cell>' +
             '<cell class="taskTitle">{{ task.title }}</cell>' +
@@ -9,10 +9,6 @@ function TasksCtrl($scope, TasksService) {
             '<cell class="taskAction taskSubtask"></cell>' + 
             '<cell class="taskAction taskDel"></cell>' +
             '</row>';
-    
-    /*
-     * $scope.template = '<row children="task.subtasks" row="task" ng-repeat="task in children"><cell class="taskTick"></cell><cell>{{ row.title }}</cell></row>';
-     */
 
 }
 //app.directive("taskRow", function ($compile) {

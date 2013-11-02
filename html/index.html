@@ -5,7 +5,7 @@
     <link rel="stylesheet" href="../bower_components/bootstrap/dist/css/bootstrap.css"/>
     <link rel="stylesheet" href="../style/tabular-list.css"/>
     <link rel="stylesheet" href="../style/main.css"/>
-
+    
     <title>GTWeb - New Better Best</title>
 </head>
 <body >
@@ -47,11 +47,11 @@
             </div>
             <div class="box" ng-controller="TasksCtrl">
                 <tablist main-column="2" indent="15" expanded="false" template="template" >
-                    <row children="task.subtasks" row="task" ng-repeat="task in tasks" ng-class="{'taskFinished': task.finished}" >
+                    <row children="task.subtasks" row="task" ng-repeat="task in tasks" ng-class="{'taskFinished': row.finished}" >
                         <cell class="taskTick"></cell>
                         <cell class='taskTags'><tag-icon ng-repeat='tag in task.tags' color='{{ tag.color }}' name='{{ tag.name }}'></tag-icon></cell>
                         <cell class="taskTitle">{{ task.title }}</cell>
-                        <cell class="taskDueDate">{{ task.dueDate }}</cell>
+                        <cell class="taskDueDate">{{ task.dueDate | date: 'dd-MM-yyyy' }}</cell>
                         <cell class="taskAction taskEdit"></cell>
                         <cell class="taskAction taskSubtask"></cell>
                         <cell class="taskAction taskDel"></cell>
@@ -66,13 +66,14 @@
 </footer>
 
 
+
 <script type="text/javascript" src="../bower_components/jquery/jquery.js"></script>
 <script type="text/javascript" src="../bower_components/angular/angular.js"></script>
 <script type="text/javascript" src="../js/main.js"></script>
 <script type="text/javascript" src="../js/tags.js"></script>
 <script type="text/javascript" src="../js/tasks.js"></script>
 <script type="text/javascript" src="../bower_components/tabularlist/js/tablist.js"></script>
-
+<script type="text/javascript" src="../bower_components/momentjs/moment.js"></script>
 
 
 </body>

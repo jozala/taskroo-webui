@@ -95,7 +95,7 @@
 }
 
 .tabular-list .taskFinished {
-    color: red;
+    color: gray;
 }
 
 /* Task title */
@@ -107,6 +107,7 @@
 /* Task due date */
 .tabular-list .taskDueDate {
     color: #666666;
+    margin-right: 5px;
 }
 
 .tabular-list .taskAction {
