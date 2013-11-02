@@ -1,7 +1,7 @@
 function TasksCtrl($scope, TasksService) {
     $scope.tasks = TasksService;
     $scope.template = '<row children="task.subtasks" row="task" ng-repeat="task in children" ng-class="{\'taskFinished\': row.finished}" >' +
-            '<cell class="taskTick"></cell>' +
+            '<cell class="taskTick" ng-click="task.finished = !task.finished"></cell>' +
             '<cell class="taskTags"><tag-icon ng-repeat="tag in task.tags" color="{{ tag.color }}" name="{{ tag.name }}"></tag-icon></cell>' +
             '<cell class="taskTitle">{{ task.title }}</cell>' +
             '<cell class="taskDueDate"></cell>' + 
