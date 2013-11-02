@@ -9,8 +9,30 @@ function TasksCtrl($scope, TasksService) {
             '<cell class="taskAction taskSubtask"></cell>' + 
             '<cell class="taskAction taskDel"></cell>' +
             '</row>';
+    
+    $scope.taskFinished = function(task) {
+        task.finished = !task.finished;
+    };
+    
+    $scope.removeTask = function(task) {
+        var taskToDeleteIndex = jQuery.inArray(task, $scope.tasks);
+        $scope.tasks.splice(taskToDeleteIndex, 1);
+    };
 
 }
+
+//app.directive("clickToEdit", function() {
+//    return {
+//        scope: {
+//            clickToEdit: "="
+//        },
+//        link: function(scope, element, attrs) {
+//            element.dblclick(function(event) {
+//                element.find(">:first-child").replaceWith("<input style='width: 100%' value='" + scope.clickToEdit + "' />");
+//            });
+//        }
+//    };
+//});
 //app.directive("taskRow", function ($compile) {
 //    return {
 //        restrict: "A",
