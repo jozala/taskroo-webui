@@ -1,4 +1,4 @@
-var app = angular.module("GTWeb", ["TabList"])
+var app = angular.module("GTWeb", ["TabList", "ui.bootstrap"]);
 
 
 app.factory("TagsService", function () {

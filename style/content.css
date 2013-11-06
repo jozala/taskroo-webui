@@ -98,6 +98,10 @@
     color: gray;
 }
 
+.tabular-list .taskTitle [contentEditable="true"] {
+    background-color: white;
+}
+
 /* Task title */
 .tabular-list .taskFinished .taskTitle {
     text-decoration: line-through;

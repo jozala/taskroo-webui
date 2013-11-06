@@ -1,6 +1,7 @@
 @CHARSET "UTF-8";
 @import url("sidebar.css");
 @import url("content.css");
+@import url("dynamic.css");
 
 html {
     font-size: 10pt;
