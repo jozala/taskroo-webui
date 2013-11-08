@@ -16,9 +16,12 @@ function TasksCtrl($scope, TasksService, $modal, $log) {
     };
     
     $scope.removeTask = function(task) {
-        $log.info('Task ' + task.id + ' removed: ' + task.title);
-        var taskToDeleteIndex = jQuery.inArray(task, $scope.tasks);
-        $scope.tasks.splice(taskToDeleteIndex, 1);
+        var removeForSure = confirm("Are you sure to remove this task and all it's subtasks? You cannot undo this.\n" + task.title); 
+        if (removeForSure) {
+            $log.info('Task ' + task.id + ' removed: ' + task.title);
+            var taskToDeleteIndex = jQuery.inArray(task, $scope.tasks);
+            $scope.tasks.splice(taskToDeleteIndex, 1);
+        }
     };
     
     $scope.updateTask = function(task) {
