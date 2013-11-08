@@ -1,18 +1,24 @@
 
-
     <div class="modal-header">
         <button type="button" class="close" ng-click="cancel()">×</button>
         <h3>Edit task</h3>
     </div>
-    <div class="modal-body">
-        <ul>
-            <li ng-repeat="item in items">
-                <a ng-click="selected.item = item">{{ item}}</a>
-            </li>
-        </ul>
-        Selected: <b>{{ selected.item}}</b>
+    <div class="modal-body task-edit">
+        <input type="text" placeholder="Task title" ng-model="task.title"/>
+        <textarea placeholder="You can put additional description here" ng-model="task.description"></textarea>
+        <input type="text" placeholder="space separated tags" ng-model="task.tags" ng-value="name" />
+        <div style="display: flex; flex-flow: row wrap; justify-content: space-around;">
+            <div style="flex: 1; padding-right: 15px;">
+                <label for="startDate">Starting on</label>
+                <input type="date" name="startDate" id="startDate" ng-model="task.startingOn" />
+            </div>
+            <div style="flex: 1; padding-right: 9px;">
+                <label for="dueDate">Due for</label>
+                <input type="date" name="dueDate" id="dueDate" ng-model="task.dueDate" />
+            </div>
+        </div>
     </div>
     <div class="modal-footer">
         <button class="btn" ng-click="cancel()">Close</button>
-        <button class="btn btn-primary" ng-click="ok()">Save changes</button>
+        <button class="btn btn-primary" ng-click="ok(task)">Save changes</button>
     </div>

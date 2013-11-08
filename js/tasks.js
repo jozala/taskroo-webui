@@ -27,15 +27,18 @@ function TasksCtrl($scope, TasksService, $modal, $log) {
     
     
     $scope.openEdit = function(task) {
-        var modalInstance = $modal.open({
+        var editTaskModalInstance = $modal.open({
             templateUrl: 'editTaskModalContent.html',
             backdrop: 'static',
-            controller: ModalInstanceCtrl
+            controller: EditTaskModalCtrl,
+            resolve: {
+                task: function() {
+                    return task;
+                }
+            }
         });
-        modalInstance.result.then(function(selectedItem) {
-            $scope.selected = selectedItem;
-        }, function() {
-            $log.info('Modal dismissed at: ' + new Date());
+        editTaskModalInstance.result.then(function(originalTask) {
+            $scope.updateTask(originalTask);
         });
     };
 
@@ -80,14 +83,45 @@ app.directive("quickEdit", function() {
     };
 });
 
-var ModalInstanceCtrl = function($scope) {
-
-
-    $scope.ok = function() {
-        $modalInstance.close($scope.selected.item);
+var EditTaskModalCtrl = function($scope, $modalInstance, task) {
+    $scope.task = angular.copy(task);
+    
+    var tags = "";
+    $scope.task.tags.forEach(function(tag) {
+        tags += tag.name + " ";
+    });
+    $scope.task.tags = tags;
+    
+    var ngDateFilter = angular.injector(["ng"]).get("dateFilter");
+    $scope.task.startingOn = ngDateFilter(task.startingOn, "yyyy-MM-dd");
+    $scope.task.dueDate = ngDateFilter(task.dueDate, 'yyyy-MM-dd');
+    
+    $scope.ok = function(changedTask) {
+        updateTaskWithData(task, changedTask);
+        $modalInstance.close(task);
     };
 
     $scope.cancel = function() {
-        $modalInstance.dismiss('cancel');
+        $modalInstance.dismiss();
+    };
+    
+    var updateTaskWithData = function(originalTask, changedTask) {
+        originalTask.title = changedTask.title;
+        originalTask.description = changedTask.description;
+        originalTask.startingOn = changedTask.startingOn;
+        originalTask.dueDate = changedTask.dueDate;
+        var tagsNames = changedTask.tags.split(" ");
+        originalTask.tags = [];
+
+        tagsNames.forEach(function(tagName) {
+            if (!isBlank(tagName)) {
+                originalTask.tags.push({"name": tagName.replace("/\\s*/g", "")});
+            }
+        });
+        
+        function isBlank(str) {
+            return (!str || /^\s*$/.test(str));
+        }
+        
     };
 };

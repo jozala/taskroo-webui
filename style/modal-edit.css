@@ -1,0 +1,10 @@
+@CHARSET "UTF-8";
+
+.task-edit input {
+    width: 97%;
+}
+
+.task-edit textarea {
+    width: 97%;
+    min-height: 100px;
+}
