@@ -1,15 +1,13 @@
 @CHARSET "UTF-8";
 
-.main-window>nav {
+#left-sidebar {
     width: 280px;
     margin-right: 20px;
-}
-
-#left-sidebar {
     background-color: #f4f5f7;
     position: fixed;
     height: 100%;
     box-shadow: 8px 0 12px black;
+/*    overflow-y: auto;*/
 }
 
 
@@ -34,7 +32,7 @@
 
 #search-form input#search-field {
     border-right: 0;
-    width: 205px;
+    width: 190px;
     float: left;
 }
 
@@ -65,19 +63,30 @@
 
 /* Tags list and elements  */
 
-.main-window>nav ul {
-    padding: 0;
-    margin: 0;
-    font-size: 11pt;
+div.tags-box {
+    max-height: 90%;
+    overflow-y: auto;
 }
 
-#tagsBox ul li {
-    width: 267px;
+ul.tags-list {
+    padding: 0;
+    margin: 0;
+    padding-bottom: 42px;
+    
+}
+
+ul.tags-list li {
     display: flex;
-    display: -webkit-flex;
+    padding: 0;
+    margin: 0;
     padding: 11px 0px 11px 13px;
     border-bottom: 1px solid #e7e7e7;
     cursor: pointer;
+    font-size: 11pt;
+}
+
+ul.tags-list .tagIcon {
+    margin-right: 10px
 }
 
 

@@ -44,6 +44,12 @@ function TasksCtrl($scope, TasksService, $modal, $log) {
             $scope.updateTask(originalTask);
         });
     };
+    
+    $scope.createSubtask = function(task) {
+      var subTask = {"title": "test"};
+      task.subtasks.push(subTask);
+      task.title += "?";
+    };
 
 }
 

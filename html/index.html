@@ -18,10 +18,13 @@
             <input type="submit" id="search-button" class="input" value=""/>
         </form>
         <div style="clear: both;"></div>
-        <ul>
-            <tag ng-repeat="tag in tags" data-id="{{ tag.id }}" color="{{ tag.color }}" name="{{ tag.name }}" size="5">{{ tag.name }}
-            </tag>
-        </ul>
+        <div class="tags-box">
+            <ul class="tags-list">
+                <tag name="All tags" size="13">All tags</tag>
+                <tag name="Tasks without tags" size="0">Tasks without tags</tag>
+                <tag ng-repeat="tag in tags" data-id="{{ tag.id }}" color="{{ tag.color }}" name="{{ tag.name }}" size="5">{{ tag.name }}</tag>
+            </ul>
+        </div>
     </nav>
     <section id="body">
         <div>
@@ -53,7 +56,7 @@
                         <cell class="taskTitle" quick-edit ng-model="task.title" ng-change="updateTask(task)">{{ task.title }}</cell>
                         <cell class="taskDueDate">{{ task.dueDate | date: 'dd-MM-yyyy' }}</cell>
                         <cell class="taskAction taskEdit" ng-click="openEdit(task)"></cell>
-                        <cell class="taskAction taskSubtask"></cell>
+                        <cell class="taskAction taskSubtask" ng-click="createSubtask(task)"></cell>
                         <cell class="taskAction taskDel" ng-click="removeTask(task)"></cell>
                     </row>
                 </tablist>

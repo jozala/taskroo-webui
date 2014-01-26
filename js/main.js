@@ -13,7 +13,23 @@ app.factory("TagsService", function () {
         {"id": 26, "name": "bills", "color": null, "visibleInWorkView": false},
         {"id": 27, "name": "zakupy", "color": "#6dffd3", "visibleInWorkView": false},
         {"id": 35, "name": "call", "color": "#A94DFF", "visibleInWorkView": false},
-        {"id": 36, "name": "priority", "color": "#FF80AA", "visibleInWorkView": false}
+        {"id": 36, "name": "priority", "color": "#FF80AA", "visibleInWorkView": false},
+        {"id": 37, "name": "10min", "color": "#FF80AA", "visibleInWorkView": false},
+        {"id": 38, "name": "20min", "color": "#FF80AA", "visibleInWorkView": false},
+        {"id": 18, "name": "Inbox", "color": "#a3a3a3", "visibleInWorkView": false},
+        {"id": 20, "name": "next", "color": "#3241d2", "visibleInWorkView": false},
+        {"id": 21, "name": "projects", "color": "#df3a1c", "visibleInWorkView": false},
+        {"id": 22, "name": "waiting", "color": "#fbfa64", "visibleInWorkView": false},
+        {"id": 23, "name": "polska", "color": "#d98b0c", "visibleInWorkView": false},
+        {"id": 24, "name": "planned", "color": "#10f028", "visibleInWorkView": false},
+        {"id": 25, "name": "atwork", "color": "#bbbaff", "visibleInWorkView": false},
+        {"id": 26, "name": "bills", "color": null, "visibleInWorkView": false},
+        {"id": 27, "name": "zakupy", "color": "#6dffd3", "visibleInWorkView": false},
+        {"id": 35, "name": "call", "color": "#A94DFF", "visibleInWorkView": false},
+        {"id": 36, "name": "priority", "color": "#FF80AA", "visibleInWorkView": false},
+        {"id": 37, "name": "10min", "color": "#FF80AA", "visibleInWorkView": false},
+        {"id": 38, "name": "20min", "color": "#FF80AA", "visibleInWorkView": false},
+        {"id": 39, "name": "30min", "color": "#FF80AA", "visibleInWorkView": false}
     ];
     return tags;
 });
