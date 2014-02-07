@@ -1,0 +1,30 @@
+{
+  "name": "TabularList",
+  "version": "1.0.1",
+  "authors": [
+    "mariusz <mariusz@aetas.pl>"
+  ],
+  "main": "tablist.js",
+  "license": "GPLv2",
+  "homepage": "aetas.pl",
+  "private": false,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "angular": "1.2"
+  },
+  "_release": "1.0.1",
+  "_resolution": {
+    "type": "version",
+    "tag": "1.0.1",
+    "commit": "c8176e91839af397ae332a005e0df3817ef338bd"
+  },
+  "_source": "git://github.com/maniekq/tabular-list.git",
+  "_target": "~1.0.1",
+  "_originalSource": "tabularlist"
+}

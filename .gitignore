@@ -2,5 +2,9 @@
 *.ipr
 *.iws
 .idea/
-bower_components/
 nbproject/
+bower_components/angular-bootstrap/
+bower_components/angular/
+bower_components/bootstrap/
+bower_components/jquery/
+bower_components/momentjs/
