@@ -85,7 +85,7 @@ function TasksCtrl($scope, TasksService, $modal, $log) {
     $scope.template = '<row children="task.subtasks" row="task" ng-repeat="task in children" ng-class="{\'taskFinished\': row.finished}" >' +
         '<cell class="taskTick" ng-click="functions.taskFinished(task)"></cell>' +
         '<cell class="taskTags"><tag-icon ng-repeat="tag in task.tags" color="{{ tag.color }}" name="{{ tag.name }}"></tag-icon></cell>' +
-        '<cell class="taskTitle" quick-edit ng-model="task.title" ng-change="functions.updateTask(task)">{{ task.title }}</cell>' +
+        '<cell class="taskTitle main-column" quick-edit ng-model="task.title" ng-change="functions.updateTask(task)">{{ task.title }}</cell>' +
         '<cell class="taskDueDate">{{ task.dueDate | date: "dd - MM - yyyy" }}</cell>' +
         '<cell class="taskAction taskEdit" ng-click="functions.openEdit(task)"></cell>' +
         '<cell class="taskAction taskSubtask" ng-click="functions.createSubtask(task)"></cell>' +
