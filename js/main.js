@@ -229,7 +229,7 @@ app.factory("TasksService", function () {
             {"id": 125, "title": "MacBook Pro Retina ", "description": null, "finished": false, "subtasks": [], "tags": [
                 {"id": 27, "name": "zakupy", "color": "#6dffd3", "visibleInWorkView": false}
             ], "startingOn": null, "dueDate": null, "closedDate": null, "createdDate": 1376085600000}
-        ]
+        ];
 
     return tasks;
 

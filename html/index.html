@@ -49,11 +49,11 @@
 
             </div>
             <div class="box" ng-controller="TasksCtrl">
-                <tablist main-column="2" indent="15" expanded="false" template="template" >
+                <tablist indent="15" expanded="false" functions="functions" template="template" >
                     <row children="task.subtasks" row="task" ng-repeat="task in tasks" ng-class="{'taskFinished': row.finished}" >
                         <cell class="taskTick" ng-click="taskFinished(task)"></cell>
                         <cell class='taskTags'><tag-icon ng-repeat='tag in task.tags' color='{{ tag.color }}' name='{{ tag.name }}'></tag-icon></cell>
-                        <cell class="taskTitle" quick-edit ng-model="task.title" ng-change="updateTask(task)">{{ task.title }}</cell>
+                        <cell class="taskTitle main-column" quick-edit ng-model="task.title" ng-change="updateTask(task)">{{ task.title }}</cell>
                         <cell class="taskDueDate">{{ task.dueDate | date: 'dd-MM-yyyy' }}</cell>
                         <cell class="taskAction taskEdit" ng-click="openEdit(task)"></cell>
                         <cell class="taskAction taskSubtask" ng-click="createSubtask(task)"></cell>
