@@ -86,9 +86,9 @@ function TasksCtrl($scope, TasksService, $modal, $log) {
         '<cell class="taskTick" ng-click="functions.taskFinished(task)"></cell>' +
         '<cell class="taskTags"><tag-icon ng-repeat="tag in task.tags" color="{{ tag.color }}" name="{{ tag.name }}"></tag-icon></cell>' +
         '<cell class="taskTitle main-column" quick-edit ng-model="task.title" ng-change="functions.updateTask(task)">{{ task.title }}</cell>' +
-        '<cell class="taskDueDate">{{ task.dueDate | date: "dd - MM - yyyy" }}</cell>' +
+        '<cell class="taskDueDate">{{ task.dueDate | date: "dd-MM-yyyy" }}</cell>' +
         '<cell class="taskAction taskEdit" ng-click="functions.openEdit(task)"></cell>' +
-        '<cell class="taskAction taskSubtask" ng-click="functions.createSubtask(task)"></cell>' +
+        '<cell class="taskAction taskSubtask" ng-click="functions.createSubtask(task); expandRow();"></cell>' +
         '<cell class="taskAction taskDel" ng-click="functions.removeTask(task)"></cell>' +
         '</row>';
 
@@ -101,23 +101,27 @@ function TasksCtrl($scope, TasksService, $modal, $log) {
         var removeForSure = confirm("Are you sure to remove this task and all it's subtasks? You cannot undo this.\n" + task.title);
         if (removeForSure) {
             $log.info('Task ' + task.id + ' removed: ' + task.title);
-            removeTaskOrSubtask(task, $scope.tasks);
+            findTaskRecursivelyAndRemoveIt(task, $scope.tasks);
         }
     };
 
-    var removeTaskOrSubtask = function(task, tasksArray) {
+    var findTaskRecursivelyAndRemoveIt = function(task, tasksArray) {
         for (var i in tasksArray) {
             if (tasksArray[i] == task) {
                 tasksArray.splice(i, 1);
                 return;
             }
-            removeTaskOrSubtask(task, tasksArray[i].subtasks);
+            findTaskRecursivelyAndRemoveIt(task, tasksArray[i].subtasks);
         }
     };
 
 
     $scope.updateTask = function(task) {
-        $log.info('Task ' + task.id + ' updated: ' + task.title);
+        if (!task.id) {
+            $log.info('New subtask created: ' + task.title);
+        } else {
+            $log.info('Task ' + task.id + ' updated: ' + task.title);
+        }
     };
 
 
@@ -137,10 +141,10 @@ function TasksCtrl($scope, TasksService, $modal, $log) {
         });
     };
 
-    // TODO create subtask does not work when adding new subtasks to task without subtasks (it is probably correctly added to model but there is no expand button shown)
     $scope.createSubtask = function(task) {
+        $log.info("Subtask created");
         var subTask = {"title": "test", "subtasks":[]};
-        task.subtasks.push(subTask);
+        task.subtasks = task.subtasks.concat([subTask]);
     };
 
     $scope.functions = {

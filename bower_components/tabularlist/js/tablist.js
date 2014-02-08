@@ -72,7 +72,7 @@ app.directive("tablist", function () {
     };
 });
 
-app.directive("row", function ($compile) {
+app.directive("row", function ($compile, $timeout) {
     return {
         restrict: "E",
         replace: true,
@@ -87,7 +87,6 @@ app.directive("row", function ($compile) {
             this.setExpandedInit = function (isExpanded) {
                 this.expanded = isExpanded;
                 if (this.hasParent() && !isExpanded) {
-                    // TODO here is the issue with hiding the subtasks when adding new subtask
                     $element.parent("ul").hide();
                 }
             };
@@ -98,11 +97,18 @@ app.directive("row", function ($compile) {
                 return $scope.children.length > 0;
             };
             this.expand = function () {
-                this.expanded = (!this.expanded);
-                if (this.expanded === false) {
-                    $element.children("ul").hide();
+                this.expanded = true;
+                $element.children("ul").show();
+            };
+            this.collapse = function () {
+                this.expanded = false;
+                $element.children("ul").hide();
+            };
+            this.toggleExpand = function () {
+                if (this.expanded === true) {
+                    this.collapse();
                 } else {
-                    $element.children("ul").show();
+                    this.expand();
                 }
             };
             this.isExpanded = function () {
@@ -112,8 +118,7 @@ app.directive("row", function ($compile) {
                 return $scope.tablistCtrl.getIndent();
             };
             this.getLevel = function () {
-                var result = $element.parents('ul').length - 1;
-                return result;
+                return $element.parents('ul').length - 1;
             };
         },
         compile: function(tElement, tAttrs, linker) {
@@ -122,14 +127,14 @@ app.directive("row", function ($compile) {
                         var tablistCtrl = $controllers[0];
                         var rowCtrl = $controllers[1];
                         $scope.tablistCtrl = tablistCtrl;
-                        rowCtrl.setExpandedInit(tablistCtrl.isExpandedAtInit());  
+                        rowCtrl.setExpandedInit(tablistCtrl.isExpandedAtInit());
 
                 },
                 post: function($scope, $element, $attr, $controllers) {
                     var tablistCtrl = $controllers[0];
                     $scope.template = tablistCtrl.getTemplate();
                     $scope.functions = tablistCtrl.getFunctions();
-                    if (angular.isArray($scope.children) && $scope.children.length > 0) {
+                    if (angular.isArray($scope.children)) {
                         $compile("<tablist indent='indent' expanded='expanded' functions='functions' template='template'>" +
                                     $scope.template +
                                 "</tablist>")($scope, function(cloned) {
@@ -142,7 +147,7 @@ app.directive("row", function ($compile) {
     };
 });
 
-app.directive("cell", function () {
+app.directive("cell", function ($timeout) {
     return {
         restrict: "E",
         require: "^row",
@@ -154,6 +159,9 @@ app.directive("cell", function () {
             $scope.isMainColumn = function() {
                 return $element.hasClass("main-column");
             };
+            $scope.expandRow = function() {
+                $timeout($scope.rowCtrl.expand, 0);
+            }
         },
         link: function(scope, element, attrs, rowCtrl) {
             scope.rowCtrl = rowCtrl;
@@ -178,15 +186,17 @@ app.directive('mainColumn', function () {
     }
 });
 
+
+// TODO bug exists causing not changing expander state (class) when new subtask is added
 app.directive("expander", function () {
     return {
         restrict: "E",
         replace: true,
         require: "^row",
-        template: "<span ng-click='expand()' class='tablist-expander' ng-class='{expanded: rowCtrl.isExpanded(), collapsed: !rowCtrl.isExpanded()}'></span>",
+        template: "<span ng-click='toggleExpand()' class='tablist-expander' ng-class='{expanded: rowCtrl.isExpanded(), collapsed: !rowCtrl.isExpanded()}'></span>",
         controller: function ($scope) {
-            $scope.expand = function () {
-                $scope.rowCtrl.expand();
+            $scope.toggleExpand = function () {
+                $scope.rowCtrl.toggleExpand();
             };
         },
         link: function (scope, element, attrs, rowCtrl) {
