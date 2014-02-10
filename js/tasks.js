@@ -37,6 +37,16 @@ app.directive("quickEdit", function() {
     };
 });
 
+app.directive('focusElement', function ($timeout) {
+    return {
+        link: function (scope, element) {
+            $timeout(function () {
+                element[0].focus();
+            });
+        }
+    };
+});
+
 var EditTaskModalCtrl = function($scope, $modalInstance, task) {
     $scope.task = angular.copy(task);
 
@@ -80,7 +90,17 @@ var EditTaskModalCtrl = function($scope, $modalInstance, task) {
     };
 };
 
-function TasksCtrl($scope, TasksService, $modal, $log) {
+var CreateSubtaskModalCtrl = function($scope, $modalInstance) {
+    $scope.ok = function(newSubtaskContent) {
+        $modalInstance.close(newSubtaskContent);
+    };
+
+    $scope.cancel = function() {
+        $modalInstance.dismiss();
+    };
+};
+
+function TasksCtrl($scope, TasksService, $modal, $log, $q) {
     $scope.tasks = TasksService;
     $scope.template = '<row children="task.subtasks" row="task" ng-repeat="task in children" ng-class="{\'taskFinished\': row.finished}" >' +
         '<cell class="taskTick" ng-click="functions.taskFinished(task)"></cell>' +
@@ -117,11 +137,7 @@ function TasksCtrl($scope, TasksService, $modal, $log) {
 
 
     $scope.updateTask = function(task) {
-        if (!task.id) {
-            $log.info('New subtask created: ' + task.title);
-        } else {
-            $log.info('Task ' + task.id + ' updated: ' + task.title);
-        }
+        $log.info('Task ' + task.id + ' updated: ' + task.title);
     };
 
 
@@ -142,9 +158,20 @@ function TasksCtrl($scope, TasksService, $modal, $log) {
     };
 
     $scope.createSubtask = function(task) {
-        $log.info("Subtask created");
-        var subTask = {"title": "test", "subtasks":[]};
-        task.subtasks = task.subtasks.concat([subTask]);
+        var createSubtaskModalInstance = $modal.open({
+            templateUrl: 'createSubtaskModalContent.html',
+            backdrop: 'static',
+            controller: CreateSubtaskModalCtrl
+        });
+        createSubtaskModalInstance.result.then(function(newSubtaskContent) {
+            var subTask = createTaskFromMagicField(newSubtaskContent);
+            $log.info("Subtask " + subTask.title + " created");
+            task.subtasks = task.subtasks.concat([subTask]);
+        });
+    };
+
+    var createTaskFromMagicField = function(content) {
+        return {"id": 666, "title": content, "subtasks": [], "tags": []};
     };
 
     $scope.functions = {

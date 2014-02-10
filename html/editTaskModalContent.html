@@ -4,7 +4,7 @@
         <h3>Edit task</h3>
     </div>
     <div class="modal-body task-edit">
-        <input type="text" placeholder="Task title" ng-model="task.title"/>
+        <input type="text" placeholder="Task title" ng-model="task.title" focus-element />
         <textarea placeholder="You can put additional description here" ng-model="task.description"></textarea>
         <input type="text" placeholder="space separated tags" ng-model="task.tags" ng-value="name" />
         <div style="display: flex; flex-flow: row wrap; justify-content: space-around;">

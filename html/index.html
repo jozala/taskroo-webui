@@ -56,7 +56,7 @@
                         <cell class="taskTitle main-column" quick-edit ng-model="task.title" ng-change="updateTask(task)">{{ task.title }}</cell>
                         <cell class="taskDueDate">{{ task.dueDate | date: 'dd-MM-yyyy' }}</cell>
                         <cell class="taskAction taskEdit" ng-click="openEdit(task)"></cell>
-                        <cell class="taskAction taskSubtask" ng-click="createSubtask(task); expandRow();"></cell>
+                        <cell class="taskAction taskSubtask" ng-click="createSubtask(task);"></cell>
                         <cell class="taskAction taskDel" ng-click="removeTask(task)"></cell>
                     </row>
                 </tablist>

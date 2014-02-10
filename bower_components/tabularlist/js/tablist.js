@@ -132,8 +132,14 @@ app.directive("row", function ($compile, $timeout) {
                 },
                 post: function($scope, $element, $attr, $controllers) {
                     var tablistCtrl = $controllers[0];
+                    var rowCtrl = $controllers[1];
                     $scope.template = tablistCtrl.getTemplate();
                     $scope.functions = tablistCtrl.getFunctions();
+                    $scope.$watch("children", function(newValue, oldValue) {
+                        if (newValue != oldValue) {
+                            $timeout(rowCtrl.expand, 0);
+                        }
+                    });
                     if (angular.isArray($scope.children)) {
                         $compile("<tablist indent='indent' expanded='expanded' functions='functions' template='template'>" +
                                     $scope.template +
@@ -159,9 +165,6 @@ app.directive("cell", function ($timeout) {
             $scope.isMainColumn = function() {
                 return $element.hasClass("main-column");
             };
-            $scope.expandRow = function() {
-                $timeout($scope.rowCtrl.expand, 0);
-            }
         },
         link: function(scope, element, attrs, rowCtrl) {
             scope.rowCtrl = rowCtrl;
@@ -187,7 +190,7 @@ app.directive('mainColumn', function () {
 });
 
 
-// TODO bug exists causing not changing expander state (class) when new subtask is added
+// TODO bug exists causing not changing expander state (class) when new children is added
 app.directive("expander", function () {
     return {
         restrict: "E",

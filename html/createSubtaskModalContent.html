@@ -1,0 +1,14 @@
+
+<div class="modal-header">
+    <button type="button" class="close" ng-click="cancel()">×</button>
+    <h3>Create subtask</h3>
+</div>
+<div class="modal-body" style="height: 45px;">
+    <form ng-submit="ok(newTaskContent)">
+        <input type="text" placeholder="Magic task input" ng-model="newTaskContent" focus-element style="width: 97%;" />
+    </form>
+</div>
+<div class="modal-footer">
+    <button class="btn" ng-click="cancel()">Close</button>
+    <button class="btn btn-primary" ng-click="ok(newTaskContent)">Save changes</button>
+</div>
