@@ -36,7 +36,7 @@ app.directive("tablist", function () {
             template: "=",
             functions: "="
         },
-        template: "<ul class='tabular-list' ng-transclude></ul>",
+        template: "<ol class='tabular-list' ng-transclude></ol>",
         controller: function($scope, $element, $attrs) {
             this.getIndent = function() {
                 var indent = $attrs.indent;
@@ -46,7 +46,7 @@ app.directive("tablist", function () {
                 return indent;
             };
             this.getLevel = function() {
-                return $element.parents('ul').length;
+                return $element.parents('ol').length;
             };
             this.isExpandedAtInit = function() {
                 var expanded = $attrs.expanded === "true";
@@ -62,10 +62,10 @@ app.directive("tablist", function () {
                 return $scope.functions;
             };
             var getIndentFromParent = function() {
-                return $element.parents('ul').last().attr("indent");
+                return $element.parents('ol').last().attr("indent");
             };
             var getExpandedFromParent = function() {
-                return $element.parents('ul').last().attr('expanded') === "true";
+                return $element.parents('ol').last().attr('expanded') === "true";
             };
         }
         
@@ -87,22 +87,22 @@ app.directive("row", function ($compile, $timeout) {
             this.setExpandedInit = function (isExpanded) {
                 this.expanded = isExpanded;
                 if (this.hasParent() && !isExpanded) {
-                    $element.parent("ul").hide();
+                    $element.parent("ol").hide();
                 }
             };
             this.hasParent = function () {
-                return $element.parent("ul").parent().is("li");
+                return $element.parent("ol").parent().is("li");
             };
             this.hasChildren = function () {
                 return $scope.children.length > 0;
             };
             this.expand = function () {
                 this.expanded = true;
-                $element.children("ul").show();
+                $element.children("ol").show();
             };
             this.collapse = function () {
                 this.expanded = false;
-                $element.children("ul").hide();
+                $element.children("ol").hide();
             };
             this.toggleExpand = function () {
                 if (this.expanded === true) {
@@ -118,7 +118,7 @@ app.directive("row", function ($compile, $timeout) {
                 return $scope.tablistCtrl.getIndent();
             };
             this.getLevel = function () {
-                return $element.parents('ul').length - 1;
+                return $element.parents('ol').length - 1;
             };
         },
         compile: function(tElement, tAttrs, linker) {
