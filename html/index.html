@@ -51,7 +51,6 @@
 
             <!-- Nested list template -->
             <script type="text/ng-template" id="table_renderer.html">
-                <!-- TODO do something with this "span" (is it really necessary here?)-->
                 <span>
                     <cell class="taskTick" ng-click="taskFinished(task)"></cell>
                     <cell class='taskTags'><tag-icon ng-repeat='tag in task.tags' color='{{ tag.color }}' name='{{ tag.name }}'></tag-icon></cell>
@@ -72,9 +71,11 @@
 
             <div class="box" ng-controller="TasksCtrl">
                 <tablist indent="15" expanded="false">
-                    <row ng-repeat="task in tasks" ng-class="{'taskFinished': task.finished}" ng-include="'table_renderer.html'"
-                         droppable="task.subtasks" draggable="task">
+                    <li droppable="tasks" style="height: 10px;"></li>
+                    <row ng-repeat="task in tasks" ng-class="{'taskFinished': task.finished}"
+                         droppable="task.subtasks" draggable="task" ng-include="'table_renderer.html'">
                     </row>
+                    <li droppable="tasks" style="height: 10px;"></li>
                 </tablist>
             </div>
         </div>

@@ -53,3 +53,7 @@
 .tabular-list .main-column {
     padding-left: 16px;
 }
+
+.tabular-list .drop-hover {
+    background-color: #819acc;
+}

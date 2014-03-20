@@ -51,11 +51,14 @@ app.directive('focusElement', function ($timeout) {
 app.directive('draggable', function () {
     return {
         link: function (scope, element, attrs) {
-
             element.draggable({
                 revert: "invalid",
                 start: function(event, ui) {
                     scope.setDraggedTask(scope.$eval(attrs.draggable));
+                    element.css("z-index", 1000);
+                },
+                stop: function(event, ui) {
+                    element.css("z-index", 0);
                 }
             });
         }
@@ -65,21 +68,18 @@ app.directive('draggable', function () {
 app.directive('droppable', function () {
     return {
         link: function (scope, element, attrs) {
-            var droppableSubtasks = scope.$eval(attrs.droppable);
+            var droppableChildrenList = scope.$eval(attrs.droppable);
             element.droppable({
                 accept: function(draggable) {
-                    if (!draggable.hasClass("row")) {
-                        return false
-                    }
-                    return scope.$eval(attrs.droppable).indexOf(scope.draggedTask) < 0
+                    return draggable.hasClass("row")
+                        && droppableChildrenList.indexOf(scope.draggedTask) < 0
                         && draggable != element;
                 },
                 hoverClass: "drop-hover",
                 greedy: true,
                 drop: function(event,ui) {
-
                     scope.$apply(function() {
-                        scope.$eval(attrs.droppable).push(scope.draggedTask);
+                        droppableChildrenList.push(scope.draggedTask);
                         scope.removeDraggedTaskFromPreviousPosition();
                     });
                 }
