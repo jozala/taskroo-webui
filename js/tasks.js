@@ -47,7 +47,6 @@ app.directive('focusElement', function ($timeout) {
     };
 });
 
-// TODO refactor if possible to make drag and drop more generic
 app.directive('draggable', function () {
     return {
         link: function (scope, element, attrs) {
@@ -216,7 +215,6 @@ function TasksCtrl($scope, TasksService, $modal, $log) {
     };
 
 
-    // TODO refactor if possible to make drag and drop more generic
     $scope.draggedTask = null;
     $scope.draggedTaskIndex = null;
     $scope.setDraggedTask = function(task) {
