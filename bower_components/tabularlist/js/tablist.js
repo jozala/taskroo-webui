@@ -32,10 +32,6 @@ app.directive("tablist", function () {
         restrict: "E",
         replace: true,
         transclude: true,
-        scope: {
-            template: "=",
-            functions: "="
-        },
         template: "<ol class='tabular-list' ng-transclude></ol>",
         controller: function($scope, $element, $attrs) {
             this.getIndent = function() {
@@ -55,12 +51,6 @@ app.directive("tablist", function () {
                 }
                 return expanded;
             };
-            this.getTemplate = function() {
-                return $scope.template;
-            };
-            this.getFunctions = function() {
-                return $scope.functions;
-            };
             var getIndentFromParent = function() {
                 return $element.parents('ol').last().attr("indent");
             };
@@ -72,37 +62,30 @@ app.directive("tablist", function () {
     };
 });
 
-app.directive("row", function ($compile, $timeout) {
+app.directive("row", function () {
     return {
         restrict: "E",
         replace: true,
         require: ["^tablist", "row"],
-        transclude: true,
-        scope: {
-            row: "=",
-            children: "="
-        },
-        template: "<li class='row'><span ng-transclude></span></li>",
+        scope: {},
+        template: "<li class='row'></li>",
         controller: function ($scope, $element) {
             this.setExpandedInit = function (isExpanded) {
                 this.expanded = isExpanded;
-                if (this.hasParent() && !isExpanded) {
-                    $element.parent("ol").hide();
+                if (!isExpanded) {
+                    this.collapse();
                 }
             };
-            this.hasParent = function () {
-                return $element.parent("ol").parent().is("li");
-            };
             this.hasChildren = function () {
-                return $scope.children.length > 0;
+                return $element.find("li").length > 0;
             };
             this.expand = function () {
                 this.expanded = true;
-                $element.children("ol").show();
+                $element.find("ol").first().show();
             };
             this.collapse = function () {
                 this.expanded = false;
-                $element.children("ol").hide();
+                $element.find("ol").first().hide();
             };
             this.toggleExpand = function () {
                 if (this.expanded === true) {
@@ -121,39 +104,23 @@ app.directive("row", function ($compile, $timeout) {
                 return $element.parents('ol').length - 1;
             };
         },
-        compile: function(tElement, tAttrs, linker) {
+        compile: function() {
             return  {
                 pre: function($scope, $element, $attr, $controllers) {
-                        var tablistCtrl = $controllers[0];
-                        var rowCtrl = $controllers[1];
-                        $scope.tablistCtrl = tablistCtrl;
-                        rowCtrl.setExpandedInit(tablistCtrl.isExpandedAtInit());
-
+                    $scope.tablistCtrl = $controllers[0];
                 },
                 post: function($scope, $element, $attr, $controllers) {
                     var tablistCtrl = $controllers[0];
                     var rowCtrl = $controllers[1];
-                    $scope.template = tablistCtrl.getTemplate();
-                    $scope.functions = tablistCtrl.getFunctions();
-                    $scope.$watch("children", function(newValue, oldValue) {
-                        if (newValue != oldValue) {
-                            $timeout(rowCtrl.expand, 0);
-                        }
-                    });
-                    if (angular.isArray($scope.children)) {
-                        $compile("<tablist indent='indent' expanded='expanded' functions='functions' template='template'>" +
-                                    $scope.template +
-                                "</tablist>")($scope, function(cloned) {
-                            $element.append(cloned);
-                        });
-                    }
+
+                    rowCtrl.setExpandedInit(tablistCtrl.isExpandedAtInit());
                 }
             };
         }
     };
 });
 
-app.directive("cell", function ($timeout) {
+app.directive("cell", function () {
     return {
         restrict: "E",
         require: "^row",
@@ -165,6 +132,9 @@ app.directive("cell", function ($timeout) {
             $scope.isMainColumn = function() {
                 return $element.hasClass("main-column");
             };
+            $scope.expand = function() {
+                $scope.rowCtrl.expand();
+            }
         },
         link: function(scope, element, attrs, rowCtrl) {
             scope.rowCtrl = rowCtrl;
@@ -189,8 +159,6 @@ app.directive('mainColumn', function () {
     }
 });
 
-
-// TODO bug exists causing not changing expander state (class) when new children is added
 app.directive("expander", function () {
     return {
         restrict: "E",

@@ -47,6 +47,47 @@ app.directive('focusElement', function ($timeout) {
     };
 });
 
+// TODO refactor if possible to make drag and drop more generic
+app.directive('draggable', function () {
+    return {
+        link: function (scope, element, attrs) {
+
+            element.draggable({
+                revert: "invalid",
+                start: function(event, ui) {
+                    scope.setDraggedTask(scope.$eval(attrs.draggable));
+                }
+            });
+        }
+    }
+});
+
+app.directive('droppable', function () {
+    return {
+        link: function (scope, element, attrs) {
+            var droppableSubtasks = scope.$eval(attrs.droppable);
+            element.droppable({
+                accept: function(draggable) {
+                    if (!draggable.hasClass("row")) {
+                        return false
+                    }
+                    return scope.$eval(attrs.droppable).indexOf(scope.draggedTask) < 0
+                        && draggable != element;
+                },
+                hoverClass: "drop-hover",
+                greedy: true,
+                drop: function(event,ui) {
+
+                    scope.$apply(function() {
+                        scope.$eval(attrs.droppable).push(scope.draggedTask);
+                        scope.removeDraggedTaskFromPreviousPosition();
+                    });
+                }
+            });
+        }
+    }
+});
+
 var EditTaskModalCtrl = function($scope, $modalInstance, task) {
     $scope.task = angular.copy(task);
 
@@ -174,12 +215,43 @@ function TasksCtrl($scope, TasksService, $modal, $log) {
         return {"id": 666, "title": content, "subtasks": [], "tags": []};
     };
 
-    $scope.functions = {
-        "updateTask": $scope.updateTask,
-        "openEdit": $scope.openEdit,
-        "removeTask": $scope.removeTask,
-        "taskFinished": $scope.taskFinished,
-        "createSubtask": $scope.createSubtask
+
+    // TODO refactor if possible to make drag and drop more generic
+    $scope.draggedTask = null;
+    $scope.draggedTaskIndex = null;
+    $scope.setDraggedTask = function(task) {
+        $scope.draggedTask = task;
+        $scope.draggedTaskPosition = findTaskPosition(task, $scope.tasks);
+        if ($scope.draggedTaskPosition == -1) {
+            throw "Dragged task's position not found" + task;
+        }
     };
+
+    var findTaskPosition = function(task, tasksArray) {
+        for (var i in tasksArray) {
+            if (tasksArray[i] == task) {
+                return [i];
+            }
+            var inResult = findTaskPosition(task, tasksArray[i].subtasks);
+            if (inResult != -1) {
+                inResult.push(i);
+                return inResult;
+            }
+        }
+        return -1;
+    };
+
+    var removeTaskOnPosition = function(draggedTaskPosition, tasksArray) {
+        if (draggedTaskPosition.length == 1) {
+            tasksArray.splice($scope.draggedTaskPosition.pop(), 1);
+            return;
+        }
+        var positionOnThisLevel = draggedTaskPosition.pop();
+        removeTaskOnPosition(draggedTaskPosition, tasksArray[positionOnThisLevel].subtasks);
+    };
+
+    $scope.removeDraggedTaskFromPreviousPosition = function() {
+        removeTaskOnPosition($scope.draggedTaskPosition, $scope.tasks);
+    }
 
 }

@@ -5,7 +5,7 @@
     <link rel="stylesheet" href="../bower_components/bootstrap/docs/assets/css/bootstrap.css"/>
     <link rel="stylesheet" href="../style/tabular-list.css"/>
     <link rel="stylesheet" href="../style/main.css"/>
-    
+
     <title>GTWeb - New Better Best</title>
 </head>
 <body>
@@ -48,16 +48,32 @@
                 </div>
 
             </div>
+
+            <!-- Nested list template -->
+            <script type="text/ng-template" id="table_renderer.html">
+                <!-- TODO do something with this "span" (is it really necessary here?)-->
+                <span>
+                    <cell class="taskTick" ng-click="taskFinished(task)"></cell>
+                    <cell class='taskTags'><tag-icon ng-repeat='tag in task.tags' color='{{ tag.color }}' name='{{ tag.name }}'></tag-icon></cell>
+                    <cell class="taskTitle main-column" quick-edit ng-model="task.title" ng-change="updateTask(task)">{{ task.title }}</cell>
+                    <cell class="taskDueDate">{{ task.dueDate | date: 'dd-MM-yyyy' }}</cell>
+                    <cell class="taskAction taskEdit" ng-click="openEdit(task)"></cell>
+                    <cell class="taskAction taskSubtask" ng-click="createSubtask(task); expand()"></cell>
+                    <cell class="taskAction taskDel" ng-click="removeTask(task)"></cell>
+                </span>
+                <div>
+                    <tablist>
+                        <row ng-repeat="task in task.subtasks" ng-class="{'taskFinished': task.finished}" ng-include="'table_renderer.html'"
+                             droppable="task.subtasks" draggable="task">
+                        </row>
+                    </tablist>
+                </div>
+            </script>
+
             <div class="box" ng-controller="TasksCtrl">
-                <tablist indent="15" expanded="false" functions="functions" template="template" >
-                    <row children="task.subtasks" row="task" ng-repeat="task in tasks" ng-class="{'taskFinished': row.finished}" >
-                        <cell class="taskTick" ng-click="taskFinished(task)"></cell>
-                        <cell class='taskTags'><tag-icon ng-repeat='tag in task.tags' color='{{ tag.color }}' name='{{ tag.name }}'></tag-icon></cell>
-                        <cell class="taskTitle main-column" quick-edit ng-model="task.title" ng-change="updateTask(task)">{{ task.title }}</cell>
-                        <cell class="taskDueDate">{{ task.dueDate | date: 'dd-MM-yyyy' }}</cell>
-                        <cell class="taskAction taskEdit" ng-click="openEdit(task)"></cell>
-                        <cell class="taskAction taskSubtask" ng-click="createSubtask(task);"></cell>
-                        <cell class="taskAction taskDel" ng-click="removeTask(task)"></cell>
+                <tablist indent="15" expanded="false">
+                    <row ng-repeat="task in tasks" ng-class="{'taskFinished': task.finished}" ng-include="'table_renderer.html'"
+                         droppable="task.subtasks" draggable="task">
                     </row>
                 </tablist>
             </div>
@@ -72,6 +88,7 @@
 
 <script type="text/javascript" src="../bower_components/jquery/jquery.js"></script>
 <script type="text/javascript" src="../bower_components/angular/angular.js"></script>
+<script type="text/javascript" src="../bower_components/jquery-ui/ui/jquery-ui.js"></script>
 <script type="text/javascript" src="../bower_components/angular-bootstrap/ui-bootstrap-tpls.js"></script>
 <script type="text/javascript" src="../js/main.js"></script>
 <script type="text/javascript" src="../js/tags.js"></script>
