@@ -2,7 +2,8 @@
 <html>
 <head>
     <meta http-equiv="content-type" content="text/html; charset=UTF-8"/>
-    <link rel="stylesheet" href="../bower_components/bootstrap/dist/css/bootstrap.css"/>
+    <link rel="stylesheet" href="../bower_components/bootstrap/dist/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="../bower_components/bootstrap-switch/build/css/bootstrap3/bootstrap-switch.min.css"/>
     <link rel="stylesheet" href="../style/tabular-list.css"/>
     <link rel="stylesheet" href="../style/main.css"/>
 
@@ -20,27 +21,39 @@
         <div style="clear: both;"></div>
         <div class="tags-box">
             <ul class="tags-list">
-                <tag name="All tags" size="13">All tags</tag>
-                <tag name="Tasks without tags" size="0">Tasks without tags</tag>
-                <tag ng-repeat="tag in tags" data-id="{{ tag.id }}" color="{{ tag.color }}" name="{{ tag.name }}" size="5">{{ tag.name }}</tag>
+                <tag name="All tags">All tags</tag>
+                <tag name="Tasks without tags">Tasks without tags</tag>
+                <tag ng-repeat="tag in tags" ng-model="tag" context-menu-toggle="#tag-edit-context-menu-{{ tag.id }}" >
+                    {{ tag.name }}
+                    <div class="tag-edit-context-menu" id="tag-edit-context-menu-{{ tag.id }}">
+                        <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu">
+                            <li><a tabindex="-1" href="#" ng-click="editTag(tag)">Edit tag</a></li>
+                            <li><a tabindex="-1" href="#" ng-click="removeTag(tag)">Remove tag</a></li>
+                        </ul>
+                    </div>
+                </tag>
+
             </ul>
         </div>
     </nav>
-    <section id="body">
+    <section id="body" ng-controller="TasksCtrl">
         <div>
             <div id="top-bar">
                 <form id="add-task-form" class="top-box" name="task" action="" method="POST" accept-charset="utf-8">
-                    <input placeholder="What about creating new task?" type="text" name="taskInput"/>
-                    <input type="submit" value="Add" class="btn btn-primary"/>
+                    <input placeholder="What about creating a new task?" type="text" name="taskInput"/>
+                    <input type="submit" value="Add" class="btn btn-warning"/>
                 </form>
 
                 <div id="view-bar" class="top-box btn-group">
-                    <button class="btn btn-primary btn-workview" data-toggle="button">Work View</button>
-                    <button class="btn btn-primary dropdown-toggle" data-toggle="dropdown">
+                    <button type="button" ng-model="workview" class="btn btn-warning btn-workview" btn-checkbox btn-checkbox-true="1" btn-checkbox-false="0">
+                        Work View
+                    </button>
+                    <button class="btn btn-warning dropdown-toggle" data-toggle="dropdown">
                         <span class="caret"></span>
                     </button>
                     <ul class="dropdown-menu">
                         <li id="show-finished-tasks-button"><a href="#">Show finished tasks</a></li>
+                        <li id="test-button"><a href="#">Something else</a></li>
                         <li id="show-unfinished-tasks-button" style="display: none;">
                             <a href="#">Show unfinished tasks</a>
                         </li>
@@ -53,7 +66,7 @@
             <script type="text/ng-template" id="table_renderer.html">
                 <span>
                     <cell class="taskTick" ng-click="taskFinished(task)"></cell>
-                    <cell class='taskTags'><tag-icon ng-repeat='tag in task.tags' color='{{ tag.color }}' name='{{ tag.name }}'></tag-icon></cell>
+                    <cell class='taskTags'><tag-icon ng-repeat='tag in task.tags' ng-model="tag"></tag-icon></cell>
                     <cell class="taskTitle main-column" quick-edit ng-model="task.title" ng-change="updateTask(task)">{{ task.title }}</cell>
                     <cell class="taskDueDate">{{ task.dueDate | date: 'dd-MM-yyyy' }}</cell>
                     <cell class="taskAction taskEdit" ng-click="openEdit(task)"></cell>
@@ -69,7 +82,7 @@
                 </div>
             </script>
 
-            <div class="box" ng-controller="TasksCtrl">
+            <div class="box">
                 <tablist indent="15" expanded="false">
                     <li droppable="tasks" style="height: 10px;"></li>
                     <row ng-repeat="task in tasks" ng-class="{'taskFinished': task.finished}"
@@ -88,15 +101,16 @@
 
 
 <script type="text/javascript" src="../bower_components/jquery/dist/jquery.min.js"></script>
-<script type="text/javascript" src="../bower_components/angular/angular.js"></script>
-<script type="text/javascript" src="../bower_components/jquery-ui/ui/jquery-ui.js"></script>
-<script type="text/javascript" src="../bower_components/angular-bootstrap/ui-bootstrap-tpls.js"></script>
+<script type="text/javascript" src="../bower_components/angular/angular.min.js"></script>
+<script type="text/javascript" src="../bower_components/jquery-ui/ui/minified/jquery-ui.min.js"></script>
+<script type="text/javascript" src="../bower_components/angular-bootstrap/ui-bootstrap-tpls.min.js"></script>
 <script type="text/javascript" src="../js/main.js"></script>
 <script type="text/javascript" src="../js/tags.js"></script>
 <script type="text/javascript" src="../js/tasks.js"></script>
 <script type="text/javascript" src="../bower_components/tabularlist/js/tablist.js"></script>
-<script type="text/javascript" src="../bower_components/momentjs/moment.js"></script>
-
+<script type="text/javascript" src="../bower_components/momentjs/min/moment.min.js"></script>
+<script type="text/javascript" src="../js/bootstrap-contextmenu.js"></script>
+<script type="text/javascript" src="../bower_components/bootstrap-switch/build/js/bootstrap-switch.min.js"></script>
 
 </body>
 </html>

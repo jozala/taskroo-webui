@@ -42,3 +42,6 @@ body>footer {
 #logout-link {
     margin-right: 10px;
 }
+
+/* angular fix for angular bootstrap */
+.nav, .pagination, .carousel, .panel-title a { cursor: pointer; }

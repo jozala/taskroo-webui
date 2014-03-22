@@ -1,0 +1,20 @@
+
+<div class="modal-header">
+    <button type="button" class="close" ng-click="cancel()">×</button>
+    <h3>Edit tag: {{ tag.name }}</h3>
+</div>
+<div class="modal-body task-edit">
+    <label for="tag-name" style="width: 70px;">Name: </label>
+    <input id="tag-name" type="text" placeholder="Tag name" ng-model="tag.name" focus-element style="width: 80%" />
+    <br />
+    <label for="tag-color" style="width: 70px;">Color: </label>
+    <input id="tag-color" type="color" ng-model="tag.color" style="width: 80%;" />
+    <br />
+    <br />
+    <label for="tag-in-workview">Visible in Workview</label><br />
+    <input id="tag-in-workview" type="checkbox" bootstrap-switch />
+</div>
+<div class="modal-footer">
+    <button class="btn" ng-click="cancel()">Close</button>
+    <button class="btn btn-primary" ng-click="ok(tag)">Save changes</button>
+</div>

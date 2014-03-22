@@ -142,15 +142,6 @@ var CreateSubtaskModalCtrl = function($scope, $modalInstance) {
 
 function TasksCtrl($scope, TasksService, $modal, $log) {
     $scope.tasks = TasksService;
-    $scope.template = '<row children="task.subtasks" row="task" ng-repeat="task in children" ng-class="{\'taskFinished\': row.finished}" >' +
-        '<cell class="taskTick" ng-click="functions.taskFinished(task)"></cell>' +
-        '<cell class="taskTags"><tag-icon ng-repeat="tag in task.tags" color="{{ tag.color }}" name="{{ tag.name }}"></tag-icon></cell>' +
-        '<cell class="taskTitle main-column" quick-edit ng-model="task.title" ng-change="functions.updateTask(task)" ui-nested-sortable-handle>{{ task.title }}</cell>' +
-        '<cell class="taskDueDate">{{ task.dueDate | date: "dd-MM-yyyy" }}</cell>' +
-        '<cell class="taskAction taskEdit" ng-click="functions.openEdit(task)"></cell>' +
-        '<cell class="taskAction taskSubtask" ng-click="functions.createSubtask(task)"></cell>' +
-        '<cell class="taskAction taskDel" ng-click="functions.removeTask(task)"></cell>' +
-        '</row>';
 
     $scope.taskFinished = function(task) {
         $log.info('Task ' + task.id + ' finished: ' + !task.finished);

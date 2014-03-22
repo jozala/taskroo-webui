@@ -7,7 +7,6 @@
     position: fixed;
     height: 100%;
     box-shadow: 8px 0 12px black;
-/*    overflow-y: auto;*/
 }
 
 
@@ -70,16 +69,13 @@ div.tags-box {
 
 ul.tags-list {
     padding: 0;
-    margin: 0;
     padding-bottom: 42px;
-    
+    display: relative;
 }
 
-ul.tags-list li {
+ul.tags-list li.tag {
     display: flex;
-    padding: 0;
-    margin: 0;
-    padding: 11px 0px 11px 13px;
+    padding: 11px 0 11px 13px;
     border-bottom: 1px solid #e7e7e7;
     cursor: pointer;
     font-size: 11pt;
@@ -92,4 +88,14 @@ ul.tags-list .tagIcon {
 
 .active-tag {
     background-color: #f5af39;
+}
+
+.tag-name {
+    width: 200px;
+}
+
+/* Badges */
+
+#left-sidebar .badge {
+    height: 18px;
 }
