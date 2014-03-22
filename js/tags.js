@@ -1,5 +1,7 @@
-function TagsCtrl($scope, TagsService, $modal, $log) {
+function TagsCtrl($scope, TagsService, TagsFilteringService, $modal, $log) {
     $scope.tags = TagsService;
+    $scope.tags.forEach(function(tag) {tag.selected = false});
+    $scope.tagFilter = TagsFilteringService;
 
     $scope.editTag = function(tag) {
         var editTaskModalInstance = $modal.open({
@@ -32,6 +34,15 @@ function TagsCtrl($scope, TagsService, $modal, $log) {
 
     $scope.updateTag = function(tag) {
         $log.info("tag: id=" + tag.id + " " + tag.name + " updated");
+    };
+
+    $scope.selectTag = function(tag) {
+        $scope.tags.forEach(function(tag) {tag.selected = false});
+
+        if (tag != "ALL" && tag != "NONE") {
+            tag.selected = true;
+        }
+        $scope.tagFilter.selectedTag = tag;
     }
 }
 
@@ -96,16 +107,6 @@ app.directive("contextMenuToggle", function() {
                     return true;
                 }
             });
-        }
-    }
-});
-
-app.directive("bootstrapSwitch", function() {
-    return {
-        link: function (scope, element, attr) {
-            element.bootstrapSwitch();
-            element.attr("data-on-color", "warning");
-            element.attr("data-off-color", "info");
         }
     }
 });

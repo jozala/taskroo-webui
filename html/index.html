@@ -13,17 +13,17 @@
 
 
 <div class="main-window" ng-app="GTWeb">
-    <nav id="left-sidebar" ng-controller="TagsCtrl">
-        <form id="search-form">
-            <input type="text" placeholder="Search" id="search-field" class="input"/>
-            <input type="submit" id="search-button" class="input" value=""/>
+    <nav id="left-sidebar" >
+        <form id="search-form" ng-controller="SearchCtrl">
+            <input type="text" placeholder="Search" id="search-field" class="input" ng-model="search.searchString"/>
+            <input type="submit" id="search-button" class="input" value="" />
         </form>
         <div style="clear: both;"></div>
-        <div class="tags-box">
+        <div class="tags-box" ng-controller="TagsCtrl">
             <ul class="tags-list">
-                <tag name="All tags">All tags</tag>
-                <tag name="Tasks without tags">Tasks without tags</tag>
-                <tag ng-repeat="tag in tags" ng-model="tag" context-menu-toggle="#tag-edit-context-menu-{{ tag.id }}" >
+                <tag name="All tags" ng-class="{'active-tag': tagFilter.selectedTag == 'ALL'}" ng-click="selectTag('ALL')">All tags</tag>
+                <tag name="Tasks without tags" ng-class="{'active-tag': tagFilter.selectedTag == 'NONE'}" ng-click="selectTag('NONE')">Tasks without tags</tag>
+                <tag ng-class='{"active-tag": tag.selected}' ng-repeat="tag in tags" ng-model="tag" context-menu-toggle="#tag-edit-context-menu-{{ tag.id }}" ng-click="selectTag(tag)" >
                     {{ tag.name }}
                     <div class="tag-edit-context-menu" id="tag-edit-context-menu-{{ tag.id }}">
                         <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu">
@@ -45,18 +45,15 @@
                 </form>
 
                 <div id="view-bar" class="top-box btn-group">
-                    <button type="button" ng-model="workview" class="btn btn-warning btn-workview" btn-checkbox btn-checkbox-true="1" btn-checkbox-false="0">
+                    <button type="button" ng-model="workview" class="btn btn-warning btn-workview" btn-checkbox>
                         Work View
                     </button>
                     <button class="btn btn-warning dropdown-toggle" data-toggle="dropdown">
                         <span class="caret"></span>
                     </button>
                     <ul class="dropdown-menu">
-                        <li id="show-finished-tasks-button"><a href="#">Show finished tasks</a></li>
-                        <li id="test-button"><a href="#">Something else</a></li>
-                        <li id="show-unfinished-tasks-button" style="display: none;">
-                            <a href="#">Show unfinished tasks</a>
-                        </li>
+                        <li id="show-finished-tasks-button" ng-show="showUnfinished" ng-click="showUnfinished = false"><a href="#">Show finished tasks</a></li>
+                        <li id="show-unfinished-tasks-button" ng-hide="showUnfinished" ng-click="showUnfinished = true"><a href="#">Show unfinished tasks</a></li>
                     </ul>
                 </div>
 
@@ -68,14 +65,15 @@
                     <cell class="taskTick" ng-click="taskFinished(task)"></cell>
                     <cell class='taskTags'><tag-icon ng-repeat='tag in task.tags' ng-model="tag"></tag-icon></cell>
                     <cell class="taskTitle main-column" quick-edit ng-model="task.title" ng-change="updateTask(task)">{{ task.title }}</cell>
-                    <cell class="taskDueDate">{{ task.dueDate | date: 'dd-MM-yyyy' }}</cell>
+                    <cell ng-if="!task.finished" class="taskDueDate">{{ task.dueDate | date: 'dd-MM-yyyy' }}</cell>
+                    <cell ng-if="task.finished" class="taskDueDate">{{ task.closedDate | date: 'dd-MM-yyyy' }}</cell>
                     <cell class="taskAction taskEdit" ng-click="openEdit(task)"></cell>
                     <cell class="taskAction taskSubtask" ng-click="createSubtask(task); expand()"></cell>
                     <cell class="taskAction taskDel" ng-click="removeTask(task)"></cell>
                 </span>
                 <div>
                     <tablist>
-                        <row ng-repeat="task in task.subtasks" ng-class="{'taskFinished': task.finished}" ng-include="'table_renderer.html'"
+                        <row ng-repeat="task in task.subtasks | orderBy:tasksOrderPredicate:false | filter:searchTask" ng-class="{'taskFinished': task.finished}" ng-include="'table_renderer.html'"
                              droppable="task.subtasks" draggable="task">
                         </row>
                     </tablist>
@@ -85,7 +83,7 @@
             <div class="box">
                 <tablist indent="15" expanded="false">
                     <li droppable="tasks" style="height: 10px;"></li>
-                    <row ng-repeat="task in tasks" ng-class="{'taskFinished': task.finished}"
+                    <row ng-repeat="task in tasks | orderBy:tasksOrderPredicate:false | filter:searchTask" ng-class="{'taskFinished': task.finished}"
                          droppable="task.subtasks" draggable="task" ng-include="'table_renderer.html'">
                     </row>
                     <li droppable="tasks" style="height: 10px;"></li>
@@ -99,18 +97,21 @@
 </footer>
 
 
-
-<script type="text/javascript" src="../bower_components/jquery/dist/jquery.min.js"></script>
+<!-- TODO testdata.js should be removed before release -->
+<script type="text/javascript" src="../js/testdata.js"></script>
+<script type="text/javascript" src="../bower_components/jquery/jquery.min.js"></script>
 <script type="text/javascript" src="../bower_components/angular/angular.min.js"></script>
 <script type="text/javascript" src="../bower_components/jquery-ui/ui/minified/jquery-ui.min.js"></script>
 <script type="text/javascript" src="../bower_components/angular-bootstrap/ui-bootstrap-tpls.min.js"></script>
 <script type="text/javascript" src="../js/main.js"></script>
 <script type="text/javascript" src="../js/tags.js"></script>
 <script type="text/javascript" src="../js/tasks.js"></script>
+<script type="text/javascript" src="../js/search.js"></script>
 <script type="text/javascript" src="../bower_components/tabularlist/js/tablist.js"></script>
 <script type="text/javascript" src="../bower_components/momentjs/min/moment.min.js"></script>
 <script type="text/javascript" src="../js/bootstrap-contextmenu.js"></script>
 <script type="text/javascript" src="../bower_components/bootstrap-switch/build/js/bootstrap-switch.min.js"></script>
+<script type="text/javascript" src="../bower_components/angular-bootstrap-switch/dist/angular-bootstrap-switch.min.js"></script>
 
 </body>
 </html>

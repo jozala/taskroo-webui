@@ -140,8 +140,92 @@ var CreateSubtaskModalCtrl = function($scope, $modalInstance) {
     };
 };
 
-function TasksCtrl($scope, TasksService, $modal, $log) {
+function TasksCtrl($scope, TasksService, SearchService, TagsFilteringService, $modal, $log) {
     $scope.tasks = TasksService;
+    $scope.search = SearchService;
+    $scope.tagFilter = TagsFilteringService;
+    $scope.workview = false;
+    $scope.showUnfinished = true;
+    $scope.tasksOrderPredicate = "dueDate";
+
+    $scope.searchTask = function(task) {
+        return searchInTaskAndSubtasks(task, $scope.search.searchString.toLowerCase());
+    };
+
+    var searchInTaskAndSubtasks = function(task, searchPhrase) {
+        if (task.finished == $scope.showUnfinished) return false;
+        if (task.title.toLowerCase().indexOf(searchPhrase) != -1 || (task.description != null && task.description.toLowerCase().indexOf(searchPhrase) != -1)) {
+            return true;
+        }
+        if (task.subtasks.length == 0) return false;
+        return task.subtasks.some(function(task) {return searchInTaskAndSubtasks(task, searchPhrase)})
+    };
+
+
+    var filterTasksByTag = function(tasks, tagToFilter) {
+        return tasks.reduce(function(previousValue, currentTask) {
+            if (currentTask.tags.some(function(taskTag) {return taskTag.id == tagToFilter.id})) {
+                return previousValue.concat(currentTask);
+            }
+            return previousValue.concat(filterTasksByTag(currentTask.subtasks, tagToFilter));
+        }, []);
+    };
+
+    var filterTasksWithNoTag = function(tasks) {
+        return tasks.reduce(function(previousValue, currentTask) {
+            if (currentTask.tags.length == 0) {
+                return previousValue.concat(currentTask);
+            }
+            return previousValue.concat(filterTasksWithNoTag(currentTask.subtasks));
+        }, []);
+    };
+
+    $scope.$watch('workview', function(workViewValue) {
+        if (workViewValue) {
+            $scope.tasks = getWorkViewTasks($scope.tasks);
+        } else {
+            $scope.tasks = TasksService;
+        }
+    });
+
+    $scope.$watch('tagFilter.selectedTag', function(newSelectedTag) {
+        if (newSelectedTag === "ALL") {
+            $scope.tasks = TasksService;
+        } else if (newSelectedTag == "NONE") {
+            $scope.tasks = filterTasksWithNoTag(TasksService);
+        } else {
+            $scope.tasks = filterTasksByTag(TasksService, newSelectedTag);
+        }
+    });
+
+    var getWorkViewTasks = function (tasks) {
+        return tasks.reduce(function(previousValue, currentTask) {
+            if (currentTask.subtasks.length == 0 && currentTask.tags.some(function(tag) {return tag.visibleInWorkView})) {
+                return previousValue.concat(currentTask);
+            }
+            return previousValue.concat(getWorkViewTasks(currentTask.subtasks));
+        }, []);
+    };
+
+    var getFinishedTasks = function(tasks) {
+        return tasks.reduce(function(previousValue, currentTask) {
+            if (currentTask.finished) {
+                previousValue.push(currentTask);
+                return previousValue.concat(currentTask.subtasks);
+            }
+            return previousValue.concat(getFinishedTasks(currentTask.subtasks));
+        }, []);
+    };
+
+    $scope.$watch("showUnfinished", function(newShowUnfinished) {
+       if (newShowUnfinished) {
+           $scope.tasksOrderPredicate = ["dueDate", "createdDate"];
+           $scope.tasks = TasksService;
+       } else {
+           $scope.tasksOrderPredicate = "-closedDate";
+           $scope.tasks = getFinishedTasks(TasksService);
+       }
+    });
 
     $scope.taskFinished = function(task) {
         $log.info('Task ' + task.id + ' finished: ' + !task.finished);
@@ -241,6 +325,8 @@ function TasksCtrl($scope, TasksService, $modal, $log) {
 
     $scope.removeDraggedTaskFromPreviousPosition = function() {
         removeTaskOnPosition($scope.draggedTaskPosition, $scope.tasks);
-    }
+    };
+
+    // TODO parsing of the magic input to task
 
 }
