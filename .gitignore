@@ -2,6 +2,7 @@
 *.ipr
 *.iws
 .idea/
+node_modules/
 nbproject/
 bower_components/angular-bootstrap/
 bower_components/angular/
