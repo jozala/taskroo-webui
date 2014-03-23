@@ -79,13 +79,43 @@ describe("The magic input parser", function() {
         expect(task.tags).toEqual([]);
     });
 
-//    it("should parse 'today' in the dates to the proper date", function() {
-//        var input = "This task has a due date start:today due:today";
-//        var task = magicParser.parse(input);
-//        var todayInMilliseconds = moment().startOf('day').valueOf();
-//        expect(task.startingOn).toEqual(todayInMilliseconds);
-//        expect(task.dueDate).toEqual(todayInMilliseconds);
-//    });
+    it("should parse 'today' in the dates to the proper date", function() {
+        var input = "This task has a due date start:today due:today";
+        var task = magicParser.parse(input);
+        var todayInMilliseconds = moment().startOf('day').valueOf();
+        expect(task.startingOn).toEqual(todayInMilliseconds);
+        expect(task.dueDate).toEqual(todayInMilliseconds);
+    });
+
+    it("should parse 'tomorrow' in the dates to the proper date", function() {
+        var input = "This task has a due date defer:tomorrow due:tomorrow";
+        var task = magicParser.parse(input);
+        var tomorrowInMilliseconds = moment().startOf('day').add(1, 'day').valueOf();
+        expect(task.startingOn).toEqual(tomorrowInMilliseconds);
+        expect(task.dueDate).toEqual(tomorrowInMilliseconds);
+    });
+
+    it("should leave date commands in title as it is when date is in invalid format", function() {
+        var input = "This task has a due date start:wrongFormatDate";
+        var task = magicParser.parse(input);
+        expect(task.startingOn).toBeUndefined();
+        expect(task.title).toBe(input);
+    });
+
+    it("should parse 'monday' and other days strings in the date commands to the proper date in future", function() {
+        var input = "This task has a due date start:monday due:sunday";
+        var task = magicParser.parse(input);
+        var nextMondayInMilliseconds = moment().day('Monday').startOf('day').valueOf();
+        if (nextMondayInMilliseconds <= moment().startOf('day').valueOf()) {
+            nextMondayInMilliseconds = moment().add(7, 'day').day('Monday').startOf('day').valueOf();
+        }
+        var nextSundayInMilliseconds = moment().day('Sunday').startOf('day').valueOf();
+        if (nextSundayInMilliseconds <= moment().startOf('day').valueOf()) {
+            nextSundayInMilliseconds = moment().add(7, 'day').day('Sunday').startOf('day').valueOf();
+        }
+        expect(task.startingOn).toEqual(nextMondayInMilliseconds);
+        expect(task.dueDate).toEqual(nextSundayInMilliseconds);
+    });
 
 });
 

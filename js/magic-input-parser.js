@@ -2,9 +2,9 @@
 
 function MagicInputParser() {
 
-    MagicInputParser.dueDateRegex = /due:(\d{8})/;
-    MagicInputParser.deferDateRegex = /defer:(\d{8})/;
-    MagicInputParser.startDateRegex = /start:(\d{8})/;
+    MagicInputParser.dueDateRegex = /due:([^\s]*)/;
+    MagicInputParser.deferDateRegex = /defer:([^\s]*)/;
+    MagicInputParser.startDateRegex = /start:([^\s]*)/;
     MagicInputParser.tagsRegex = /tags:([^\s]*)/;
     MagicInputParser.tagAtRegex = /\s@([^\s]*)/g;
     MagicInputParser.tagAtOnTheStartRegex = /^@([^\s]*)/g;
@@ -13,23 +13,17 @@ function MagicInputParser() {
         {
             regex: MagicInputParser.dueDateRegex,
             taskField: "dueDate",
-            assignFn: function (value) {
-                return moment(value, "YYYYMMDD").valueOf();
-            }
+            assignFn: MagicInputParser.parseDate
         },
         {
             regex: MagicInputParser.deferDateRegex,
             taskField: "startingOn",
-            assignFn: function (value) {
-                return moment(value, "YYYYMMDD").valueOf();
-            }
+            assignFn: MagicInputParser.parseDate
         },
         {
             regex: MagicInputParser.startDateRegex,
             taskField: "startingOn",
-            assignFn: function (value) {
-                return moment(value, "YYYYMMDD").valueOf();
-            }
+            assignFn: MagicInputParser.parseDate
         },
         {
             regex: MagicInputParser.tagsRegex,
@@ -41,7 +35,24 @@ function MagicInputParser() {
     ];
 
     MagicInputParser.parseDate = function(input) {
-        return moment(value, "YYYYMMDD").valueOf();
+        if (input.toLowerCase() == 'today') {
+            return moment().startOf('day').valueOf();
+        }
+        if (input.toLowerCase() == 'tomorrow') {
+            return moment().startOf('day').add(1, 'day').valueOf();
+        }
+        var correctDays = ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'];
+        if (correctDays.some(function(day) { return day == input.toLowerCase() })) {
+            var indexOfDay = correctDays.indexOf(input.toLowerCase());
+            if (moment().day(indexOfDay).startOf('day') <= moment().startOf('day')) {
+                return moment().add(7, 'day').day(indexOfDay).startOf('day').valueOf();
+            }
+            return moment().day(indexOfDay).startOf('day').valueOf();
+        }
+        if (!moment(input, "YYYYMMDD").isValid()) {
+            return undefined;
+        }
+        return moment(input, "YYYYMMDD").valueOf();
     };
 }
 
@@ -53,8 +64,11 @@ MagicInputParser.prototype.parse = function (input) {
     MagicInputParser.commands.forEach(function (command) {
         var commandPart = input.match(command.regex);
         if (commandPart) {
-            task.title = task.title.split(commandPart[0]).join("").trim();
-            task[command.taskField] = command.assignFn(commandPart[1]);
+            var fieldValue = command.assignFn(commandPart[1]);
+            if (fieldValue != undefined) {
+                task[command.taskField] = fieldValue;
+                task.title = task.title.split(commandPart[0]).join("").trim();
+            }
         }
     });
 
