@@ -87,7 +87,25 @@ app.directive('droppable', function () {
     }
 });
 
-var EditTaskModalCtrl = function($scope, $modalInstance, task) {
+app.directive('dateInput', function (dateFilter) {
+    return {
+        require: 'ngModel',
+        link: function (scope, elm, attrs, ngModelCtrl) {
+            ngModelCtrl.$formatters.push(function (modelValue) {
+                return new Date(modelValue);
+            });
+
+            ngModelCtrl.$parsers.push(function (viewValue) {
+                if (moment(new Date(viewValue).valueOf()).isValid()) {
+                    return new Date(viewValue).valueOf();
+                }
+                return null;
+            });
+        }
+    };
+});
+
+var EditTaskModalCtrl = function($scope, $modalInstance, task, dateFilter) {
     $scope.task = angular.copy(task);
 
     var tags = "";
@@ -95,10 +113,6 @@ var EditTaskModalCtrl = function($scope, $modalInstance, task) {
         tags += tag.name + " ";
     });
     $scope.task.tags = tags;
-
-    var ngDateFilter = angular.injector(["ng"]).get("dateFilter");
-    $scope.task.startingOn = ngDateFilter(task.startingOn, "yyyy-MM-dd");
-    $scope.task.dueDate = ngDateFilter(task.dueDate, 'yyyy-MM-dd');
 
     $scope.ok = function(changedTask) {
         updateTaskWithData(task, changedTask);
@@ -128,6 +142,7 @@ var EditTaskModalCtrl = function($scope, $modalInstance, task) {
         }
 
     };
+
 };
 
 var CreateSubtaskModalCtrl = function($scope, $modalInstance) {
