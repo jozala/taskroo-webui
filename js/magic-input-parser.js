@@ -9,6 +9,29 @@ function MagicInputParser() {
     MagicInputParser.tagAtRegex = /\s@([^\s]*)/g;
     MagicInputParser.tagAtOnTheStartRegex = /^@([^\s]*)/g;
 
+    MagicInputParser.parseDate = function (input) {
+        if (input.toLowerCase() == 'today') {
+            return moment().startOf('day').valueOf();
+        }
+        if (input.toLowerCase() == 'tomorrow') {
+            return moment().startOf('day').add(1, 'day').valueOf();
+        }
+        var correctDays = ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'];
+        if (correctDays.some(function (day) {
+            return day == input.toLowerCase()
+        })) {
+            var indexOfDay = correctDays.indexOf(input.toLowerCase());
+            if (moment().day(indexOfDay).startOf('day') <= moment().startOf('day')) {
+                return moment().add(7, 'day').day(indexOfDay).startOf('day').valueOf();
+            }
+            return moment().day(indexOfDay).startOf('day').valueOf();
+        }
+        if (!moment(input, "YYYYMMDD").isValid()) {
+            return undefined;
+        }
+        return moment(input, "YYYYMMDD").valueOf();
+    };
+
     MagicInputParser.commands = [
         {
             regex: MagicInputParser.dueDateRegex,
@@ -29,37 +52,19 @@ function MagicInputParser() {
             regex: MagicInputParser.tagsRegex,
             taskField: "tags",
             assignFn: function (value) {
-                return value.split(',');
+                return value.split(',').map(function (tagString) {
+                    return {name: tagString}
+                });
             }
         }
     ];
-
-    MagicInputParser.parseDate = function(input) {
-        if (input.toLowerCase() == 'today') {
-            return moment().startOf('day').valueOf();
-        }
-        if (input.toLowerCase() == 'tomorrow') {
-            return moment().startOf('day').add(1, 'day').valueOf();
-        }
-        var correctDays = ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'];
-        if (correctDays.some(function(day) { return day == input.toLowerCase() })) {
-            var indexOfDay = correctDays.indexOf(input.toLowerCase());
-            if (moment().day(indexOfDay).startOf('day') <= moment().startOf('day')) {
-                return moment().add(7, 'day').day(indexOfDay).startOf('day').valueOf();
-            }
-            return moment().day(indexOfDay).startOf('day').valueOf();
-        }
-        if (!moment(input, "YYYYMMDD").isValid()) {
-            return undefined;
-        }
-        return moment(input, "YYYYMMDD").valueOf();
-    };
 }
 
 MagicInputParser.prototype.parse = function (input) {
     var task = {};
     task.title = input;
     task.tags = [];
+    task.subtasks = [];
 
     MagicInputParser.commands.forEach(function (command) {
         var commandPart = input.match(command.regex);
@@ -77,19 +82,19 @@ MagicInputParser.prototype.parse = function (input) {
     return task;
 };
 
-MagicInputParser.prototype.findAtTags = function(input) {
+MagicInputParser.prototype.findAtTags = function (input) {
     var tags = [];
     var atTagsFromTitle = input.match(MagicInputParser.tagAtRegex);
     if (atTagsFromTitle) {
         atTagsFromTitle.forEach(function (atTag) {
-            tags.push(atTag.substring(2))
+            tags.push({name: atTag.substring(2)});
         });
     }
 
     atTagsFromTitle = input.match(MagicInputParser.tagAtOnTheStartRegex);
     if (atTagsFromTitle) {
         atTagsFromTitle.forEach(function (atTag) {
-            tags.push(atTag.substring(1))
+            tags.push({name: atTag.substring(1)});
         });
     }
     return tags;

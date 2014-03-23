@@ -42,7 +42,7 @@ app.directive('focusElement', function ($timeout) {
         link: function (scope, element) {
             $timeout(function () {
                 element[0].focus();
-            });
+            }, 50);
         }
     };
 });
@@ -154,7 +154,8 @@ function TasksCtrl($scope, TasksService, SearchService, TagsFilteringService, $m
 
     var searchInTaskAndSubtasks = function(task, searchPhrase) {
         if (task.finished == $scope.showUnfinished) return false;
-        if (task.title.toLowerCase().indexOf(searchPhrase) != -1 || (task.description != null && task.description.toLowerCase().indexOf(searchPhrase) != -1)) {
+        if (task.title.toLowerCase().indexOf(searchPhrase) != -1 ||
+            (task.description != null && task.description.toLowerCase().indexOf(searchPhrase) != -1)) {
             return true;
         }
         if (task.subtasks.length == 0) return false;
@@ -230,6 +231,7 @@ function TasksCtrl($scope, TasksService, SearchService, TagsFilteringService, $m
     $scope.taskFinished = function(task) {
         $log.info('Task ' + task.id + ' finished: ' + !task.finished);
         task.finished = !task.finished;
+        task.closedDate = moment().startOf('day').valueOf();
     };
 
     $scope.removeTask = function(task) {
@@ -255,6 +257,15 @@ function TasksCtrl($scope, TasksService, SearchService, TagsFilteringService, $m
         $log.info('Task ' + task.id + ' updated: ' + task.title);
     };
 
+    $scope.addNewTask = function (task) {
+        $scope.tasks.push(task);
+        $scope.magicInput = "";
+    };
+
+    $scope.createSubtask = function(task, subtask) {
+        task.subtasks = task.subtasks.concat([subtask]);
+        $log.info('Subtask ' + subtask.title + ' created for task: ' + task.title + " id=(" + task.id + ")");
+    };
 
     $scope.openEdit = function(task) {
         var editTaskModalInstance = $modal.open({
@@ -272,21 +283,16 @@ function TasksCtrl($scope, TasksService, SearchService, TagsFilteringService, $m
         });
     };
 
-    $scope.createSubtask = function(task) {
+    $scope.openCreateSubtask = function(task) {
         var createSubtaskModalInstance = $modal.open({
             templateUrl: 'createSubtaskModalContent.html',
             backdrop: 'static',
             controller: CreateSubtaskModalCtrl
         });
         createSubtaskModalInstance.result.then(function(newSubtaskContent) {
-            var subTask = createTaskFromMagicField(newSubtaskContent);
-            $log.info("Subtask " + subTask.title + " created");
-            task.subtasks = task.subtasks.concat([subTask]);
+            var subTask =  new MagicInputParser().parse(newSubtaskContent);
+            $scope.createSubtask(task, subTask);
         });
-    };
-
-    var createTaskFromMagicField = function(content) {
-        return {"id": 666, "title": content, "subtasks": [], "tags": []};
     };
 
 
@@ -327,6 +333,9 @@ function TasksCtrl($scope, TasksService, SearchService, TagsFilteringService, $m
         removeTaskOnPosition($scope.draggedTaskPosition, $scope.tasks);
     };
 
-    // TODO parsing of the magic input to task
+    $scope.magicInputSubmit = function() {
+        var task = new MagicInputParser().parse($scope.magicInput);
+        $scope.addNewTask(task)
+    }
 
 }

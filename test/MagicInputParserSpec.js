@@ -58,19 +58,19 @@ describe("The magic input parser", function() {
     it("should parse tags from input when tags command is in the input", function() {
         var input = "This task has multiple due commands tags:one,two,three";
         var task = magicParser.parse(input);
-        expect(task.tags).toEqual(["one","two","three"]);
+        expect(task.tags).toEqual([{name: "one"},{name: "two"},{name: "three"}]);
     });
 
     it("should parse tags when @tag is in the task title", function() {
         var input = "This task has @someTags specified in the @title";
         var task = magicParser.parse(input);
-        expect(task.tags).toEqual(["someTags", "title"]);
+        expect(task.tags).toEqual([{name: "someTags"},{name: "title"}]);
     });
 
     it("should parse tags when @tag is in the beginning of the task title", function() {
         var input = "@This task has only one tag on the beginning of the title";
         var task = magicParser.parse(input);
-        expect(task.tags).toEqual(["This"]);
+        expect(task.tags).toEqual([{name: "This"}]);
     });
 
     it("should not parse email addresses as tags from task title", function() {
