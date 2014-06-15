@@ -40,12 +40,12 @@ function MagicInputParser() {
         },
         {
             regex: MagicInputParser.deferDateRegex,
-            taskField: "startingOn",
+            taskField: "startDate",
             assignFn: MagicInputParser.parseDate
         },
         {
             regex: MagicInputParser.startDateRegex,
-            taskField: "startingOn",
+            taskField: "startDate",
             assignFn: MagicInputParser.parseDate
         },
         {

@@ -1,6 +1,10 @@
 function TagsCtrl($scope, TagsService, TagsFilteringService, $modal, $log) {
-    $scope.tags = TagsService;
-    $scope.tags.forEach(function(tag) {tag.selected = false});
+    TagsService.service.query(function(result) {
+        TagsService.tags = result;
+        $scope.tags = TagsService.tags;
+        $scope.tags.forEach(function(tag) {tag.selected = false});
+    });
+
     $scope.tagFilter = TagsFilteringService;
 
     $scope.editTag = function(tag) {
@@ -22,6 +26,7 @@ function TagsCtrl($scope, TagsService, TagsFilteringService, $modal, $log) {
     $scope.removeTag = function(tag) {
         var removeConfirmed = confirm("Are you sure to remove this tag?\n" + tag.name + "\n\nYou cannot undo this.");
         if (removeConfirmed) {
+            TagsService.service.delete({tagId: tag.id});
             $log.info("tag: id=" + tag.id + " " + tag.name + " removed");
             for (var i in $scope.tags) {
                 if($scope.tags[i] == tag) {
@@ -33,6 +38,7 @@ function TagsCtrl($scope, TagsService, TagsFilteringService, $modal, $log) {
     };
 
     $scope.updateTag = function(tag) {
+        new TagsService.service(tag).$update({tagId: tag.id});
         $log.info("tag: id=" + tag.id + " " + tag.name + " updated");
     };
 

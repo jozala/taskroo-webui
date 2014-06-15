@@ -1,18 +1,71 @@
-var app = angular.module("GTWeb", ["TabList", "ui.bootstrap", 'frapontillo.bootstrap-switch']);
+var app = angular.module("GTWeb", ["TabList", "ui.bootstrap", 'frapontillo.bootstrap-switch', 'ngResource']);
 
 
-app.factory("TagsService", function () {
-    var tags = testTags;
-    return tags;
+app.factory("TagsService", function ($resource, $log) {
+    var tokenId = 'c06878f3-75b9-448b-a4e1-970ee2dfe64f';
+    var tags = [];
+    var service = $resource("http://localhost/tags/:tagId", {}, {
+        query: {
+            method:'GET',
+            isArray: true,
+            headers: { 'Authorization': 'GTWebAuth realm="gtweb@aetas.pl",tokenKey="' + tokenId + '"'}
+        },
+        save: {
+            method: 'POST',
+            headers: { 'Authorization': 'GTWebAuth realm="gtweb@aetas.pl",tokenKey="' + tokenId + '"'}
+        },
+        update: {
+            method:'PUT',
+            headers: { 'Authorization': 'GTWebAuth realm="gtweb@aetas.pl",tokenKey="' + tokenId + '"'}
+        },
+        delete: {
+            method: 'DELETE',
+            headers: { 'Authorization': 'GTWebAuth realm="gtweb@aetas.pl",tokenKey="' + tokenId + '"'}
+        }
+    });
+
+    return {
+        tags: tags,
+        service: service
+    }
 });
 
-app.factory("TasksService", function () {
-    var tasks = testTasks;
-    var finishedTasks = testFinishedTasks;
+app.factory("TasksService", function ($resource) {
+    var tokenId = 'c06878f3-75b9-448b-a4e1-970ee2dfe64f';
+    var tasks = [];
+    var service = $resource("http://localhost/tasks/:taskId", {}, {
+        query: {
+            method: 'GET',
+            isArray: true,
+            headers: { 'Authorization': 'GTWebAuth realm="gtweb@aetas.pl",tokenKey="' + tokenId + '"'}
+        },
+        save: {
+            method: 'POST',
+            headers: { 'Authorization': 'GTWebAuth realm="gtweb@aetas.pl",tokenKey="' + tokenId + '"'}
+        },
+        update: {
+            method:'PUT',
+            headers: { 'Authorization': 'GTWebAuth realm="gtweb@aetas.pl",tokenKey="' + tokenId + '"'}
+        },
+        delete: {
+            method: 'DELETE',
+            headers: { 'Authorization': 'GTWebAuth realm="gtweb@aetas.pl",tokenKey="' + tokenId + '"'}
+        }
+    });
 
+    var subtaskService = $resource("http://localhost/tasks/:taskId/subtasks/:subtaskId", {}, {
+        add: {
+            method:'POST',
+            headers: { 'Authorization': 'GTWebAuth realm="gtweb@aetas.pl",tokenKey="' + tokenId + '"'},
+            params: {taskId: '@taskId', subtaskId: '@subtaskId'}
+        }
+    });
 
-    return tasks.concat(finishedTasks);
-
+    return {
+        tasks: tasks,
+        service: service,
+        subtaskService: subtaskService
+    }
 });
 
 app.factory("SearchService", function () {

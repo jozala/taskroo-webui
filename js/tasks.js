@@ -126,7 +126,7 @@ var EditTaskModalCtrl = function($scope, $modalInstance, task, dateFilter) {
     var updateTaskWithData = function(originalTask, changedTask) {
         originalTask.title = changedTask.title;
         originalTask.description = changedTask.description;
-        originalTask.startingOn = changedTask.startingOn;
+        originalTask.startDate = changedTask.startDate;
         originalTask.dueDate = changedTask.dueDate;
         var tagsNames = changedTask.tags.split(" ");
         originalTask.tags = [];
@@ -155,8 +155,8 @@ var CreateSubtaskModalCtrl = function($scope, $modalInstance) {
     };
 };
 
-function TasksCtrl($scope, TasksService, SearchService, TagsFilteringService, $modal, $log) {
-    $scope.tasks = TasksService;
+function TasksCtrl($scope, TasksService, TagsService, SearchService, TagsFilteringService, $modal, $log) {
+    TasksService.service.query(function(result) {$scope.tasks = result; TasksService.tasks = result;});
     $scope.search = SearchService;
     $scope.tagFilter = TagsFilteringService;
     $scope.workview = false;
@@ -200,17 +200,17 @@ function TasksCtrl($scope, TasksService, SearchService, TagsFilteringService, $m
         if (workViewValue) {
             $scope.tasks = getWorkViewTasks($scope.tasks);
         } else {
-            $scope.tasks = TasksService;
+            $scope.tasks = TasksService.tasks;
         }
     });
 
     $scope.$watch('tagFilter.selectedTag', function(newSelectedTag) {
         if (newSelectedTag === "ALL") {
-            $scope.tasks = TasksService;
+            $scope.tasks = TasksService.tasks;
         } else if (newSelectedTag == "NONE") {
-            $scope.tasks = filterTasksWithNoTag(TasksService);
+            $scope.tasks = filterTasksWithNoTag(TasksService.tasks);
         } else {
-            $scope.tasks = filterTasksByTag(TasksService, newSelectedTag);
+            $scope.tasks = filterTasksByTag(TasksService.tasks, newSelectedTag);
         }
     });
 
@@ -236,10 +236,10 @@ function TasksCtrl($scope, TasksService, SearchService, TagsFilteringService, $m
     $scope.$watch("showUnfinished", function(newShowUnfinished) {
        if (newShowUnfinished) {
            $scope.tasksOrderPredicate = ["dueDate", "createdDate"];
-           $scope.tasks = TasksService;
+           $scope.tasks = TasksService.tasks;
        } else {
            $scope.tasksOrderPredicate = "-closedDate";
-           $scope.tasks = getFinishedTasks(TasksService);
+           $scope.tasks = getFinishedTasks(TasksService.tasks);
        }
     });
 
@@ -247,12 +247,14 @@ function TasksCtrl($scope, TasksService, SearchService, TagsFilteringService, $m
         $log.info('Task ' + task.id + ' finished: ' + !task.finished);
         task.finished = !task.finished;
         task.closedDate = moment().startOf('day').valueOf();
+        new TasksService.service(task).$update({taskId: task.id})
     };
 
     $scope.removeTask = function(task) {
         var removeForSure = confirm("Are you sure to remove this task and all it's subtasks? You cannot undo this.\n" + task.title);
         if (removeForSure) {
             $log.info('Task ' + task.id + ' removed: ' + task.title);
+            TasksService.service.delete({taskId: task.id});
             findTaskRecursivelyAndRemoveIt(task, $scope.tasks);
         }
     };
@@ -267,17 +269,31 @@ function TasksCtrl($scope, TasksService, SearchService, TagsFilteringService, $m
         }
     };
 
-
     $scope.updateTask = function(task) {
+        var updatedTask = new TasksService.service(task);
+        updatedTask.$update({taskId: task.id}, function(taskAfterUpdate) {
+            var index = $scope.tasks.indexOf(task);
+            if (index != -1) {
+                $log.debug("Replacing task with id: " + task.id + " with updated data task")
+                $scope.tasks[index] = taskAfterUpdate;
+            }
+        });
         $log.info('Task ' + task.id + ' updated: ' + task.title);
     };
 
     $scope.addNewTask = function (task) {
+        $log.debug("Task with title: " + task.title + " added");
+        var newTask = new TasksService.service(task);
+        newTask.$save();
         $scope.tasks.push(task);
         $scope.magicInput = "";
     };
 
     $scope.createSubtask = function(task, subtask) {
+        new TasksService.service(subtask).$save(function(subtaskResult) {
+            TasksService.subtaskService.add({taskId: task.id, subtaskId: subtaskResult.id})
+        });
+
         task.subtasks = task.subtasks.concat([subtask]);
         $log.info('Subtask ' + subtask.title + ' created for task: ' + task.title + " id=(" + task.id + ")");
     };
@@ -349,8 +365,40 @@ function TasksCtrl($scope, TasksService, SearchService, TagsFilteringService, $m
     };
 
     $scope.magicInputSubmit = function() {
+        $log.debug('Magic input submitted: ' + $scope.magicInput);
         var task = new MagicInputParser().parse($scope.magicInput);
-        $scope.addNewTask(task)
-    }
+        var existingTagsNames = TagsService.tags.map(function(it) {return it.name});
 
+        var tagsToAdd = [];
+        task.tags.forEach(function(tagFromTask) {
+            if (existingTagsNames.indexOf(tagFromTask.name) == -1) {
+                var newTag = new TagsService.service(tagFromTask);
+                tagsToAdd.push(newTag);
+            }
+        });
+
+        var addTaskAfterTagsAdded = new MultitaskRunner(
+            tagsToAdd.map( function(it) {return function(param) {return it.$save(param)}} ),
+            function () { $scope.addNewTask(task) });
+
+        addTaskAfterTagsAdded.start();
+
+    };
+
+    var MultitaskRunner = function(tasksToRunWithCallback, onFinishedFunction) {
+
+        this.start = function() {
+            $log.debug("MultitaskRunner started");
+            checkIfAllFinished();
+            tasksToRunWithCallback.forEach(function(fun) {fun(function() {counter++; checkIfAllFinished()})});
+        };
+
+        var counter = 0;
+        var checkIfAllFinished = function() {
+            $log.debug("Check if actual counter (" + counter + ") is same as the number of tasks to run (" + tasksToRunWithCallback.length + ")");
+            if (counter == tasksToRunWithCallback.length) {
+                onFinishedFunction();
+            }
+        }
+    };
 }
