@@ -288,18 +288,33 @@ function TasksCtrl($scope, TasksService, TagsService, SearchService, TagsFilteri
     $scope.addNewTask = function (task) {
         $log.debug("Task with title: " + task.title + " added");
         var newTask = new TasksService.service(task);
-        newTask.$save();
-        $scope.tasks.push(task);
-        $scope.magicInput = "";
+        newTask.$save(function(addedTask) {
+            $scope.tasks.push(addedTask);
+            $scope.magicInput = "";
+        });
+
     };
 
     $scope.createSubtask = function(task, subtask) {
         new TasksService.service(subtask).$save(function(subtaskResult) {
-            TasksService.subtaskService.add({taskId: task.id, subtaskId: subtaskResult.id})
+            TasksService.subtaskService.add({taskId: task.id, subtaskId: subtaskResult.id}, function() {
+                task.subtasks = task.subtasks.concat([subtaskResult]);
+                $log.info('Subtask ' + subtaskResult.title + ' id=(' + subtaskResult.id + ') created for task: ' + task.title + " id=(" + task.id + ")");
+            });
         });
+    };
 
-        task.subtasks = task.subtasks.concat([subtask]);
-        $log.info('Subtask ' + subtask.title + ' created for task: ' + task.title + " id=(" + task.id + ")");
+    var findNonExistingTags = function(tags) {
+        var existingTagsNames = TagsService.tags.map(function(it) {return it.name});
+
+        var nonExistingTags = [];
+        tags.forEach(function(tagFromTask) {
+            if (existingTagsNames.indexOf(tagFromTask.name) == -1) {
+                var newTag = new TagsService.service(tagFromTask);
+                nonExistingTags.push(newTag);
+            }
+        });
+        return nonExistingTags;
     };
 
     $scope.openEdit = function(task) {
@@ -326,7 +341,13 @@ function TasksCtrl($scope, TasksService, TagsService, SearchService, TagsFilteri
         });
         createSubtaskModalInstance.result.then(function(newSubtaskContent) {
             var subTask =  new MagicInputParser().parse(newSubtaskContent);
-            $scope.createSubtask(task, subTask);
+
+            var tagsToAdd = findNonExistingTags(subTask.tags);
+            var addSubtaskAfterTagsAdded = new MultitaskRunner(
+                tagsToAdd.map( function(it) {return function(param) {return it.$save(param)}} ),
+                function () { $scope.createSubtask(task, subTask) });
+
+            addSubtaskAfterTagsAdded.start();
         });
     };
 
@@ -371,16 +392,8 @@ function TasksCtrl($scope, TasksService, TagsService, SearchService, TagsFilteri
     $scope.magicInputSubmit = function() {
         $log.debug('Magic input submitted: ' + $scope.magicInput);
         var task = new MagicInputParser().parse($scope.magicInput);
-        var existingTagsNames = TagsService.tags.map(function(it) {return it.name});
 
-        var tagsToAdd = [];
-        task.tags.forEach(function(tagFromTask) {
-            if (existingTagsNames.indexOf(tagFromTask.name) == -1) {
-                var newTag = new TagsService.service(tagFromTask);
-                tagsToAdd.push(newTag);
-            }
-        });
-
+        var tagsToAdd = findNonExistingTags(task.tags);
         var addTaskAfterTagsAdded = new MultitaskRunner(
             tagsToAdd.map( function(it) {return function(param) {return it.$save(param)}} ),
             function () { $scope.addNewTask(task) });
