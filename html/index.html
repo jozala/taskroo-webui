@@ -75,7 +75,7 @@
                 <div>
                     <tablist>
                         <row ng-repeat="task in task.subtasks | orderBy:tasksOrderPredicate:false | filter:searchTask" ng-class="{'taskFinished': task.finished}" ng-include="'table_renderer.html'"
-                             droppable="task.subtasks" draggable="task">
+                             droppable="{targetCollection: task.subtasks, target: task, onDrop: moveSubtaskToTask }" draggable="task">
                         </row>
                     </tablist>
                 </div>
@@ -83,11 +83,11 @@
 
             <div class="box">
                 <tablist indent="15" expanded="false">
-                    <li droppable="tasks" style="height: 10px;"></li>
+                    <!--<li droppable="tasks" style="height: 10px;"></li>-->
                     <row ng-repeat="task in tasks | orderBy:tasksOrderPredicate:false | filter:searchTask" ng-class="{'taskFinished': task.finished}"
-                         droppable="task.subtasks" draggable="task" ng-include="'table_renderer.html'">
+                         droppable="{targetCollection: task.subtasks, target: task, onDrop: moveSubtaskToTask }" draggable="task" ng-include="'table_renderer.html'">
                     </row>
-                    <li droppable="tasks" style="height: 10px;"></li>
+                    <!--<li droppable="tasks" style="height: 10px;"></li>-->
                 </tablist>
             </div>
         </div>

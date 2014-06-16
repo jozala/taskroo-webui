@@ -64,23 +64,20 @@ app.directive('draggable', function () {
     }
 });
 
-app.directive('droppable', function () {
+app.directive('droppable', function ($rootScope) {
     return {
         link: function (scope, element, attrs) {
-            var droppableChildrenList = scope.$eval(attrs.droppable);
+            var droppableValues = scope.$eval(attrs.droppable);
             element.droppable({
                 accept: function(draggable) {
                     return draggable.hasClass("row")
-                        && droppableChildrenList.indexOf(scope.draggedTask) < 0
+                        && droppableValues.targetCollection.indexOf(scope.draggedTask) < 0
                         && draggable != element;
                 },
                 hoverClass: "drop-hover",
                 greedy: true,
                 drop: function(event,ui) {
-                    scope.$apply(function() {
-                        droppableChildrenList.push(scope.draggedTask);
-                        scope.removeDraggedTaskFromPreviousPosition();
-                    });
+                    droppableValues.onDrop(scope.draggedTask, droppableValues.target);
                 }
             });
         }
@@ -156,7 +153,7 @@ var CreateSubtaskModalCtrl = function($scope, $modalInstance) {
 };
 
 function TasksCtrl($scope, TasksService, TagsService, SearchService, TagsFilteringService, $modal, $log) {
-    TasksService.service.query(function(result) {$scope.tasks = result; TasksService.tasks = result;});
+    TasksService.service.query(function(result) {TasksService.tasks = result; $scope.tasks = TasksService.tasks});
     $scope.search = SearchService;
     $scope.tagFilter = TagsFilteringService;
     $scope.workview = false;
@@ -400,5 +397,13 @@ function TasksCtrl($scope, TasksService, TagsService, SearchService, TagsFilteri
                 onFinishedFunction();
             }
         }
+    };
+
+    $scope.moveSubtaskToTask = function(movedTask, newParentTask) {
+        $log.debug("Task " + movedTask.id + " moved to new parent task " + newParentTask.id);
+        TasksService.subtaskService.add({taskId: newParentTask.id, subtaskId: movedTask.id}, function() {
+            newParentTask.subtasks.push($scope.draggedTask);
+            $scope.removeDraggedTaskFromPreviousPosition();
+        });
     };
 }

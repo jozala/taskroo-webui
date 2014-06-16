@@ -2,7 +2,7 @@ var app = angular.module("GTWeb", ["TabList", "ui.bootstrap", 'frapontillo.boots
 
 
 app.factory("TagsService", function ($resource, $log) {
-    var tokenId = 'c06878f3-75b9-448b-a4e1-970ee2dfe64f';
+    var tokenId = '225e38ef-4a0f-4d07-83ba-36e3ad7c2ee2';
     var tags = [];
     var service = $resource("http://localhost/tags/:tagId", {}, {
         query: {
@@ -31,7 +31,7 @@ app.factory("TagsService", function ($resource, $log) {
 });
 
 app.factory("TasksService", function ($resource) {
-    var tokenId = 'c06878f3-75b9-448b-a4e1-970ee2dfe64f';
+    var tokenId = '225e38ef-4a0f-4d07-83ba-36e3ad7c2ee2';
     var tasks = [];
     var service = $resource("http://localhost/tasks/:taskId", {}, {
         query: {
