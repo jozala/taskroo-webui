@@ -72,7 +72,7 @@
                     <cell class="taskAction taskSubtask" ng-click="openCreateSubtask(task); expand()"></cell>
                     <cell class="taskAction taskDel" ng-click="removeTask(task)"></cell>
                 </span>
-                <div>
+                <div class="subtasks">
                     <tablist>
                         <row ng-repeat="task in task.subtasks | orderBy:tasksOrderPredicate:false | filter:searchTask" ng-class="{'taskFinished': task.finished}" ng-include="'table_renderer.html'"
                              droppable="{targetCollection: task.subtasks, target: task, onDrop: moveSubtaskToTask }" draggable="task">
@@ -83,11 +83,11 @@
 
             <div class="box">
                 <tablist indent="15" expanded="false">
-                    <!--<li droppable="tasks" style="height: 10px;"></li>-->
+                    <li droppable="{targetCollection: null, target: task, onDrop: moveSubtaskTopLevel }" style="height: 10px;"></li>
                     <row ng-repeat="task in tasks | orderBy:tasksOrderPredicate:false | filter:searchTask" ng-class="{'taskFinished': task.finished}"
                          droppable="{targetCollection: task.subtasks, target: task, onDrop: moveSubtaskToTask }" draggable="task" ng-include="'table_renderer.html'">
                     </row>
-                    <!--<li droppable="tasks" style="height: 10px;"></li>-->
+                    <li droppable="{targetCollection: null, target: task, onDrop: moveSubtaskTopLevel }" style="height: 10px;"></li>
                 </tablist>
             </div>
         </div>
@@ -98,8 +98,6 @@
 </footer>
 
 
-<!-- TODO testdata.js should be removed before release -->
-<script type="text/javascript" src="../js/testdata.js"></script>
 <script type="text/javascript" src="../bower_components/jquery/jquery.min.js"></script>
 <script type="text/javascript" src="../bower_components/angular/angular.min.js"></script>
 <script type="text/javascript" src="../bower_components/jquery-ui/ui/minified/jquery-ui.min.js"></script>

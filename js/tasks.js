@@ -35,6 +35,7 @@ app.directive("quickEdit", function() {
             }
         }
     };
+    // TODO magic input nie działa w szybkiej edycji ?!?! Feature or bug?
 });
 
 app.directive('focusElement', function ($timeout) {
@@ -64,15 +65,20 @@ app.directive('draggable', function () {
     }
 });
 
-app.directive('droppable', function ($rootScope) {
+app.directive('droppable', function ($log) {
     return {
         link: function (scope, element, attrs) {
             var droppableValues = scope.$eval(attrs.droppable);
             element.droppable({
                 accept: function(draggable) {
                     return draggable.hasClass("row")
-                        && droppableValues.targetCollection.indexOf(scope.draggedTask) < 0
-                        && draggable != element;
+                        &&
+                        ((droppableValues.targetCollection == null && draggable.parents('.subtasks').length != 0)
+                          ||
+                          (droppableValues.targetCollection != null
+                          && droppableValues.targetCollection.indexOf(scope.draggedTask) < 0
+                          && draggable != element)
+                        );
                 },
                 hoverClass: "drop-hover",
                 greedy: true,
@@ -102,6 +108,7 @@ app.directive('dateInput', function (dateFilter) {
     };
 });
 
+// TODO startDate and dueDate is not correctly displayed in edit modal window when set
 var EditTaskModalCtrl = function($scope, $modalInstance, task, dateFilter) {
     $scope.task = angular.copy(task);
 
@@ -403,6 +410,14 @@ function TasksCtrl($scope, TasksService, TagsService, SearchService, TagsFilteri
         $log.debug("Task " + movedTask.id + " moved to new parent task " + newParentTask.id);
         TasksService.subtaskService.add({taskId: newParentTask.id, subtaskId: movedTask.id}, function() {
             newParentTask.subtasks.push($scope.draggedTask);
+            $scope.removeDraggedTaskFromPreviousPosition();
+        });
+    };
+
+    $scope.moveSubtaskTopLevel = function(movedTask) {
+        $log.debug("Task " + movedTask.id + " moved to top level");
+        TasksService.service.moveToTopLevel({taskId: movedTask.id}, function() {
+            $scope.tasks.push($scope.draggedTask);
             $scope.removeDraggedTaskFromPreviousPosition();
         });
     };

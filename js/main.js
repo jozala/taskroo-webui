@@ -2,7 +2,7 @@ var app = angular.module("GTWeb", ["TabList", "ui.bootstrap", 'frapontillo.boots
 
 
 app.factory("TagsService", function ($resource, $log) {
-    var tokenId = '225e38ef-4a0f-4d07-83ba-36e3ad7c2ee2';
+    var tokenId = '168f5734-d67f-4d2b-82da-0e42947c1e0f';
     var tags = [];
     var service = $resource("http://localhost/tags/:tagId", {}, {
         query: {
@@ -31,7 +31,7 @@ app.factory("TagsService", function ($resource, $log) {
 });
 
 app.factory("TasksService", function ($resource) {
-    var tokenId = '225e38ef-4a0f-4d07-83ba-36e3ad7c2ee2';
+    var tokenId = '168f5734-d67f-4d2b-82da-0e42947c1e0f';
     var tasks = [];
     var service = $resource("http://localhost/tasks/:taskId", {}, {
         query: {
@@ -50,6 +50,11 @@ app.factory("TasksService", function ($resource) {
         delete: {
             method: 'DELETE',
             headers: { 'Authorization': 'GTWebAuth realm="gtweb@aetas.pl",tokenKey="' + tokenId + '"'}
+        },
+        moveToTopLevel: {
+            method: 'POST',
+            headers: { 'Authorization': 'GTWebAuth realm="gtweb@aetas.pl",tokenKey="' + tokenId + '"'},
+            params: {taskId: '@taskId'}
         }
     });
 
