@@ -35,7 +35,6 @@ app.directive("quickEdit", function() {
             }
         }
     };
-    // TODO magic input nie działa w szybkiej edycji ?!?! Feature or bug?
 });
 
 app.directive('focusElement', function ($timeout) {
@@ -95,7 +94,7 @@ app.directive('dateInput', function (dateFilter) {
         require: 'ngModel',
         link: function (scope, elm, attrs, ngModelCtrl) {
             ngModelCtrl.$formatters.push(function (modelValue) {
-                return new Date(modelValue);
+                return dateFilter(modelValue, "yyyy-MM-dd");
             });
 
             ngModelCtrl.$parsers.push(function (viewValue) {
@@ -108,7 +107,9 @@ app.directive('dateInput', function (dateFilter) {
     };
 });
 
-// TODO startDate and dueDate is not correctly displayed in edit modal window when set
+// TODO when creating tasks and tag is active (selected) then this tag should be automatically added to tags of newly created task
+// TODO after update of tag all tasks with this tag should be automatically updated (same after tag removal - remove from all tasks)
+// TODO finished tasks should be displayed as flat list, right? They're not (try with 3 levels)!
 var EditTaskModalCtrl = function($scope, $modalInstance, task, dateFilter) {
     $scope.task = angular.copy(task);
 
@@ -289,7 +290,7 @@ function TasksCtrl($scope, TasksService, TagsService, SearchService, TagsFilteri
         $log.debug("Task with title: " + task.title + " added");
         var newTask = new TasksService.service(task);
         newTask.$save(function(addedTask) {
-            $scope.tasks.push(addedTask);
+            TasksService.tasks.push(addedTask)
             $scope.magicInput = "";
         });
 
@@ -329,7 +330,12 @@ function TasksCtrl($scope, TasksService, TagsService, SearchService, TagsFilteri
             }
         });
         editTaskModalInstance.result.then(function(originalTask) {
-            $scope.updateTask(originalTask);
+            var tagsToAdd = findNonExistingTags(originalTask.tags);
+            var addSubtaskAfterTagsAdded = new MultitaskRunner(
+                tagsToAdd.map( function(it) {return function(param) {return it.$save(param)}} ),
+                function () { $scope.updateTask(originalTask) });
+
+            addSubtaskAfterTagsAdded.start();
         });
     };
 
