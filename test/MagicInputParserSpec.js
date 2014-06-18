@@ -30,14 +30,14 @@ describe("The magic input parser", function() {
         var input = "This task has a due date defer:20140709";
         var task = magicParser.parse(input);
         var expectedDateInMilliseconds = moment("20140709", "YYYYMMDD").valueOf();
-        expect(task.startingOn).toBe(expectedDateInMilliseconds);
+        expect(task.startDate).toBe(expectedDateInMilliseconds);
     });
 
     it("should parse start date when there is a prefix start:", function() {
         var input = "This task has a due date start:20140214";
         var task = magicParser.parse(input);
         var expectedDateInMilliseconds = moment("20140214", "YYYYMMDD").valueOf();
-        expect(task.startingOn).toBe(expectedDateInMilliseconds);
+        expect(task.startDate).toBe(expectedDateInMilliseconds);
     });
 
     it("should remove commands from task title when there are multiple commands in the input", function() {
@@ -83,7 +83,7 @@ describe("The magic input parser", function() {
         var input = "This task has a due date start:today due:today";
         var task = magicParser.parse(input);
         var todayInMilliseconds = moment().startOf('day').valueOf();
-        expect(task.startingOn).toEqual(todayInMilliseconds);
+        expect(task.startDate).toEqual(todayInMilliseconds);
         expect(task.dueDate).toEqual(todayInMilliseconds);
     });
 
@@ -91,14 +91,14 @@ describe("The magic input parser", function() {
         var input = "This task has a due date defer:tomorrow due:tomorrow";
         var task = magicParser.parse(input);
         var tomorrowInMilliseconds = moment().startOf('day').add(1, 'day').valueOf();
-        expect(task.startingOn).toEqual(tomorrowInMilliseconds);
+        expect(task.startDate).toEqual(tomorrowInMilliseconds);
         expect(task.dueDate).toEqual(tomorrowInMilliseconds);
     });
 
     it("should leave date commands in title as it is when date is in invalid format", function() {
         var input = "This task has a due date start:wrongFormatDate";
         var task = magicParser.parse(input);
-        expect(task.startingOn).toBeUndefined();
+        expect(task.startDate).toBeUndefined();
         expect(task.title).toBe(input);
     });
 
@@ -113,7 +113,7 @@ describe("The magic input parser", function() {
         if (nextSundayInMilliseconds <= moment().startOf('day').valueOf()) {
             nextSundayInMilliseconds = moment().add(7, 'day').day('Sunday').startOf('day').valueOf();
         }
-        expect(task.startingOn).toEqual(nextMondayInMilliseconds);
+        expect(task.startDate).toEqual(nextMondayInMilliseconds);
         expect(task.dueDate).toEqual(nextSundayInMilliseconds);
     });
 
