@@ -1762,73 +1762,382 @@ var testTasks = [
 ];
 
 var testFinishedTasks = [
-    {"id": 853, "title": "Przygotuj Drag&Drop to change task into subtask w AngularJS ", "description": null, "finished": true, "subtasks": [
-        {"id": 888, "title": "Zobacz czy nie da sie zrobic latwiej treetable jak w D&D ", "description": "http://jimliu.github.io/Angular-NestedSortable/index.html", "finished": true, "subtasks": [], "tags": [
-            {"id": 20, "name": "next", "color": "#3241d2", "visibleInWorkView": false},
-            {"id": 36, "name": "priority", "color": "#FF80AA", "visibleInWorkView": false}
-        ], "startingOn": null, "dueDate": null, "closedDate": 1393289264000, "createdDate": 1392682181000}
-    ], "tags": [
-        {"id": 20, "name": "next", "color": "#3241d2", "visibleInWorkView": false},
-        {"id": 36, "name": "priority", "color": "#FF80AA", "visibleInWorkView": false}
-    ], "startingOn": null, "dueDate": null, "closedDate": 1395343942000, "createdDate": 1391991027000},
-    {"id": 1022, "title": "Przejrzyj papiery z Corte od mamy i zobacz ile rzeczywiscie jest do doplaty ", "description": null, "finished": true, "subtasks": [], "tags": [
-        {"id": 20, "name": "next", "color": "#3241d2", "visibleInWorkView": false},
-        {"id": 36, "name": "priority", "color": "#FF80AA", "visibleInWorkView": false}
-    ], "startingOn": null, "dueDate": null, "closedDate": 1395262606000, "createdDate": 1395189608000},
-    {"id": 1012, "title": "Wrzuć nową szatę graficzną z localhost na aetas.pl ", "description": null, "finished": true, "subtasks": [], "tags": [
-        {"id": 20, "name": "next", "color": "#3241d2", "visibleInWorkView": false}
-    ], "startingOn": null, "dueDate": null, "closedDate": 1395188308000, "createdDate": 1395011593000},
-    {"id": 1014, "title": "Zobacz na dolnyslask.org na zdjecia wroclawia polecane przez Marcina ", "description": null, "finished": true, "subtasks": [], "tags": [
-        {"id": 20, "name": "next", "color": "#3241d2", "visibleInWorkView": false}
-    ], "startingOn": null, "dueDate": null, "closedDate": 1395186045000, "createdDate": 1395096225000},
-    {"id": 1016, "title": "Obejrzyj wszystkie filmiki z 1 tygodnia kursu mongoDB ", "description": null, "finished": true, "subtasks": [], "tags": [
-        {"id": 20, "name": "next", "color": "#3241d2", "visibleInWorkView": false}
-    ], "startingOn": null, "dueDate": null, "closedDate": 1395185536000, "createdDate": 1395103002000},
-    {"id": 1019, "title": "Zamów bilety lotnicze dla Kowalskich do Londynu ", "description": null, "finished": true, "subtasks": [], "tags": [
-        {"id": 20, "name": "next", "color": "#3241d2", "visibleInWorkView": false},
-        {"id": 36, "name": "priority", "color": "#FF80AA", "visibleInWorkView": false}
-    ], "startingOn": null, "dueDate": null, "closedDate": 1395185533000, "createdDate": 1395103692000},
-    {"id": 998, "title": "Wyśij oferte pracy z Wiley do Jarka ", "description": null, "finished": true, "subtasks": [], "tags": [
-        {"id": 24, "name": "planned", "color": "#10f028", "visibleInWorkView": false},
-        {"id": 25, "name": "atwork", "color": "#bbbaff", "visibleInWorkView": false}
-    ], "startingOn": null, "dueDate": 1395097200000, "closedDate": 1395107017000, "createdDate": 1394985817000},
-    {"id": 975, "title": "Przegląd tygodniowy ", "description": null, "finished": true, "subtasks": [], "tags": [
-        {"id": 24, "name": "planned", "color": "#10f028", "visibleInWorkView": false}
-    ], "startingOn": 1395097200000, "dueDate": 1395097200000, "closedDate": 1395105352000, "createdDate": 1394490775000},
-    {"id": 760, "title": "Skasuj przelewy automatyczne za podatek za wynajem bo Conu sie wyprowadzili ", "description": null, "finished": true, "subtasks": [], "tags": [
-        {"id": 24, "name": "planned", "color": "#10f028", "visibleInWorkView": false}
-    ], "startingOn": null, "dueDate": 1395356400000, "closedDate": 1395105337000, "createdDate": 1390427124000},
-    {"id": 118, "title": "Podatek za wynajem 107zł - automatyczny przelew 17 każdego miesiąca (dostałeś maila od sync?) ", "description": "Do 20 każdego miesiąca", "finished": true, "subtasks": [], "tags": [
-        {"id": 24, "name": "planned", "color": "#10f028", "visibleInWorkView": false},
-        {"id": 26, "name": "bills", "color": null, "visibleInWorkView": false}
-    ], "startingOn": 1395100800000, "dueDate": 1395100800000, "closedDate": 1395104605000, "createdDate": 1376085600000},
-    {"id": 831, "title": "Zainstaluj i uruchom MongoDB na komputerze ", "description": "http://docs.mongodb.org/manual/tutorial/install-mongodb-on-os-x/", "finished": true, "subtasks": [], "tags": [
-        {"id": 20, "name": "next", "color": "#3241d2", "visibleInWorkView": false},
-        {"id": 36, "name": "priority", "color": "#FF80AA", "visibleInWorkView": false}
-    ], "startingOn": null, "dueDate": null, "closedDate": 1395102964000, "createdDate": 1391466887000},
-    {"id": 988, "title": "Zadzwon do Topnotch zarezerwowac kort na przyszly tydzien [odrzucone kostka]", "description": null, "finished": true, "subtasks": [], "tags": [
-        {"id": 24, "name": "planned", "color": "#10f028", "visibleInWorkView": false}
-    ], "startingOn": null, "dueDate": 1395014400000, "closedDate": 1395093874000, "createdDate": 1394580326000},
-    {"id": 918, "title": "Wyłącz Netflixa ", "description": null, "finished": true, "subtasks": [], "tags": [
-        {"id": 24, "name": "planned", "color": "#10f028", "visibleInWorkView": false}
-    ], "startingOn": null, "dueDate": 1395014400000, "closedDate": 1395093865000, "createdDate": 1393445348000},
-    {"id": 665, "title": "Opisać projekt GTWeb na bloga ", "description": null, "finished": true, "subtasks": [], "tags": [
-        {"id": 20, "name": "next", "color": "#3241d2", "visibleInWorkView": false}
-    ], "startingOn": null, "dueDate": null, "closedDate": 1395007137000, "createdDate": 1387755376000},
-    {"id": 957, "title": "Przelej pieniądze do Polski na konto oszczędnościowe ", "description": null, "finished": true, "subtasks": [
-        {"id": 958, "title": "Załóż konto oszczędnościowe w BGŻ ", "description": null, "finished": true, "subtasks": [], "tags": [
-            {"id": 20, "name": "next", "color": "#3241d2", "visibleInWorkView": false}
-        ], "startingOn": null, "dueDate": null, "closedDate": 1394376418000, "createdDate": 1394374368000},
-        {"id": 959, "title": "Ania powinna założyć konto w transferwise ", "description": null, "finished": true, "subtasks": [], "tags": [
-            {"id": 22, "name": "waiting", "color": "#fbfa64", "visibleInWorkView": false}
-        ], "startingOn": 1394323200000, "dueDate": 1394323200000, "closedDate": 1394390439000, "createdDate": 1394374411000},
-        {"id": 960, "title": "Kasa powinna przyjść z TransferWise na Aliora ", "description": null, "finished": true, "subtasks": [], "tags": [
-            {"id": 22, "name": "waiting", "color": "#fbfa64", "visibleInWorkView": false}
-        ], "startingOn": 1394665200000, "dueDate": 1394665200000, "closedDate": 1394580348000, "createdDate": 1394376493000},
-        {"id": 989, "title": "Odpowiedz od BGZOptima ze wlaczyli lokate ", "description": null, "finished": true, "subtasks": [], "tags": [
-            {"id": 22, "name": "waiting", "color": "#fbfa64", "visibleInWorkView": false}
-        ], "startingOn": null, "dueDate": 1394665200000, "closedDate": 1394662978000, "createdDate": 1394580506000}
-    ], "tags": [
-        {"id": 21, "name": "project", "color": "#df3a1c", "visibleInWorkView": false}
-    ], "startingOn": null, "dueDate": null, "closedDate": 1395002111000, "createdDate": 1394374347000}
+    // 3 finished + 0 unfinished
+    {
+        "closedDate": null,
+        "createdDate": 1383176727000,
+        "description": null,
+        "dueDate": null,
+        "finished": false,
+        "id": 457,
+        "startDate": null,
+        "title": "Finished task 1 with two subtasks (both finished)",
+        "subtasks": [
+            {
+                "closedDate": 1389452128000,
+                "createdDate": 1383176775000,
+                "description": null,
+                "dueDate": null,
+                "finished": true,
+                "id": 458,
+                "startDate": null,
+                "subtasks": [],
+                "title": "Finished subtask 1.1 (level 1)",
+                "tags": [
+                    {
+                        "color": "#3241d2",
+                        "id": 20,
+                        "name": "next", "visibleInWorkView": true
+                    },
+                    {
+                        "color": "#FF80AA",
+                        "id": 36,
+                        "name": "priority",
+                        "visibleInWorkView": false
+                    }
+                ]
+            },
+            {
+                "closedDate": null,
+                "createdDate": 1389743254000,
+                "description": null,
+                "dueDate": null,
+                "finished": true,
+                "id": 733,
+                "startDate": null,
+                "subtasks": [],
+                "tags": [
+                    {
+                        "color": "#3241d2",
+                        "id": 20,
+                        "name": "next", "visibleInWorkView": true
+                    }
+                ],
+                "title": "Finished subtask 1.2 (level 1)"
+            }
+        ],
+        "tags": [
+            {
+                "color": "#df3a1c",
+                "id": 21,
+                "name": "project",
+                "visibleInWorkView": false
+            }
+        ]
+    },
+    // 0 finished + 1 unfinished
+    {
+        "closedDate": null,
+        "createdDate": 1376933740000,
+        "description": null,
+        "dueDate": 1395878400000,
+        "finished": false,
+        "id": 161,
+        "startDate": 1395878400000,
+        "subtasks": [],
+        "tags": [
+            {
+                "color": "#10f028",
+                "id": 24,
+                "name": "planned",
+                "visibleInWorkView": false
+            },
+            {
+                "color": null,
+                "id": 26,
+                "name": "bills",
+                "visibleInWorkView": false
+            }
+        ],
+        "title": "Unfinished - task 2"
+    },
+    //  4 finished + 5 unfinished
+    {
+        "closedDate": null,
+        "createdDate": 1376085600000,
+        "description": null,
+        "dueDate": null,
+        "finished": false,
+        "id": 104,
+        "startDate": null,
+        "title": "Unfinished task 3 with many subtasks (some finished)",
+        "subtasks": [
+            {
+                "closedDate": null,
+                "createdDate": 1376085600000,
+                "description": null,
+                "dueDate": null,
+                "finished": false,
+                "id": 84,
+                "startDate": null,
+                "title": "Unfinished - subtask 3.1",
+                "subtasks": [
+                    {
+                        "closedDate": 1381685292000,
+                        "createdDate": 1379936796000,
+                        "description": null,
+                        "dueDate": null,
+                        "finished": true,
+                        "id": 322,
+                        "startDate": null,
+                        "title": "Finished - subtask 3.1.1",
+                        "subtasks": [],
+                        "tags": [
+                            {
+                                "color": "#3241d2",
+                                "id": 20,
+                                "name": "next", "visibleInWorkView": true
+                            }
+                        ]
+                    },
+                    {
+                        "closedDate": null,
+                        "createdDate": 1381685332000,
+                        "description": null,
+                        "dueDate": null,
+                        "finished": false,
+                        "id": 397,
+                        "startDate": null,
+                        "title": "Unfinished - subtask 3.1.2",
+                        "subtasks": [],
+                        "tags": [
+                            {
+                                "color": "#3241d2",
+                                "id": 20,
+                                "name": "next", "visibleInWorkView": true
+                            }
+                        ]
+                    },
+                    {
+                        "closedDate": 1394408301000,
+                        "createdDate": 1394386282000,
+                        "description": null,
+                        "dueDate": null,
+                        "finished": true,
+                        "id": 967,
+                        "startDate": null,
+                        "subtasks": [],
+                        "tags": [
+                            {
+                                "color": "#3241d2",
+                                "id": 20,
+                                "name": "next", "visibleInWorkView": true
+                            }
+                        ],
+                        "title": "Finished - subtask 3.1.3"
+                    }
+                ],
+                "tags": [
+                    {
+                        "color": "#df3a1c",
+                        "id": 21,
+                        "name": "project",
+                        "visibleInWorkView": false
+                    }
+                ]
+            },
+            {
+                "closedDate": 1381258263000,
+                "createdDate": 1376950286000,
+                "description": null,
+                "dueDate": null,
+                "finished": false,
+                "id": 168,
+                "startDate": null,
+                "title": "Unfinished task 3.2 with lower level finished task",
+                "subtasks": [
+                    {
+                        "closedDate": 1381258256000,
+                        "createdDate": 1379935840000,
+                        "description": null,
+                        "dueDate": null,
+                        "finished": false,
+                        "id": 321,
+                        "startDate": null,
+                        "title": "Unfinished subtask 3.2.1",
+                        "subtasks": [
+                            {
+                                "closedDate": 1381258256000,
+                                "createdDate": 1379935840000,
+                                "description": null,
+                                "dueDate": null,
+                                "finished": true,
+                                "id": 1023,
+                                "startDate": null,
+                                "title": "Finished subtask 3.2.1.1",
+                                "subtasks": [
+                                    {
+                                        "closedDate": 1381258256000,
+                                        "createdDate": 1379935840000,
+                                        "description": null,
+                                        "dueDate": null,
+                                        "finished": true,
+                                        "id": 1024,
+                                        "startDate": null,
+                                        "subtasks": [],
+                                        "title": "Finished subtask 3.2.1.1.1",
+                                        "tags": [
+                                            {
+                                                "color": "#3241d2",
+                                                "id": 20,
+                                                "name": "next", "visibleInWorkView": true
+                                            }
+                                        ]
+                                    }
+                                ],
+                                "tags": [
+                                    {
+                                        "color": "#3241d2",
+                                        "id": 20,
+                                        "name": "next", "visibleInWorkView": true
+                                    }
+                                ]
+                            }
+                        ],
+                        "tags": [
+                            {
+                                "color": "#3241d2",
+                                "id": 20,
+                                "name": "next", "visibleInWorkView": true
+                            }
+                        ]
+                    }
+                ],
+                "tags": [
+                    {
+                        "color": "#3241d2",
+                        "id": 20,
+                        "name": "next", "visibleInWorkView": true
+                    }
+                ]
+            }
+        ],
+        "tags": [
+            {
+                "color": "#df3a1c",
+                "id": 21,
+                "name": "project",
+                "visibleInWorkView": false
+            }
+        ]
+    }
+];
+
+var threeLevelFinishedTasks = [
+    {
+        "closedDate": 1381258256000,
+        "createdDate": 1379935840000,
+        "description": null,
+        "dueDate": null,
+        "finished": true,
+        "id": 321,
+        "startDate": null,
+        "title": "Finished task 1",
+        "subtasks": [
+            {
+                "closedDate": 1381258256000,
+                "createdDate": 1379935840000,
+                "description": null,
+                "dueDate": null,
+                "finished": true,
+                "id": 1023,
+                "startDate": null,
+                "title": "Finished subtask 1.1",
+                "subtasks": [
+                    {
+                        "closedDate": 1381258256000,
+                        "createdDate": 1379935840000,
+                        "description": null,
+                        "dueDate": null,
+                        "finished": true,
+                        "id": 1024,
+                        "startDate": null,
+                        "subtasks": [],
+                        "title": "Finished subtask 1.1.1",
+                        "tags": [
+                            {
+                                "color": "#3241d2",
+                                "id": 20,
+                                "name": "next", "visibleInWorkView": true
+                            }
+                        ]
+                    }
+                ],
+                "tags": [
+                    {
+                        "color": "#3241d2",
+                        "id": 20,
+                        "name": "next", "visibleInWorkView": true
+                    }
+                ]
+            }
+        ],
+        "tags": [
+            {
+                "color": "#3241d2",
+                "id": 20,
+                "name": "next", "visibleInWorkView": true
+            }
+        ]
+    }
+];
+
+
+var threeLevelUnfinishedTasks = [
+    {
+        "closedDate": 1381258256000,
+        "createdDate": 1379935840000,
+        "description": null,
+        "dueDate": null,
+        "finished": false,
+        "id": 321,
+        "startDate": null,
+        "title": "Unfinished task 1",
+        "subtasks": [
+            {
+                "closedDate": 1381258256000,
+                "createdDate": 1379935840000,
+                "description": null,
+                "dueDate": null,
+                "finished": false,
+                "id": 1023,
+                "startDate": null,
+                "title": "Unfinished subtask 1.1",
+                "subtasks": [
+                    {
+                        "closedDate": 1381258256000,
+                        "createdDate": 1379935840000,
+                        "description": null,
+                        "dueDate": null,
+                        "finished": false,
+                        "id": 1024,
+                        "startDate": null,
+                        "subtasks": [],
+                        "title": "Unfinished subtask 1.1.1",
+                        "tags": [
+                            {
+                                "color": "#3241d2",
+                                "id": 20,
+                                "name": "next", "visibleInWorkView": true
+                            }
+                        ]
+                    }
+                ],
+                "tags": [
+                    {
+                        "color": "#3241d2",
+                        "id": 20,
+                        "name": "next", "visibleInWorkView": true
+                    }
+                ]
+            }
+        ],
+        "tags": [
+            {
+                "color": "#3241d2",
+                "id": 20,
+                "name": "next", "visibleInWorkView": true
+            }
+        ]
+    }
 ];

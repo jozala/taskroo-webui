@@ -1,10 +1,10 @@
-var app = angular.module("GTWeb", ["TabList", "ui.bootstrap", 'frapontillo.bootstrap-switch', 'ngResource']);
+var app = angular.module("taskroo", ["TabList", "ui.bootstrap", 'frapontillo.bootstrap-switch', 'ngResource']);
 
+var tokenId = '81d9cb58-ec10-499b-ad27-99fa10193841';
 
 app.factory("TagsService", function ($resource, $log) {
-    var tokenId = '87115322-1c4d-4f59-90d2-b3da0f60dd39';
     var tags = [];
-    var service = $resource("http://taskroo.local/ws/tags/:tagId", {}, {
+    var service = $resource("/ws/tags/:tagId", {}, {
         query: {
             method:'GET',
             isArray: true,
@@ -31,9 +31,8 @@ app.factory("TagsService", function ($resource, $log) {
 });
 
 app.factory("TasksService", function ($resource) {
-    var tokenId = '87115322-1c4d-4f59-90d2-b3da0f60dd39';
     var tasks = [];
-    var service = $resource("http://taskroo.local/ws/tasks/:taskId", {}, {
+    var service = $resource("/ws/tasks/:taskId", {}, {
         query: {
             method: 'GET',
             isArray: true,
@@ -58,7 +57,7 @@ app.factory("TasksService", function ($resource) {
         }
     });
 
-    var subtaskService = $resource("http://taskroo.local/ws/tasks/:taskId/subtasks/:subtaskId", {}, {
+    var subtaskService = $resource("/ws/tasks/:taskId/subtasks/:subtaskId", {}, {
         add: {
             method:'POST',
             headers: { 'Authorization': 'GTWebAuth realm="gtweb@aetas.pl",tokenKey="' + tokenId + '"'},

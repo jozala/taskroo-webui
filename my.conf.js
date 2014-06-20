@@ -24,16 +24,22 @@ module.exports = function(config) {
         // components
         cfg.bowerComponents + '/jquery/jquery.js',
         cfg.bowerComponents + '/angular/angular.js',
+        cfg.bowerComponents + '/angular-mocks/angular-mocks.js',
+        cfg.bowerComponents + '/angular-resource/angular-resource.js',
         cfg.bowerComponents + '/momentjs/min/moment.min.js',
+        cfg.bowerComponents + '/tabularlist/js/tablist.js',
+        cfg.bowerComponents + '/angular-bootstrap/ui-bootstrap-tpls.min.js',
+        cfg.bowerComponents + '/angular-bootstrap-switch/dist/angular-bootstrap-switch.min.js',
 
       'js/*.js',
+      'test/testdata.js',
       'test/*Spec.js'
     ],
 
 
     // list of files to exclude
     exclude: [
-      
+
     ],
 
 

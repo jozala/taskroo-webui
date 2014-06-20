@@ -109,8 +109,7 @@ app.directive('dateInput', function (dateFilter) {
 
 // TODO when creating tasks and tag is active (selected) then this tag should be automatically added to tags of newly created task
 // TODO after update of tag all tasks with this tag should be automatically updated (same after tag removal - remove from all tasks)
-// TODO finished tasks should be displayed as flat list, right? They're not (try with 3 levels)!
-var EditTaskModalCtrl = function($scope, $modalInstance, task, dateFilter) {
+var EditTaskModalCtrl = function($scope, $modalInstance, task) {
     $scope.task = angular.copy(task);
 
     var tags = "";
@@ -231,8 +230,10 @@ function TasksCtrl($scope, TasksService, TagsService, SearchService, TagsFilteri
     var getFinishedTasks = function(tasks) {
         return tasks.reduce(function(previousValue, currentTask) {
             if (currentTask.finished) {
-                previousValue.push(currentTask);
-                return previousValue.concat(currentTask.subtasks);
+                var currentTaskCopy = angular.copy(currentTask);
+                currentTaskCopy.subtasks = [];
+                previousValue.push(currentTaskCopy);
+                return previousValue.concat(getFinishedTasks(currentTask.subtasks));
             }
             return previousValue.concat(getFinishedTasks(currentTask.subtasks));
         }, []);
@@ -249,10 +250,14 @@ function TasksCtrl($scope, TasksService, TagsService, SearchService, TagsFilteri
     });
 
     $scope.taskFinished = function(task) {
-        $log.info('Task ' + task.id + ' finished: ' + !task.finished);
         task.finished = !task.finished;
-        task.closedDate = moment().startOf('day').valueOf();
-        new TasksService.service(task).$update({taskId: task.id})
+        new TasksService.service(task).$update({taskId: task.id}, function(updatedTask) {
+            var index = $scope.tasks.indexOf(task);
+            if (index != -1) {
+                $log.debug("Replacing task with id: " + task.id + " with updated data task (tasks finished)");
+                $scope.tasks[index] = updatedTask;
+            }
+        })
     };
 
     $scope.removeTask = function(task) {
