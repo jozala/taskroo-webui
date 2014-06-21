@@ -1,4 +1,4 @@
-function TagsCtrl($scope, TagsService, TagsFilteringService, $modal, $log) {
+function TagsCtrl($scope, TagsService, TasksService, TagsFilteringService, $modal, $log) {
     TagsService.service.query(function(result) {
         TagsService.tags = result;
         $scope.tags = TagsService.tags;
@@ -38,7 +38,15 @@ function TagsCtrl($scope, TagsService, TagsFilteringService, $modal, $log) {
     };
 
     $scope.updateTag = function(tag) {
-        new TagsService.service(tag).$update({tagId: tag.id});
+        new TagsService.service(tag).$update({tagId: tag.id}, function(updatedTag) {
+            TasksService.service.query(function(newTasks) {
+                TasksService.tasks.length = 0;
+                newTasks.forEach(function(refreshedTask) {
+                    TasksService.tasks.push(refreshedTask);
+                });
+                $scope.selectTag('ALL');
+            });
+        });
         $log.info("tag: id=" + tag.id + " " + tag.name + " updated");
     };
 

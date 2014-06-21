@@ -109,6 +109,7 @@ app.directive('dateInput', function (dateFilter) {
 
 // TODO when creating tasks and tag is active (selected) then this tag should be automatically added to tags of newly created task
 // TODO after update of tag all tasks with this tag should be automatically updated (same after tag removal - remove from all tasks)
+// TODO something is wrong with unfinishing tasks
 var EditTaskModalCtrl = function($scope, $modalInstance, task) {
     $scope.task = angular.copy(task);
 
@@ -161,6 +162,15 @@ var CreateSubtaskModalCtrl = function($scope, $modalInstance) {
 
 function TasksCtrl($scope, TasksService, TagsService, SearchService, TagsFilteringService, $modal, $log) {
     TasksService.service.query(function(result) {TasksService.tasks = result; $scope.tasks = TasksService.tasks});
+    $scope.tasksFilter = function(tasks) {
+        return tasks;
+    };
+    var removeTasksFilter = function() {
+        $scope.tasksFilter = function(tasks) { return tasks };
+    };
+    $scope.getAllTasks = function() {
+        return $scope.tasksFilter(TasksService.tasks);
+    };
     $scope.search = SearchService;
     $scope.tagFilter = TagsFilteringService;
     $scope.workview = false;
@@ -210,11 +220,11 @@ function TasksCtrl($scope, TasksService, TagsService, SearchService, TagsFilteri
 
     $scope.$watch('tagFilter.selectedTag', function(newSelectedTag) {
         if (newSelectedTag === "ALL") {
-            $scope.tasks = TasksService.tasks;
+            $scope.tasks = $scope.getAllTasks();
         } else if (newSelectedTag == "NONE") {
-            $scope.tasks = filterTasksWithNoTag(TasksService.tasks);
+            $scope.tasks = filterTasksWithNoTag($scope.getAllTasks());
         } else {
-            $scope.tasks = filterTasksByTag(TasksService.tasks, newSelectedTag);
+            $scope.tasks = filterTasksByTag($scope.getAllTasks(), newSelectedTag);
         }
     });
 
@@ -242,10 +252,12 @@ function TasksCtrl($scope, TasksService, TagsService, SearchService, TagsFilteri
     $scope.$watch("showUnfinished", function(newShowUnfinished) {
        if (newShowUnfinished) {
            $scope.tasksOrderPredicate = ["dueDate", "createdDate"];
-           $scope.tasks = TasksService.tasks;
+           removeTasksFilter();
+           $scope.tasks = $scope.getAllTasks();
        } else {
            $scope.tasksOrderPredicate = "-closedDate";
-           $scope.tasks = getFinishedTasks(TasksService.tasks);
+           $scope.tasksFilter = getFinishedTasks;
+           $scope.tasks = $scope.getAllTasks();
        }
     });
 
