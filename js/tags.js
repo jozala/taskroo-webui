@@ -26,28 +26,34 @@ function TagsCtrl($scope, TagsService, TasksService, TagsFilteringService, $moda
     $scope.removeTag = function(tag) {
         var removeConfirmed = confirm("Are you sure to remove this tag?\n" + tag.name + "\n\nYou cannot undo this.");
         if (removeConfirmed) {
-            TagsService.service.delete({tagId: tag.id});
-            $log.info("tag: id=" + tag.id + " " + tag.name + " removed");
-            for (var i in $scope.tags) {
-                if($scope.tags[i] == tag) {
-                    $scope.tags.splice(i, 1);
-                    break;
+            TagsService.service.delete({tagId: tag.id}, function() {
+                $log.info("tag: id=" + tag.id + " " + tag.name + " removed");
+                for (var i in $scope.tags) {
+                    if($scope.tags[i] == tag) {
+                        $scope.tags.splice(i, 1);
+                        break;
+                    }
                 }
-            }
+                refreshTasks();
+            });
         }
     };
 
     $scope.updateTag = function(tag) {
         new TagsService.service(tag).$update({tagId: tag.id}, function(updatedTag) {
-            TasksService.service.query(function(newTasks) {
-                TasksService.tasks.length = 0;
-                newTasks.forEach(function(refreshedTask) {
-                    TasksService.tasks.push(refreshedTask);
-                });
-                $scope.selectTag('ALL');
-            });
+            refreshTasks();
         });
         $log.info("tag: id=" + tag.id + " " + tag.name + " updated");
+    };
+
+    var refreshTasks = function() {
+        TasksService.service.query(function(newTasks) {
+            TasksService.tasks.length = 0;
+            newTasks.forEach(function(refreshedTask) {
+                TasksService.tasks.push(refreshedTask);
+            });
+            $scope.selectTag('ALL');
+        });
     };
 
     $scope.selectTag = function(tag) {

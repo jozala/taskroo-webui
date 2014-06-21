@@ -108,7 +108,6 @@ app.directive('dateInput', function (dateFilter) {
 });
 
 // TODO when creating tasks and tag is active (selected) then this tag should be automatically added to tags of newly created task
-// TODO after update of tag all tasks with this tag should be automatically updated (same after tag removal - remove from all tasks)
 // TODO something is wrong with unfinishing tasks
 var EditTaskModalCtrl = function($scope, $modalInstance, task) {
     $scope.task = angular.copy(task);
