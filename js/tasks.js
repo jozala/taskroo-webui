@@ -107,8 +107,9 @@ app.directive('dateInput', function (dateFilter) {
     };
 });
 
-// TODO when creating tasks and tag is active (selected) then this tag should be automatically added to tags of newly created task
 // TODO something is wrong with unfinishing tasks
+// TODO WorkView does not work properly when switching between tags
+// TODO implement hints in the magic input field (Have you tried Work View? It's awesome!, Be productive. Today., Please, use me, You can write due:monday to set due date of the task to the next monday.)
 var EditTaskModalCtrl = function($scope, $modalInstance, task) {
     $scope.task = angular.copy(task);
 
@@ -306,7 +307,8 @@ function TasksCtrl($scope, TasksService, TagsService, SearchService, TagsFilteri
         $log.debug("Task with title: " + task.title + " added");
         var newTask = new TasksService.service(task);
         newTask.$save(function(addedTask) {
-            TasksService.tasks.push(addedTask)
+            TasksService.tasks.push(addedTask);
+            $scope.tasks.push(addedTask);
             $scope.magicInput = "";
         });
 
@@ -406,6 +408,10 @@ function TasksCtrl($scope, TasksService, TagsService, SearchService, TagsFilteri
     $scope.magicInputSubmit = function() {
         $log.debug('Magic input submitted: ' + $scope.magicInput);
         var task = new MagicInputParser().parse($scope.magicInput);
+
+        if ($scope.tagFilter.selectedTag != 'ALL' && $scope.tagFilter.selectedTag != 'NONE') {
+            task.tags.push($scope.tagFilter.selectedTag);
+        }
 
         var tagsToAdd = findNonExistingTags(task.tags);
         addTagsAndDoSomethingElseLater(tagsToAdd, function() {$scope.addNewTask(task)});
