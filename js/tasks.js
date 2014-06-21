@@ -336,11 +336,7 @@ function TasksCtrl($scope, TasksService, TagsService, SearchService, TagsFilteri
         });
         editTaskModalInstance.result.then(function(originalTask) {
             var tagsToAdd = findNonExistingTags(originalTask.tags);
-            var addSubtaskAfterTagsAdded = new MultitaskRunner(
-                tagsToAdd.map( function(it) {return function(param) {return it.$save(param)}} ),
-                function () { $scope.updateTask(originalTask) });
-
-            addSubtaskAfterTagsAdded.start();
+            addTagsAndDoSomethingElseLater(tagsToAdd, function() {$scope.updateTask(originalTask)});
         });
     };
 
@@ -354,11 +350,7 @@ function TasksCtrl($scope, TasksService, TagsService, SearchService, TagsFilteri
             var subTask =  new MagicInputParser().parse(newSubtaskContent);
 
             var tagsToAdd = findNonExistingTags(subTask.tags);
-            var addSubtaskAfterTagsAdded = new MultitaskRunner(
-                tagsToAdd.map( function(it) {return function(param) {return it.$save(param)}} ),
-                function () { $scope.createSubtask(task, subTask) });
-
-            addSubtaskAfterTagsAdded.start();
+            addTagsAndDoSomethingElseLater(tagsToAdd, function() {$scope.createSubtask(task, subTask)});
         });
     };
 
@@ -405,15 +397,30 @@ function TasksCtrl($scope, TasksService, TagsService, SearchService, TagsFilteri
         var task = new MagicInputParser().parse($scope.magicInput);
 
         var tagsToAdd = findNonExistingTags(task.tags);
-        var addTaskAfterTagsAdded = new MultitaskRunner(
-            tagsToAdd.map( function(it) {return function(param) {return it.$save(param)}} ),
-            function () { $scope.addNewTask(task) });
+        addTagsAndDoSomethingElseLater(tagsToAdd, function() {$scope.addNewTask(task)});
+    };
 
-        addTaskAfterTagsAdded.start();
+    var addTagsAndDoSomethingElseLater = function(tagsToAdd, somethingElse) {
+        var addToTagsCollection = function(createdTag) {
+            createdTag.size = 1;
+            TagsService.tags.push(createdTag);
+        };
 
+        var doSomethingAfterTagsAdded = new MultitaskRunner(
+            tagsToAdd.map( function(it) {return function(callbackAfterDone) {return it.$save(function(createdTag) {addToTagsCollection(createdTag); callbackAfterDone()})}} ),
+            somethingElse);
+
+        doSomethingAfterTagsAdded.start();
     };
 
     var MultitaskRunner = function(tasksToRunWithCallback, onFinishedFunction) {
+
+        var checkIfAllFinished = function() {
+            $log.debug("Check if actual counter (" + counter + ") is same as the number of tasks to run (" + tasksToRunWithCallback.length + ")");
+            if (counter == tasksToRunWithCallback.length) {
+                onFinishedFunction();
+            }
+        };
 
         this.start = function() {
             $log.debug("MultitaskRunner started");
@@ -422,12 +429,7 @@ function TasksCtrl($scope, TasksService, TagsService, SearchService, TagsFilteri
         };
 
         var counter = 0;
-        var checkIfAllFinished = function() {
-            $log.debug("Check if actual counter (" + counter + ") is same as the number of tasks to run (" + tasksToRunWithCallback.length + ")");
-            if (counter == tasksToRunWithCallback.length) {
-                onFinishedFunction();
-            }
-        }
+
     };
 
     $scope.moveSubtaskToTask = function(movedTask, newParentTask) {
