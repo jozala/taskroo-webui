@@ -107,7 +107,7 @@ app.directive('dateInput', function (dateFilter) {
     };
 });
 
-// TODO something is wrong with unfinishing tasks
+// TODO separate view for finished tasks (only flat list of tasks with possibility to display only part of the task - last month)
 // TODO WorkView does not work properly when switching between tags
 // TODO implement hints in the magic input field (Have you tried Work View? It's awesome!, Be productive. Today., Please, use me, You can write due:monday to set due date of the task to the next monday.)
 // TODO should be visible by some icon that tags is visible in the WorkView
@@ -241,9 +241,7 @@ function TasksCtrl($scope, TasksService, TagsService, SearchService, TagsFilteri
     var getFinishedTasks = function(tasks) {
         return tasks.reduce(function(previousValue, currentTask) {
             if (currentTask.finished) {
-                var currentTaskCopy = angular.copy(currentTask);
-                currentTaskCopy.subtasks = [];
-                previousValue.push(currentTaskCopy);
+                previousValue.push(currentTask);
                 return previousValue.concat(getFinishedTasks(currentTask.subtasks));
             }
             return previousValue.concat(getFinishedTasks(currentTask.subtasks));
@@ -265,12 +263,13 @@ function TasksCtrl($scope, TasksService, TagsService, SearchService, TagsFilteri
     $scope.taskFinished = function(task) {
         task.finished = !task.finished;
         new TasksService.service(task).$update({taskId: task.id}, function(updatedTask) {
-            var index = TasksService.tasks.indexOf(task);
-            if (index != -1) {
-                $log.debug("Replacing task with id: " + TasksService.tasks[index].id + " with updated data task (tasks finished)");
-                TasksService.tasks[index] = updatedTask;
-                $scope.tasks = $scope.getAllTasks();
+            if (!task.finished) {
+                var taskAncestors = Tasks.findTaskAncestors(TasksService.tasks, task.id);
+                taskAncestors.forEach(function(ancestorTask) {ancestorTask.finished = false})
             }
+            $log.debug("Replacing task with id: " + task.id + " with updated data task (tasks (un)finished)");
+            Tasks.replaceTaskOrSubtask(TasksService.tasks, task, updatedTask);
+            $scope.tasks = $scope.getAllTasks();
         })
     };
 
