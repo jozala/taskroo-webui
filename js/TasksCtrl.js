@@ -110,6 +110,7 @@ app.directive('dateInput', function (dateFilter) {
 // TODO something is wrong with unfinishing tasks
 // TODO WorkView does not work properly when switching between tags
 // TODO implement hints in the magic input field (Have you tried Work View? It's awesome!, Be productive. Today., Please, use me, You can write due:monday to set due date of the task to the next monday.)
+// TODO should be visible by some icon that tags is visible in the WorkView
 var EditTaskModalCtrl = function($scope, $modalInstance, task) {
     $scope.task = angular.copy(task);
 
@@ -264,10 +265,11 @@ function TasksCtrl($scope, TasksService, TagsService, SearchService, TagsFilteri
     $scope.taskFinished = function(task) {
         task.finished = !task.finished;
         new TasksService.service(task).$update({taskId: task.id}, function(updatedTask) {
-            var index = $scope.tasks.indexOf(task);
+            var index = TasksService.tasks.indexOf(task);
             if (index != -1) {
-                $log.debug("Replacing task with id: " + task.id + " with updated data task (tasks finished)");
-                $scope.tasks[index] = updatedTask;
+                $log.debug("Replacing task with id: " + TasksService.tasks[index].id + " with updated data task (tasks finished)");
+                TasksService.tasks[index] = updatedTask;
+                $scope.tasks = $scope.getAllTasks();
             }
         })
     };
