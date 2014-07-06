@@ -23,6 +23,12 @@ body>footer {
     display: block;
 
     text-align: right;
+    padding-top: 5px;
+    padding-right: 10px;
+    padding-left: 10px;
+
+    background-color: #121212;
+    box-shadow: 0 0 7px black;
 
     background-image: linear-gradient(bottom, rgb(0,0,0) 0%, rgb(46,46,46) 100%);
     background-image: -o-linear-gradient(bottom, rgb(0,0,0) 0%, rgb(46,46,46) 100%);
