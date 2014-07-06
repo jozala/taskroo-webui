@@ -312,7 +312,6 @@ function TasksCtrl($scope, TasksService, TagsService, SearchService, TagsFilteri
         var newTask = new TasksService.service(task);
         newTask.$save(function(addedTask) {
             TasksService.tasks.push(addedTask);
-            $scope.tasks.push(addedTask);
             $scope.magicInput = "";
         });
         $scope.magicInputHint = HintsService.getRandom();
