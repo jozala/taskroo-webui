@@ -158,7 +158,7 @@ var CreateSubtaskModalCtrl = function($scope, $modalInstance) {
     };
 };
 
-function TasksCtrl($scope, TasksService, TagsService, SearchService, TagsFilteringService, $modal, $log) {
+function TasksCtrl($scope, TasksService, TagsService, SearchService, TagsFilteringService, HintsService, $modal, $log) {
     TasksService.service.query(function(result) {TasksService.tasks = result; $scope.tasks = TasksService.tasks});
     $scope.tasksFilter = function(tasks) {
         return tasks;
@@ -178,6 +178,8 @@ function TasksCtrl($scope, TasksService, TagsService, SearchService, TagsFilteri
     $scope.searchTask = function(task) {
         return searchInTaskAndSubtasks(task, $scope.search.searchString.toLowerCase());
     };
+
+    $scope.magicInputHint = HintsService.getRandom();
 
     var searchInTaskAndSubtasks = function(task, searchPhrase) {
         if (task.finished == $scope.showUnfinished) return false;
@@ -313,7 +315,7 @@ function TasksCtrl($scope, TasksService, TagsService, SearchService, TagsFilteri
             $scope.tasks.push(addedTask);
             $scope.magicInput = "";
         });
-
+        $scope.magicInputHint = HintsService.getRandom();
     };
 
     $scope.createSubtask = function(task, subtask) {
@@ -323,6 +325,7 @@ function TasksCtrl($scope, TasksService, TagsService, SearchService, TagsFilteri
                 $log.info('Subtask ' + subtaskResult.title + ' id=(' + subtaskResult.id + ') created for task: ' + task.title + " id=(" + task.id + ")");
             });
         });
+        $scope.magicInputHint = HintsService.getRandom();
     };
 
     var findNonExistingTags = function(tags) {

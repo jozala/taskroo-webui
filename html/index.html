@@ -41,7 +41,7 @@
             <div id="top-bar">
                 <form id="add-task-form" class="top-box" name="task" action="" method="POST" accept-charset="utf-8"
                       ng-submit="magicInputSubmit()">
-                    <input placeholder="What about creating a new task?" focus-element type="text" name="taskInput" ng-model="magicInput"/>
+                    <input placeholder="{{ magicInputHint }}" focus-element type="text" name="taskInput" ng-model="magicInput"/>
                     <input type="submit" value="Add" class="btn btn-warning"/>
                 </form>
 

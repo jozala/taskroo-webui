@@ -1,6 +1,6 @@
 var app = angular.module("taskroo", ["TabList", "ui.bootstrap", 'frapontillo.bootstrap-switch', 'ngResource']);
 
-var tokenId = '81d9cb58-ec10-499b-ad27-99fa10193841';
+var tokenId = '37c76c32-74fb-454f-a30e-fc3b26ce8ed8';
 
 app.factory("TagsService", function ($resource, $log) {
     var tags = [];
@@ -78,4 +78,22 @@ app.factory("SearchService", function () {
 
 app.factory("TagsFilteringService", function() {
     return {selectedTag: "ALL"}
+});
+
+app.factory("HintsService", function() {
+    var hints = ["How about getting some things done?",
+            "Would you like to create a new task?",
+            "Have you tried Work View? It's awesome!",
+            "Be productive. Today.",
+            "Please, use me!",
+            "You can write \"due:monday\" to set due date of the task to the next monday.",
+            "Try \"start:tomorrow\" to set task's start date to tomorrow.",
+            "Write \"tags:myTag,important\" to add multiple tags to new task at once."]
+
+    return {
+        getRandom: function() {
+            var index = Math.floor(Math.random() * hints.length);
+            return hints[index];
+        }
+    }
 });
