@@ -107,10 +107,7 @@ app.directive('dateInput', function (dateFilter) {
     };
 });
 
-// TODO separate view for finished tasks (only flat list of tasks with possibility to display only part of the task - last month)
-// TODO WorkView does not work properly when switching between tags
 // TODO implement hints in the magic input field (Have you tried Work View? It's awesome!, Be productive. Today., Please, use me, You can write due:monday to set due date of the task to the next monday.)
-// TODO should be visible by some icon that tags is visible in the WorkView
 var EditTaskModalCtrl = function($scope, $modalInstance, task) {
     $scope.task = angular.copy(task);
 
@@ -213,9 +210,13 @@ function TasksCtrl($scope, TasksService, TagsService, SearchService, TagsFilteri
 
     $scope.$watch('workview', function(workViewValue) {
         if (workViewValue) {
-            $scope.tasks = getWorkViewTasks($scope.tasks);
+            TagsFilteringService.selectedTag = "ALL";
+            $scope.tasksFilter = getWorkViewTasks;
+            $scope.tasks = $scope.getAllTasks();
         } else {
-            $scope.tasks = TasksService.tasks;
+            TagsFilteringService.selectedTag = "ALL";
+            removeTasksFilter();
+            $scope.tasks = $scope.getAllTasks();
         }
     });
 

@@ -63,7 +63,12 @@ function TagsCtrl($scope, TagsService, TasksService, TagsFilteringService, $moda
             tag.selected = true;
         }
         $scope.tagFilter.selectedTag = tag;
-    }
+    };
+
+    $scope.$watch('tagFilter.selectedTag', function(newSelectedTag) {
+        if ($scope.tags == undefined) return;
+        $scope.selectTag(newSelectedTag);
+    });
 }
 
 var EditTagModalCtrl = function($scope, $modalInstance, tag) {
