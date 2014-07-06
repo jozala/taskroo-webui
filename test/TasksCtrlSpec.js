@@ -48,8 +48,17 @@ describe("TasksService responsible for managing tasks in the scope", function() 
         scope.$apply(function() {
             scope.showUnfinished = false;
         });
-        var noneOfTheTasksHasSubtasks = scope.tasks.every(function(it) { return it.subtasks.length == 0 });
         expect(scope.tasks.length).toBe(3);
+    });
+
+    it("tasks should not have any subtasks when displaying finished tasks", function () {
+        mockRetrievedTasks(threeLevelFinishedTasks);
+        $httpBackend.flush();
+
+        scope.$apply(function() {
+            scope.showUnfinished = false;
+        });
+        var noneOfTheTasksHasSubtasks = scope.tasks.every(function(it) { return it.subtasks.length == 0 });
         expect(noneOfTheTasksHasSubtasks).toBeTruthy();
     });
 

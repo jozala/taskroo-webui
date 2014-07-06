@@ -38,7 +38,7 @@ var testTasks = [
     {
         "closedDate": null,
         "createdDate": 1376085600000,
-        "description": "NationWide, sort code: 07-02-46, Account no: 36231672, Do 23 ka\u017cdego miesi\u0105ca",
+        "description": "NationWide, sort code: 07-02-46, Account no: 123456, Do 23 ka\u017cdego miesi\u0105ca",
         "dueDate": 1395532800000,
         "finished": false,
         "id": 120,
@@ -2141,3 +2141,69 @@ var threeLevelUnfinishedTasks = [
         ]
     }
 ];
+
+var threeTopLevelTasks = [
+    {
+        "closedDate": null,
+        "createdDate": 1395103430000,
+        "description": "0208 231 2200",
+        "dueDate": 1395100800000,
+        "finished": false,
+        "id": 1,
+        "startingOn": null,
+        "subtasks": [],
+        "tags": [
+            {
+                "color": "#10f028",
+                "id": 24,
+                "name": "planned",
+                "visibleInWorkView": false
+            }
+        ],
+        "title": "Zarezerwuj stolik w Pillars na 20 Marca albo 26 Marca albo 17 kwietnia "
+    },
+    {
+        "closedDate": null,
+        "createdDate": 1376085600000,
+        "description": "NationWide, sort code: 07-02-46, Account no: 1243655, Do 23 ka\u017cdego miesi\u0105ca",
+        "dueDate": 1395532800000,
+        "finished": false,
+        "id": 2,
+        "startingOn": 1395532800000,
+        "subtasks": [],
+        "tags": [
+            {
+                "color": "#10f028",
+                "id": 24,
+                "name": "planned",
+                "visibleInWorkView": false
+            },
+            {
+                "color": null,
+                "id": 26,
+                "name": "bills",
+                "visibleInWorkView": false
+            }
+        ],
+        "title": "Zap\u0142a\u0107 czynsz za UK - \u00a3917 "
+    },
+    {
+        "closedDate": null,
+        "createdDate": 1376085600000,
+        "description": null,
+        "dueDate": 1395532800000,
+        "finished": false,
+        "id": 3,
+        "startingOn": 1395532800000,
+        "subtasks": [],
+        "tags": [
+            {
+                "color": "#10f028",
+                "id": 24,
+                "name": "planned",
+                "visibleInWorkView": false
+            }
+        ],
+        "title": "Przelej kas\u0119 na nast\u0119pny tydzie\u0144 na konto A/C "
+    }
+]
