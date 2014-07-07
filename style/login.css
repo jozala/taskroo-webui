@@ -38,3 +38,7 @@ body {
     width: auto;
     height: auto;
 }
+
+.ng-pristine .ng-invalid-required {
+    box-shadow: none;
+}
