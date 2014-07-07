@@ -1,6 +1,6 @@
 var app = angular.module("taskroo", ["TabList", "ui.bootstrap", 'frapontillo.bootstrap-switch', 'ngResource']);
 
-var tokenId = '37c76c32-74fb-454f-a30e-fc3b26ce8ed8';
+var tokenId = '83c16449-ed03-485d-a551-48ea1bfe08f5';
 
 app.factory("TagsService", function ($resource, $log) {
     var tags = [];

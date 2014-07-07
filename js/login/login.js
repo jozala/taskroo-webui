@@ -13,9 +13,32 @@ app.factory("LoginService", function ($resource) {
     }
 });
 
+app.directive("autofill", function () {
+    return {
+        require: "ngModel",
+        link: function (scope, element, attrs, ngModel) {
+            scope.$on("autofill:update", function() {
+                ngModel.$setViewValue(element.val());
+            });
+        }
+    }
+});
+
+app.directive("shaker", function ($log) {
+    return {
+        link: function(scope, element) {
+            scope.$on("login:failure", function() {
+                element.effect('shake', { times:3 }, 400);
+            });
+        }
+    };
+});
+
+
 function LoginCtrl($scope, LoginService, $log) {
     $scope.form = {};
     $scope.login = function(form) {
+        $scope.$broadcast("autofill:update");
         if (form.username == undefined || form.password == undefined) {
             $log.info("Username or password not specified");
             return;
@@ -24,7 +47,7 @@ function LoginCtrl($scope, LoginService, $log) {
         new LoginService.service(form).$login(function(session) {
             alert(session.sessionId);
         }, function(response) {
-            $(".shaker").effect('shake', { times:3 }, 400);
+            $scope.$broadcast("login:failure");
         });
 
     }

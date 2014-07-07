@@ -7,11 +7,11 @@
     <title>TaskRoo - Productivity Jump</title>
 </head>
 <body>
-<div id="login-box" class="blur" ng-app="taskroo-login">
-    <div id="logo" class="shaker"></div>
-    <form ng-controller="LoginCtrl" ng-submit="login(form)">
-        <input placeholder="Login" type="text" ng-model="form.username" required />
-        <input placeholder="Password" type="password" ng-model="form.password" required />
+<div id="login-box" class="blur" ng-app="taskroo-login" ng-controller="LoginCtrl">
+    <div id="logo" class="shaker" shaker></div>
+    <form ng-submit="login(form)">
+        <input placeholder="Login" type="text" ng-model="form.username" autofill required />
+        <input placeholder="Password" type="password" ng-model="form.password" autofill required />
         <input type="submit" class="btn btn-warning" value="Sign in" />
 
         <label><input type="checkbox" name="remember-me" style="display: inline-block" ng-model="form.rememberMe" />
@@ -21,12 +21,13 @@
     </form>
 </div>
 
-<script type="text/javascript" src="../bower_components/jquery/jquery.min.js"></script>
+<script type="text/javascript" src="../bower_components/jquery/dist/jquery.min.js"></script>
 <script type="text/javascript" src="../bower_components/jquery-ui/ui/jquery.ui.core.js"></script>
 <script type="text/javascript" src="../bower_components/jquery-ui/ui/jquery.ui.effect.js"></script>
 <script type="text/javascript" src="../bower_components/jquery-ui/ui/jquery.ui.effect-shake.js"></script>
 <script type="text/javascript" src="../bower_components/angular/angular.min.js"></script>
 <script type="text/javascript" src="../bower_components/angular-resource/angular-resource.min.js"></script>
+<script type="text/javascript" src="../bower_components/angular-cookies/angular-cookies.min.js"></script>
 <script type="text/javascript" src="../js/login/login.js"></script>
 
 </body>
