@@ -16,10 +16,8 @@ body {
 }
 
 #logo {
-    background-image: url("../static/img/logo/taskroo-logo-full-black-bg.png");
+    background: url("../static/img/logo/taskroo-logo-full-black-bg.png") no-repeat center;
     background-size: 100%;
-    background-repeat: no-repeat;
-    background-position: center;
     height: 100px;
     width: 70%;
     margin-left: 50px;
@@ -32,6 +30,7 @@ body {
     margin-top: 14px;
     padding-left: 10px;
     padding-right: 10px;
+    border: 1px solid gray;
 }
 
 #login-box input[type=checkbox] {
