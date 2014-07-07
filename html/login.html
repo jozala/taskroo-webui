@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title></title>
+    <link rel="stylesheet" href="../style/login.css"/>
+    <link rel="stylesheet" href="../bower_components/bootstrap/dist/css/bootstrap.min.css" />
+</head>
+<body>
+<div id="login-box" class="blur">
+    <div id="logo"></div>
+    <form>
+        <input placeholder="Login" type="text"/>
+        <input placeholder="Password" type="password" />
+        <input type="submit" class="btn btn-warning" value="Sign in" />
+
+        <label><input type="checkbox" name="remember-me" style="display: inline-block" />
+            <span>Remember me</span>
+        </label>
+        <a href="help.html" style="float: right; margin-top: 12px;">Forgot password?</a>
+
+
+    </form>
+</div>
+
+<script type="text/javascript" src="../bower_components/jquery/jquery.min.js"></script>
+<script type="text/javascript" src="../js/blur.min.js"></script>
+<script type="text/javascript">
+    $('.blur').blurjs({ source: 'body', radius: 7, overlay: 'rgba(255,255,255,0.4)' });
+</script>
+
+</body>
+</html>
