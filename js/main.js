@@ -1,8 +1,7 @@
-var app = angular.module("taskroo", ["TabList", "ui.bootstrap", 'frapontillo.bootstrap-switch', 'ngResource']);
+var app = angular.module("taskroo", ["TabList", "ui.bootstrap", 'frapontillo.bootstrap-switch', 'ngResource', 'ngCookies']);
 
-var tokenId = '83c16449-ed03-485d-a551-48ea1bfe08f5';
-
-app.factory("TagsService", function ($resource, $log) {
+app.factory("TagsService", function ($resource, $cookies, $log) {
+    var tokenId = $cookies.sid;
     var tags = [];
     var service = $resource("/ws/tags/:tagId", {}, {
         query: {
@@ -30,7 +29,8 @@ app.factory("TagsService", function ($resource, $log) {
     }
 });
 
-app.factory("TasksService", function ($resource) {
+app.factory("TasksService", function ($resource, $cookies) {
+    var tokenId = $cookies.sid;
     var tasks = [];
     var service = $resource("/ws/tasks/:taskId", {}, {
         query: {

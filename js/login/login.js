@@ -1,4 +1,4 @@
-var app = angular.module("taskroo-login", ['ngResource']);
+var app = angular.module("taskroo-login", ['ngResource', 'ngCookies']);
 
 app.factory("LoginService", function ($resource) {
     var service = $resource("/auth/authToken/login", {}, {
@@ -35,7 +35,7 @@ app.directive("shaker", function ($log) {
 });
 
 
-function LoginCtrl($scope, LoginService, $log) {
+function LoginCtrl($scope, LoginService, $cookies, $location, $log) {
     $scope.form = {};
     $scope.login = function(form) {
         $scope.$broadcast("autofill:update");
@@ -45,7 +45,8 @@ function LoginCtrl($scope, LoginService, $log) {
         }
         $log.debug("Sending user credentials to sign in user");
         new LoginService.service(form).$login(function(session) {
-            alert(session.sessionId);
+            $cookies.sid = session.sessionId;
+            window.location.href="index.html"
         }, function(response) {
             $scope.$broadcast("login:failure");
         });
