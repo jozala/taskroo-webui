@@ -97,3 +97,22 @@ app.factory("HintsService", function() {
         }
     }
 });
+
+// error handling
+app.factory('unauthorizedInterceptor', ['$q', '$cookies', '$log', function($q, $cookies, $log) {
+    return {
+        responseError: function (response) {
+            if (response.status == 403) {
+                $cookies.sid = "";
+                $log.info("Authorization failed. Redirecting to login page.");
+                window.location.href = "login.html"
+            }
+            return $q.reject(response);
+        }
+    };
+}]);
+
+app.config(['$httpProvider', function($httpProvider) {
+    $httpProvider.interceptors.push('unauthorizedInterceptor');
+}]);
+
