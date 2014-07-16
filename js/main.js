@@ -1,3 +1,5 @@
+"use strict";
+
 var app = angular.module("taskroo", ["TabList", "ui.bootstrap", 'frapontillo.bootstrap-switch', 'ngResource', 'ngCookies']);
 
 app.factory("TagsService", function ($resource, $cookies, $log) {
@@ -117,3 +119,18 @@ app.config(['$httpProvider', function($httpProvider) {
     $httpProvider.interceptors.push('unauthorizedInterceptor');
 }]);
 
+app.directive("splashScreen", function($log) {
+    return {
+        restrict: 'C',
+        link: function(scope, element) {
+            setTimeout(function() {
+                $log.debug("Hiding splash screen after timeout");
+                element.css("display", "none");
+            }, 5000);
+            scope.$on("hideSplash", function() {
+                $log.debug("Hiding splash screen on hideSplash event");
+                element.css("display", "none");
+            });
+        }
+    }
+});

@@ -159,7 +159,12 @@ var CreateSubtaskModalCtrl = function($scope, $modalInstance) {
 };
 
 function TasksCtrl($scope, TasksService, TagsService, SearchService, TagsFilteringService, HintsService, $modal, $log) {
-    TasksService.service.query(function(result) {TasksService.tasks = result; $scope.tasks = TasksService.tasks});
+    TasksService.service.query(function(result) {
+        TasksService.tasks = result;
+        $scope.tasks = TasksService.tasks;
+        $scope.$broadcast("hideSplash");
+    });
+
     $scope.tasksFilter = function(tasks) {
         return tasks;
     };
