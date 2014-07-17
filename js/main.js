@@ -5,7 +5,7 @@ var app = angular.module("taskroo", ["TabList", "ui.bootstrap", 'frapontillo.boo
 app.factory("TagsService", function ($resource, $cookies, $log) {
     var tokenId = $cookies.sid;
     var tags = [];
-    var service = $resource("/ws/tags/:tagId", {}, {
+    var service = $resource("/api/tags/:tagId", {}, {
         query: {
             method:'GET',
             isArray: true,
@@ -34,7 +34,7 @@ app.factory("TagsService", function ($resource, $cookies, $log) {
 app.factory("TasksService", function ($resource, $cookies) {
     var tokenId = $cookies.sid;
     var tasks = [];
-    var service = $resource("/ws/tasks/:taskId", {}, {
+    var service = $resource("/api/tasks/:taskId", {}, {
         query: {
             method: 'GET',
             isArray: true,
@@ -59,7 +59,7 @@ app.factory("TasksService", function ($resource, $cookies) {
         }
     });
 
-    var subtaskService = $resource("/ws/tasks/:taskId/subtasks/:subtaskId", {}, {
+    var subtaskService = $resource("/api/tasks/:taskId/subtasks/:subtaskId", {}, {
         add: {
             method:'POST',
             headers: { 'Authorization': 'GTWebAuth realm="gtweb@aetas.pl",tokenKey="' + tokenId + '"'},

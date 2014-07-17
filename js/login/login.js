@@ -46,7 +46,7 @@ function LoginCtrl($scope, LoginService, $cookies, $location, $log) {
         $log.debug("Sending user credentials to sign in user");
         new LoginService.service(form).$login(function(session) {
             $cookies.sid = session.sessionId;
-            window.location.href="index.html";
+            window.location.href="/";
         }, function(response) {
             $scope.$broadcast("login:failure");
         });
