@@ -238,11 +238,16 @@ function TasksCtrl($scope, TasksService, TagsService, SearchService, TagsFilteri
 
     var getWorkViewTasks = function (tasks) {
         return tasks.reduce(function(previousValue, currentTask) {
-            if (currentTask.subtasks.length == 0 && currentTask.tags.some(function(tag) {return tag.visibleInWorkView})) {
+            if (currentTask.subtasks.length == 0 && currentTask.tags.some(function(tag) {return tag.visibleInWorkView}) &&
+                isTimestampTodayOrBefore(currentTask.dueDate)) {
                 return previousValue.concat(currentTask);
             }
             return previousValue.concat(getWorkViewTasks(currentTask.subtasks));
         }, []);
+    };
+
+    var isTimestampTodayOrBefore = function(timestamp) {
+        return timestamp <= moment().endOf('day')
     };
 
     var getFinishedTasks = function(tasks) {
