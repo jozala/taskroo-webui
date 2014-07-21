@@ -9,19 +9,19 @@ app.factory("TagsService", function ($resource, $cookies, $log) {
         query: {
             method:'GET',
             isArray: true,
-            headers: { 'Authorization': 'GTWebAuth realm="gtweb@aetas.pl",tokenKey="' + tokenId + '"'}
+            headers: { 'Authorization': 'TaskRooAuth realm="taskroo@aetas.pl",tokenKey="' + tokenId + '"'}
         },
         save: {
             method: 'POST',
-            headers: { 'Authorization': 'GTWebAuth realm="gtweb@aetas.pl",tokenKey="' + tokenId + '"'}
+            headers: { 'Authorization': 'TaskRooAuth realm="taskroo@aetas.pl",tokenKey="' + tokenId + '"'}
         },
         update: {
             method:'PUT',
-            headers: { 'Authorization': 'GTWebAuth realm="gtweb@aetas.pl",tokenKey="' + tokenId + '"'}
+            headers: { 'Authorization': 'TaskRooAuth realm="taskroo@aetas.pl",tokenKey="' + tokenId + '"'}
         },
         delete: {
             method: 'DELETE',
-            headers: { 'Authorization': 'GTWebAuth realm="gtweb@aetas.pl",tokenKey="' + tokenId + '"'}
+            headers: { 'Authorization': 'TaskRooAuth realm="taskroo@aetas.pl",tokenKey="' + tokenId + '"'}
         }
     });
 
@@ -38,23 +38,23 @@ app.factory("TasksService", function ($resource, $cookies) {
         query: {
             method: 'GET',
             isArray: true,
-            headers: { 'Authorization': 'GTWebAuth realm="gtweb@aetas.pl",tokenKey="' + tokenId + '"'}
+            headers: { 'Authorization': 'TaskRooAuth realm="taskroo@aetas.pl",tokenKey="' + tokenId + '"'}
         },
         save: {
             method: 'POST',
-            headers: { 'Authorization': 'GTWebAuth realm="gtweb@aetas.pl",tokenKey="' + tokenId + '"'}
+            headers: { 'Authorization': 'TaskRooAuth realm="taskroo@aetas.pl",tokenKey="' + tokenId + '"'}
         },
         update: {
             method:'PUT',
-            headers: { 'Authorization': 'GTWebAuth realm="gtweb@aetas.pl",tokenKey="' + tokenId + '"'}
+            headers: { 'Authorization': 'TaskRooAuth realm="taskroo@aetas.pl",tokenKey="' + tokenId + '"'}
         },
         delete: {
             method: 'DELETE',
-            headers: { 'Authorization': 'GTWebAuth realm="gtweb@aetas.pl",tokenKey="' + tokenId + '"'}
+            headers: { 'Authorization': 'TaskRooAuth realm="taskroo@aetas.pl",tokenKey="' + tokenId + '"'}
         },
         moveToTopLevel: {
             method: 'POST',
-            headers: { 'Authorization': 'GTWebAuth realm="gtweb@aetas.pl",tokenKey="' + tokenId + '"'},
+            headers: { 'Authorization': 'TaskRooAuth realm="taskroo@aetas.pl",tokenKey="' + tokenId + '"'},
             params: {taskId: '@taskId'}
         }
     });
@@ -62,7 +62,7 @@ app.factory("TasksService", function ($resource, $cookies) {
     var subtaskService = $resource("/api/tasks/:taskId/subtasks/:subtaskId", {}, {
         add: {
             method:'POST',
-            headers: { 'Authorization': 'GTWebAuth realm="gtweb@aetas.pl",tokenKey="' + tokenId + '"'},
+            headers: { 'Authorization': 'TaskRooAuth realm="taskroo@aetas.pl",tokenKey="' + tokenId + '"'},
             params: {taskId: '@taskId', subtaskId: '@subtaskId'}
         }
     });

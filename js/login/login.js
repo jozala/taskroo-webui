@@ -4,7 +4,7 @@ app.factory("LoginService", function ($resource) {
     var service = $resource("/auth/authToken/login", {}, {
         login: {
             method: 'POST',
-            headers: { 'Authorization': 'GTWebAuth realm="gtweb@aetas.pl"' }
+            headers: { 'Authorization': 'TaskRooAuth realm="taskroo@aetas.pl"' }
         }
     });
 

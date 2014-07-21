@@ -1,12 +1,12 @@
 {
-  "name": "GTWeb-Angular",
+  "name": "TaskRoo-WebUI",
   "version": "1.0.0",
   "authors": [
     "mariusz <mariusz@aetas.pl>"
   ],
-  "main": "gtweb.js",
+  "main": "js/main.js",
   "license": "MIT",
-  "homepage": "aetas.pl",
+  "homepage": "taskroo.com",
   "private": true,
   "ignore": [
     "**/.*",
