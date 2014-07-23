@@ -35,10 +35,17 @@ app.factory("TasksService", function ($resource, $cookies) {
     var tokenId = $cookies.sid;
     var tasks = [];
     var service = $resource("/api/tasks/:taskId", {}, {
-        query: {
+        getUnfinished: {
             method: 'GET',
             isArray: true,
-            headers: { 'Authorization': 'TaskRooAuth realm="taskroo@aetas.pl",tokenKey="' + tokenId + '"'}
+            headers: { 'Authorization': 'TaskRooAuth realm="taskroo@aetas.pl",tokenKey="' + tokenId + '"'},
+            params: {finished: false}
+        },
+        getFinished: {
+            method: 'GET',
+            isArray: true,
+            headers: { 'Authorization': 'TaskRooAuth realm="taskroo@aetas.pl",tokenKey="' + tokenId + '"'},
+            params: {finished: true}
         },
         save: {
             method: 'POST',

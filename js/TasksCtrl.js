@@ -158,7 +158,7 @@ var CreateSubtaskModalCtrl = function($scope, $modalInstance) {
 };
 
 function TasksCtrl($scope, TasksService, TagsService, SearchService, TagsFilteringService, HintsService, $modal, $log) {
-    TasksService.service.query(function(result) {
+    TasksService.service.getUnfinished(function(result) {
         TasksService.tasks = result;
         $scope.tasks = TasksService.tasks;
         $scope.$broadcast("hideSplash");
@@ -260,15 +260,16 @@ function TasksCtrl($scope, TasksService, TagsService, SearchService, TagsFilteri
         }, []);
     };
 
-    $scope.$watch("showUnfinished", function(newShowUnfinished) {
+    $scope.$watch("showUnfinished", function(newShowUnfinished, oldShowUnfinished) {
+       if (oldShowUnfinished == newShowUnfinished) return;
        if (newShowUnfinished) {
            $scope.tasksOrderPredicate = ["dueDate", "createdDate"];
            removeTasksFilter();
-           $scope.tasks = $scope.getAllTasks();
+           $scope.tasks = TasksService.service.getUnfinished();
        } else {
            $scope.tasksOrderPredicate = "-closedDate";
            $scope.tasksFilter = getFinishedTasks;
-           $scope.tasks = $scope.getAllTasks();
+           $scope.tasks = TasksService.service.getFinished();
        }
     });
 
