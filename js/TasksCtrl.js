@@ -275,15 +275,7 @@ function TasksCtrl($scope, TasksService, TagsService, SearchService, TagsFilteri
 
     $scope.taskFinished = function(task) {
         task.finished = !task.finished;
-        new TasksService.service(task).$update({taskId: task.id}, function(updatedTask) {
-            if (!task.finished) {
-                var taskAncestors = Tasks.findTaskAncestors(TasksService.tasks, task.id);
-                taskAncestors.forEach(function(ancestorTask) {ancestorTask.finished = false})
-            }
-            $log.debug("Replacing task with id: " + task.id + " with updated data task (tasks (un)finished)");
-            Tasks.replaceTaskOrSubtask(TasksService.tasks, task, updatedTask);
-            $scope.tasks = $scope.getAllTasks();
-        })
+        $scope.updateTask(task);
     };
 
     $scope.removeTask = function(task) {
