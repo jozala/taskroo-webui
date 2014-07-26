@@ -422,6 +422,10 @@ function TasksCtrl($scope, TasksService, TagsService, SearchService, TagsFilteri
     $scope.magicInputSubmit = function() {
         $log.debug('Magic input submitted: ' + $scope.magicInput);
         var task = new MagicInputParser().parse($scope.magicInput);
+        if (!task.title) {
+            $log.info('Task not added because title is empty');
+            return;
+        }
 
         if ($scope.tagFilter.selectedTag != 'ALL' && $scope.tagFilter.selectedTag != 'NONE') {
             task.tags.push($scope.tagFilter.selectedTag);
