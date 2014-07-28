@@ -34,6 +34,28 @@ var Tasks = {
             tasks[index] = newTask;
         }
     }
+};
+
+function TasksMultiFilter() {
+    this.filters = {};
+}
+
+TasksMultiFilter.prototype.addFilter = function(filterName, filterCallback) {
+    this.filters[filterName] = filterCallback;
+};
 
 
+TasksMultiFilter.prototype.removeFilter = function(filterName) {
+    if (this.filters[filterName] == null) {
+        throw "Filter with name '"+ filterName + "' does not exist";
+    }
+    delete this.filters[filterName];
+};
+
+TasksMultiFilter.prototype.filter = function(tasks) {
+    var filteredTasks = tasks;
+    for (var filterName in this.filters) {
+        filteredTasks = this.filters[filterName](filteredTasks)
+    }
+    return filteredTasks;
 };

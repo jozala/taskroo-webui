@@ -38,12 +38,15 @@ describe("TasksService responsible for managing tasks in the scope", function() 
     it("should set tasks from WebService(finished=true) in scope.tasks when showUnfinished changed to false", function() {
         $httpBackend.expectGET('/api/tasks?finished=false').respond(200, unfinishedTasks);
         $httpBackend.flush();
-        $httpBackend.expectGET('/api/tasks?finished=true').respond(200, finishedTasks);
+        $httpBackend.expectGET('/api/tasks?finished=true').respond(200, threeLevelFinishedTasks);
         scope.$apply(function() {
             scope.showUnfinished = false;
         });
         $httpBackend.flush();
-        expect(scope.tasks).toEqualData(scope.tasksFilter(finishedTasks))
+        expect(scope.tasks).toEqualData([
+            threeLevelFinishedTasks[0],
+            threeLevelFinishedTasks[0].subtasks[0],
+            threeLevelFinishedTasks[0].subtasks[0].subtasks[0]]);
     });
 
     it("should flatten list of finished task when showUnfinished is changed to false", function () {

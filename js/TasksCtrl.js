@@ -164,14 +164,10 @@ function TasksCtrl($scope, TasksService, TagsService, SearchService, TagsFilteri
         $scope.$broadcast("hideSplash");
     });
 
-    $scope.tasksFilter = function(tasks) {
-        return tasks;
-    };
-    var removeTasksFilter = function() {
-        $scope.tasksFilter = function(tasks) { return tasks };
-    };
+    var tasksFilter = new TasksMultiFilter();
+
     $scope.getAllTasks = function() {
-        return $scope.tasksFilter(TasksService.tasks);
+        return tasksFilter.filter(TasksService.tasks);
     };
     $scope.search = SearchService;
     $scope.tagFilter = TagsFilteringService;
@@ -214,26 +210,26 @@ function TasksCtrl($scope, TasksService, TagsService, SearchService, TagsFilteri
         }, []);
     };
 
-    $scope.$watch('workview', function(workViewValue) {
+    $scope.$watch('workview', function(workViewValue, oldValue) {
+        if (workViewValue == oldValue) return;
         if (workViewValue) {
-            TagsFilteringService.selectedTag = "ALL";
-            $scope.tasksFilter = getWorkViewTasks;
-            $scope.tasks = $scope.getAllTasks();
+            tasksFilter.addFilter('workviewFilter', getWorkViewTasks);
         } else {
-            TagsFilteringService.selectedTag = "ALL";
-            removeTasksFilter();
-            $scope.tasks = $scope.getAllTasks();
+            tasksFilter.removeFilter('workviewFilter');
         }
+        $scope.tasks = $scope.getAllTasks();
     });
 
-    $scope.$watch('tagFilter.selectedTag', function(newSelectedTag) {
+    $scope.$watch('tagFilter.selectedTag', function(newSelectedTag, oldValue) {
+        if(newSelectedTag == oldValue) return;
         if (newSelectedTag === "ALL") {
-            $scope.tasks = $scope.getAllTasks();
+            tasksFilter.removeFilter('tagFilter');
         } else if (newSelectedTag == "NONE") {
-            $scope.tasks = filterTasksWithNoTag($scope.getAllTasks());
+            tasksFilter.addFilter('tagFilter', filterTasksWithNoTag);
         } else {
-            $scope.tasks = filterTasksByTag($scope.getAllTasks(), newSelectedTag);
+            tasksFilter.addFilter('tagFilter', function(tasks) {return filterTasksByTag(tasks, newSelectedTag)});
         }
+        $scope.tasks = $scope.getAllTasks();
     });
 
     var getWorkViewTasks = function (tasks) {
@@ -252,10 +248,7 @@ function TasksCtrl($scope, TasksService, TagsService, SearchService, TagsFilteri
 
     var getFinishedTasks = function(tasks) {
         return tasks.reduce(function(previousValue, currentTask) {
-            if (currentTask.finished) {
-                previousValue.push(currentTask);
-                return previousValue.concat(getFinishedTasks(currentTask.subtasks));
-            }
+            previousValue.push(currentTask);
             return previousValue.concat(getFinishedTasks(currentTask.subtasks));
         }, []);
     };
@@ -264,12 +257,19 @@ function TasksCtrl($scope, TasksService, TagsService, SearchService, TagsFilteri
        if (oldShowUnfinished == newShowUnfinished) return;
        if (newShowUnfinished) {
            $scope.tasksOrderPredicate = ["dueDate", "createdDate"];
-           removeTasksFilter();
-           $scope.tasks = TasksService.service.getUnfinished();
+           TasksService.service.getUnfinished(function(tasks) {
+               TasksService.tasks = tasks;
+               tasksFilter.removeFilter('finishedFilter');
+               $scope.tasks = $scope.getAllTasks();
+           });
        } else {
            $scope.tasksOrderPredicate = "-closedDate";
-           $scope.tasksFilter = getFinishedTasks;
-           $scope.tasks = TasksService.service.getFinished();
+           TasksService.service.getFinished(function (tasks) {
+               TasksService.tasks = tasks;
+               tasksFilter.addFilter('finishedFilter', getFinishedTasks);
+               $scope.tasks = $scope.getAllTasks();
+           });
+
        }
     });
 
@@ -314,6 +314,7 @@ function TasksCtrl($scope, TasksService, TagsService, SearchService, TagsFilteri
         var newTask = new TasksService.service(task);
         newTask.$save(function(addedTask) {
             TasksService.tasks.push(addedTask);
+            $scope.tasks = $scope.getAllTasks();
             $scope.magicInput = "";
         });
         $scope.magicInputHint = HintsService.getRandom();
