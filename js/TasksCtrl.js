@@ -5,7 +5,7 @@ app.directive("quickEdit", function() {
         link: function(scope, element, attrs, ngModel) {
             var internalElement = element.find(".cell-content");
             ngModel.$render = function() {
-                internalElement.html(ngModel.$viewValue || '');
+                internalElement.text(ngModel.$viewValue || '');
             };
 
             internalElement.dblclick(function() {
@@ -23,15 +23,15 @@ app.directive("quickEdit", function() {
                     scope.$apply(read);
                 }
                 if (keycode === 27) { // ESCAPE
-                    internalElement.html(ngModel.$viewValue);
+                    internalElement.text(ngModel.$viewValue);
                     $(this).attr("contentEditable", "false");
                     $(this).blur();
                 }
             });
 
             function read() {
-                var html = internalElement.html();
-                ngModel.$setViewValue(html);
+                var text = internalElement.text();
+                ngModel.$setViewValue(text);
             }
         }
     };

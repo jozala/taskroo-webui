@@ -65,7 +65,7 @@
                 <span>
                     <cell class="taskTick" ng-click="taskFinished(task)"></cell>
                     <cell class='taskTags'><tag-icon ng-repeat='tag in task.tags' ng-model="tag"></tag-icon></cell>
-                    <cell class="taskTitle main-column" quick-edit ng-model="task.title" ng-change="updateTask(task)">{{ task.title }}</cell>
+                    <cell class="taskTitle main-column" quick-edit ng-model="task.title" ng-change="updateTask(task)"></cell>
                     <cell ng-if="!task.finished" class="taskDueDate">{{ task.dueDate | date: 'dd-MM-yyyy' }}</cell>
                     <cell ng-if="task.finished" class="taskDueDate">{{ task.closedDate | date: 'dd-MM-yyyy' }}</cell>
                     <cell class="taskAction taskEdit" ng-click="openEdit(task)"></cell>
