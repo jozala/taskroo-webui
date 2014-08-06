@@ -1,4 +1,4 @@
-var app = angular.module("taskroo-login", ['ngResource', 'ngCookies']);
+var app = angular.module("taskroo-login", ['ngResource', 'ngCookies', 'growlNotifications', 'ngSanitize']);
 
 app.factory("LoginService", function ($resource) {
     var service = $resource("/auth/authToken/login", {}, {
@@ -35,7 +35,7 @@ app.directive("shaker", function ($log) {
 });
 
 
-function LoginCtrl($scope, LoginService, $cookies, $location, $log) {
+function LoginCtrl($scope, LoginService, $cookies, growlNotifications, $location, $log) {
     $scope.form = {};
     $scope.login = function(form) {
         $scope.$broadcast("autofill:update");
@@ -48,6 +48,7 @@ function LoginCtrl($scope, LoginService, $cookies, $location, $log) {
             $cookies.sid = session.sessionId;
             window.location.href="/";
         }, function(response) {
+            growlNotifications.add('The login or password you entered is incorrect.', 'danger', 10000);
             $scope.$broadcast("login:failure");
         });
 

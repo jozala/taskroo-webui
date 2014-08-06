@@ -8,6 +8,7 @@
 </head>
 <body>
 <div id="login-box" class="blur" ng-app="taskroo-login" ng-controller="LoginCtrl">
+    <div class="notifications" growl-notifications></div>
     <div id="logo" class="shaker" shaker></div>
     <form ng-submit="login(form)">
         <input placeholder="Login" type="text" ng-model="form.username" autofill required />
@@ -28,6 +29,8 @@
 <script type="text/javascript" src="../bower_components/angular/angular.min.js"></script>
 <script type="text/javascript" src="../bower_components/angular-resource/angular-resource.min.js"></script>
 <script type="text/javascript" src="../bower_components/angular-cookies/angular-cookies.min.js"></script>
+<script type="text/javascript" src="../bower_components/angular-sanitize/angular-sanitize.js"></script>
+<script type="text/javascript" src="../bower_components/angular-growl-notifications/dist/growl-notifications.js"></script>
 <script type="text/javascript" src="../js/login/login.js"></script>
 
 </body>
