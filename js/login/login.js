@@ -35,7 +35,7 @@ app.directive("shaker", function ($log) {
 });
 
 
-function LoginCtrl($scope, LoginService, $cookies, growlNotifications, $location, $log) {
+function LoginCtrl($scope, LoginService, $cookies, growlNotifications, $log) {
     $scope.form = {};
     $scope.login = function(form) {
         $scope.$broadcast("autofill:update");
@@ -44,8 +44,8 @@ function LoginCtrl($scope, LoginService, $cookies, growlNotifications, $location
             return;
         }
         $log.debug("Sending user credentials to sign in user");
-        new LoginService.service(form).$login(function(session) {
-            $cookies.sid = session.sessionId;
+        new LoginService.service(form).$login(function(securityToken) {
+            $cookies.sid = securityToken.id;
             window.location.href="/";
         }, function(response) {
             growlNotifications.add('The login or password you entered is incorrect.', 'danger', 10000);
