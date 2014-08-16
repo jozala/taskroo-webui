@@ -98,7 +98,8 @@ app.factory("HintsService", function() {
             "You can write \"due:monday\" to set due date of the task to the next monday.",
             "Add \"start:tomorrow\" to task's title to set start date to tomorrow.",
             "Write \"tags:myTag,important\" to add multiple tags to new task at once.",
-            "Double click on the existing task title allow quick edit."];
+            "Double click on the existing task title allow quick edit.",
+            "Task in the future? Try \"start:YYYYMMDD\" and \"due:YYYYMMDD\"."];
 
     return {
         getRandom: function() {
