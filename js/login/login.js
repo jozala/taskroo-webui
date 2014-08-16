@@ -35,8 +35,12 @@ app.directive("shaker", function ($log) {
 });
 
 
-function LoginCtrl($scope, LoginService, $cookies, growlNotifications, $log) {
+function LoginCtrl($scope, LoginService, $cookies, $cookieStore, $http, growlNotifications, $log) {
     $scope.form = {};
+    if ($cookies.rememberMeToken) {
+        loginWithRememberMeToken();
+    }
+
     $scope.login = function(form) {
         $scope.$broadcast("autofill:update");
         if (form.username == undefined || form.password == undefined) {
@@ -46,12 +50,29 @@ function LoginCtrl($scope, LoginService, $cookies, growlNotifications, $log) {
         $log.debug("Sending user credentials to sign in user");
         new LoginService.service(form).$login(function(securityToken) {
             $cookies.sid = securityToken.id;
+            if (securityToken.rememberMeToken) {
+                $cookies.rememberMeToken = securityToken.rememberMeToken;
+            }
             window.location.href="/";
         }, function(response) {
             growlNotifications.add('The login or password you entered is incorrect.', 'danger', 10000);
             $scope.$broadcast("login:failure");
         });
 
+    };
+
+    function loginWithRememberMeToken() {
+        $http.post("/auth/authToken/loginWithRememberMe", $cookies.rememberMeToken, {headers: {"Content-Type": "text/plain;charset=utf-8"}})
+            .success(function (securityToken, status, headers, config) {
+                $cookies.sid = securityToken.id;
+                $cookies.rememberMeToken = securityToken.rememberMeToken;
+                window.location.href = "/";
+            })
+            .error(function (data, status, headers, config) {
+                $log.debug("Sign in using remember me token failed. RememberMe token is no longer valid.");
+                $cookieStore.remove('sid');
+                $cookieStore.remove('rememberMeToken');
+            });
     }
 
 }

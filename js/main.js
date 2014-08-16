@@ -109,11 +109,12 @@ app.factory("HintsService", function() {
 });
 
 // error handling
-app.factory('unauthorizedInterceptor', ['$q', '$cookies', '$log', function($q, $cookies, $log) {
+app.factory('unauthorizedInterceptor', ['$q', '$cookies', '$cookieStore', '$log',
+                                function($q, $cookies, $cookieStore, $log) {
     return {
         responseError: function (response) {
             if (response.status == 403) {
-                $cookies.sid = "";
+                $cookieStore.remove("sid");
                 $log.info("Authorization failed. Redirecting to login page.");
                 window.location.href = "login.html"
             }
