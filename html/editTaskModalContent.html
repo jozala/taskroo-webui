@@ -10,11 +10,11 @@
         <div style="display: flex; flex-flow: row wrap; justify-content: space-around;">
             <div style="flex: 1; padding-right: 15px;">
                 <label for="startDate">Starting on</label>
-                <input type="date" ng-model="task.startDate" date-input name="startDate" id="startDate" />
+                <input id="startDate" name="startDate" type="text" datepicker-popup class="form-control" ng-model="task.startDate" />
             </div>
             <div style="flex: 1; padding-right: 9px;">
                 <label for="dueDate">Due for</label>
-                <input type="date" ng-model="task.dueDate" date-input name="dueDate" id="dueDate" />
+                <input id="dueDate" name="dueDate" type="text" datepicker-popup class="form-control" ng-model="task.dueDate" close-text="Close" />
             </div>
         </div>
     </div>
