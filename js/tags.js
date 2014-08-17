@@ -1,4 +1,4 @@
-function TagsCtrl($scope, TagsService, TasksService, TagsFilteringService, $modal, $log) {
+function TagsCtrl($scope, TagsService, TasksService, TagsFilteringService, $modal, $log, growlNotifications) {
     TagsService.service.query(function(result) {
         TagsService.tags = result;
         $scope.tags = TagsService.tags;
@@ -35,6 +35,7 @@ function TagsCtrl($scope, TagsService, TasksService, TagsFilteringService, $moda
                     }
                 }
                 refreshTasks();
+                growlNotifications.add('Tag "' + tag.name + '" has been removed.', 'warning', 10000);
             });
         }
     };
@@ -42,6 +43,7 @@ function TagsCtrl($scope, TagsService, TasksService, TagsFilteringService, $moda
     $scope.updateTag = function(tag) {
         new TagsService.service(tag).$update({tagId: tag.id}, function(updatedTag) {
             refreshTasks();
+            growlNotifications.add('Tag "' + tag.name + '" has been updated.', 'success', 5000);
         });
         $log.info("tag: id=" + tag.id + " " + tag.name + " updated");
     };

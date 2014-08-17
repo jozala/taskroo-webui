@@ -157,7 +157,7 @@ var CreateSubtaskModalCtrl = function($scope, $modalInstance) {
     };
 };
 
-function TasksCtrl($scope, TasksService, TagsService, SearchService, TagsFilteringService, HintsService, $modal, $log) {
+function TasksCtrl($scope, TasksService, TagsService, SearchService, TagsFilteringService, HintsService, $modal, $log, growlNotifications) {
     TasksService.service.getUnfinished(function(result) {
         TasksService.tasks = result;
         $scope.tasks = TasksService.tasks;
@@ -282,7 +282,10 @@ function TasksCtrl($scope, TasksService, TagsService, SearchService, TagsFilteri
         var removeForSure = confirm("Are you sure to remove this task and all it's subtasks? You cannot undo this.\n" + task.title);
         if (removeForSure) {
             $log.info('Task ' + task.id + ' removed: ' + task.title);
-            TasksService.service.delete({taskId: task.id});
+            TasksService.service.delete({taskId: task.id}, function() {
+                var shortedTitle = task.title.substr(0, 15) + "...";
+                growlNotifications.add('Task "' + shortedTitle + '" has been removed.', 'warning', 10000);
+            });
             findTaskRecursivelyAndRemoveIt(task, $scope.tasks);
         }
     };
@@ -305,6 +308,8 @@ function TasksCtrl($scope, TasksService, TagsService, SearchService, TagsFilteri
                 $log.debug("Replacing task with id: " + task.id + " with updated data task")
                 $scope.tasks[index] = taskAfterUpdate;
             }
+            var shortedTitle = taskAfterUpdate.title.substr(0, 15) + "...";
+            growlNotifications.add('Task "' + shortedTitle + '" has been updated.', 'success', 5000);
         });
         $log.info('Task ' + task.id + ' updated: ' + task.title);
     };
@@ -316,6 +321,8 @@ function TasksCtrl($scope, TasksService, TagsService, SearchService, TagsFilteri
             TasksService.tasks.push(addedTask);
             $scope.tasks = $scope.getAllTasks();
             $scope.magicInput = "";
+            var shortedTitle = addedTask.title.substr(0, 15) + "...";
+            growlNotifications.add('Task "' + shortedTitle + '" has been created.', 'success', 3000);
         });
         $scope.magicInputHint = HintsService.getRandom();
     };
@@ -325,6 +332,9 @@ function TasksCtrl($scope, TasksService, TagsService, SearchService, TagsFilteri
             TasksService.subtaskService.add({taskId: task.id, subtaskId: subtaskResult.id}, function() {
                 task.subtasks = task.subtasks.concat([subtaskResult]);
                 $log.info('Subtask ' + subtaskResult.title + ' id=(' + subtaskResult.id + ') created for task: ' + task.title + " id=(" + task.id + ")");
+                var subtaskShortedTitle = subtaskResult.title.substr(0, 15) + "...";
+                var parentShortedTitle = task.title.substr(0, 15) + "...";
+                growlNotifications.add('Subtask "' + subtaskShortedTitle + '" created for task "' + parentShortedTitle + '".', 'success', 10000);
             });
         });
         $scope.magicInputHint = HintsService.getRandom();
@@ -435,7 +445,10 @@ function TasksCtrl($scope, TasksService, TagsService, SearchService, TagsFilteri
         };
 
         var doSomethingAfterTagsAdded = new MultitaskRunner(
-            tagsToAdd.map( function(it) {return function(callbackAfterDone) {return it.$save(function(createdTag) {addToTagsCollection(createdTag); callbackAfterDone()})}} ),
+            tagsToAdd.map( function(it) {return function(callbackAfterDone) {return it.$save(function(createdTag) {
+                addToTagsCollection(createdTag); callbackAfterDone();
+                growlNotifications.add('Tag "' + createdTag.name + '" has been created.', 'success', 3000);
+            })}} ),
             somethingElse);
 
         doSomethingAfterTagsAdded.start();
@@ -465,6 +478,9 @@ function TasksCtrl($scope, TasksService, TagsService, SearchService, TagsFilteri
         TasksService.subtaskService.add({taskId: newParentTask.id, subtaskId: movedTask.id}, function() {
             newParentTask.subtasks.push($scope.draggedTask);
             $scope.removeDraggedTaskFromPreviousPosition();
+            var subtaskShortedTitle = movedTask.title.substr(0, 15) + "...";
+            var parentShortedTitle = newParentTask.title.substr(0, 15) + "...";
+            growlNotifications.add('Task "' + subtaskShortedTitle + '" has set as subtask of task "' + parentShortedTitle + '".', 'success', 5000);
         });
     };
 
@@ -473,6 +489,8 @@ function TasksCtrl($scope, TasksService, TagsService, SearchService, TagsFilteri
         TasksService.service.moveToTopLevel({taskId: movedTask.id}, function() {
             $scope.tasks.push($scope.draggedTask);
             $scope.removeDraggedTaskFromPreviousPosition();
+            var taskShortedTitle = movedTask.title.substr(0, 15) + "...";
+            growlNotifications.add('Task "' + taskShortedTitle + '" has been moved to top level.', 'success', 5000);
         });
     };
 }

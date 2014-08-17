@@ -64,3 +64,10 @@ body>footer {
 
 /* angular fix for angular bootstrap */
 .nav, .pagination, .carousel, .panel-title a { cursor: pointer; }
+
+.notifications {
+    position: fixed;
+    bottom: 30px;
+    left: 45%;
+    z-index: 100;
+}

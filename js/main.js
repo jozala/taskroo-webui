@@ -1,6 +1,6 @@
 "use strict";
 
-var app = angular.module("taskroo", ["TabList", "ui.bootstrap", 'frapontillo.bootstrap-switch', 'ngResource', 'ngCookies']);
+var app = angular.module("taskroo", ["TabList", "ui.bootstrap", 'frapontillo.bootstrap-switch', 'ngResource', 'ngCookies', 'ngSanitize', 'growlNotifications']);
 
 app.factory("TagsService", function ($resource, $cookies, $log) {
     var tokenId = $cookies.sid;
@@ -110,14 +110,16 @@ app.factory("HintsService", function() {
 });
 
 // error handling
-app.factory('unauthorizedInterceptor', ['$q', '$cookies', '$cookieStore', '$log',
-                                function($q, $cookies, $cookieStore, $log) {
+app.factory('unauthorizedInterceptor', ['$q', '$cookies', '$cookieStore', '$log', 'growlNotifications',
+                                function($q, $cookies, $cookieStore, $log, growlNotifications) {
     return {
         responseError: function (response) {
             if (response.status == 403) {
                 $cookieStore.remove("sid");
                 $log.info("Authorization failed. Redirecting to login page.");
                 window.location.href = "login.html"
+            } else {
+                growlNotifications.add('Sorry, we could not handle this request. Please report this if this problem will occur again.', 'danger', 10000);
             }
             return $q.reject(response);
         }
