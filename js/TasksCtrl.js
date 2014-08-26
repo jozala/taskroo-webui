@@ -255,6 +255,7 @@ function TasksCtrl($scope, TasksService, TagsService, SearchService, TagsFilteri
 
     $scope.$watch("showUnfinished", function(newShowUnfinished, oldShowUnfinished) {
        if (oldShowUnfinished == newShowUnfinished) return;
+       TasksService.hasUnfinishedTasks = newShowUnfinished;
        if (newShowUnfinished) {
            $scope.tasksOrderPredicate = ["dueDate", "createdDate"];
            TasksService.service.getUnfinished(function(tasks) {

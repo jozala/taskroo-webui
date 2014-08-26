@@ -49,13 +49,23 @@ function TagsCtrl($scope, TagsService, TasksService, TagsFilteringService, $moda
     };
 
     var refreshTasks = function() {
-        TasksService.service.query(function(newTasks) {
-            TasksService.tasks.length = 0;
-            newTasks.forEach(function(refreshedTask) {
-                TasksService.tasks.push(refreshedTask);
+        if (TasksService.hasUnfinishedTasks) {
+            TasksService.service.getUnfinished(function (newTasks) {
+                TasksService.tasks.length = 0;
+                newTasks.forEach(function (refreshedTask) {
+                    TasksService.tasks.push(refreshedTask);
+                });
+                $scope.selectTag('ALL');
             });
-            $scope.selectTag('ALL');
-        });
+        } else {
+            TasksService.service.getFinished(function (newTasks) {
+                TasksService.tasks.length = 0;
+                newTasks.forEach(function (refreshedTask) {
+                    TasksService.tasks.push(refreshedTask);
+                });
+                $scope.selectTag('ALL');
+            });
+        }
     };
 
     $scope.selectTag = function(tag) {

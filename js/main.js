@@ -77,7 +77,8 @@ app.factory("TasksService", function ($resource, $cookies) {
     return {
         tasks: tasks,
         service: service,
-        subtaskService: subtaskService
+        subtaskService: subtaskService,
+        hasUnfinishedTasks: true
     }
 });
 
