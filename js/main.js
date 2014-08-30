@@ -1,6 +1,6 @@
 "use strict";
 
-var app = angular.module("taskroo", ["TabList", "ui.bootstrap", 'frapontillo.bootstrap-switch', 'ngResource', 'ngCookies', 'ngSanitize', 'growlNotifications']);
+var app = angular.module("taskroo", ["angular-tablist", "ui.bootstrap", 'frapontillo.bootstrap-switch', 'ngResource', 'ngCookies', 'ngSanitize', 'growlNotifications']);
 
 app.factory("TagsService", function ($resource, $cookies, $log) {
     var tokenId = $cookies.sid;
