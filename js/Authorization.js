@@ -74,7 +74,7 @@ app.factory('RememberMeTokenRecoverer', ['$injector', '$q', '$cookies', '$cookie
 app.factory('LoginRedirect', ['$q', '$cookieStore', '$window', function($q, $cookieStore, $window) {
     return {
         responseError: function(response) {
-            if (response.status == 403) {
+            if (response.status == 403 || response.status == 401) {
                 $cookieStore.remove("sid");
                 $cookieStore.remove("rememberMeToken");
                 $window.location.href = 'login.html';

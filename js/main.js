@@ -102,8 +102,9 @@ app.factory('ErrorResponseNotification', ['$q', '$cookies', '$cookieStore', '$lo
 
     return {
         responseError: function (response) {
-            if (response.status != 403) {
-                growlNotifications.add(response.status + ': Sorry, we could not handle this request. Please report this if this problem will occur again.', 'danger', 10000);
+            if (response.status != 403 && response.status != 401 && response.status != 0) {
+                growlNotifications.add('Sorry, we could not handle this request (' + response.status + '). ' +
+                    'Please report this if this problem will occur again.', 'danger', 10000);
             }
             return $q.reject(response);
         }

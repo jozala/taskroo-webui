@@ -116,4 +116,16 @@ describe('ErrorResponseNotification responsible for displaying notification in c
             .toHaveBeenCalled()
     });
 
+    it('should not display growl notification when 401 is returned in response', function () {
+        // given
+        spyOn(growlNotifications, 'add');
+        $httpBackend.whenGET('/api/tasks?finished=false').respond(401);
+        // when
+        tasksService.service.getUnfinished();
+        $httpBackend.flush();
+        // then
+        expect(growlNotifications.add).not
+            .toHaveBeenCalled()
+    });
+
 });
