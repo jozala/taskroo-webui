@@ -2,26 +2,21 @@
 
 var app = angular.module("taskroo", ["angular-tablist", "ui.bootstrap", 'frapontillo.bootstrap-switch', 'ngResource', 'ngCookies', 'ngSanitize', 'growlNotifications']);
 
-app.factory("TagsService", function ($resource, $cookies, $log) {
-    var tokenId = $cookies.sid;
+app.factory("TagsService", function ($resource) {
     var tags = [];
     var service = $resource("/api/tags/:tagId", {}, {
         query: {
             method:'GET',
-            isArray: true,
-            headers: { 'Authorization': 'TaskRooAuth realm="taskroo@aetas.pl",tokenKey="' + tokenId + '"'}
+            isArray: true
         },
         save: {
-            method: 'POST',
-            headers: { 'Authorization': 'TaskRooAuth realm="taskroo@aetas.pl",tokenKey="' + tokenId + '"'}
+            method: 'POST'
         },
         update: {
-            method:'PUT',
-            headers: { 'Authorization': 'TaskRooAuth realm="taskroo@aetas.pl",tokenKey="' + tokenId + '"'}
+            method:'PUT'
         },
         delete: {
-            method: 'DELETE',
-            headers: { 'Authorization': 'TaskRooAuth realm="taskroo@aetas.pl",tokenKey="' + tokenId + '"'}
+            method: 'DELETE'
         }
     });
 
@@ -31,37 +26,30 @@ app.factory("TagsService", function ($resource, $cookies, $log) {
     }
 });
 
-app.factory("TasksService", function ($resource, $cookies) {
-    var tokenId = $cookies.sid;
+    app.factory("TasksService", function ($resource) {
     var tasks = [];
     var service = $resource("/api/tasks/:taskId", {}, {
         getUnfinished: {
             method: 'GET',
             isArray: true,
-            headers: { 'Authorization': 'TaskRooAuth realm="taskroo@aetas.pl",tokenKey="' + tokenId + '"'},
             params: {finished: false}
         },
         getFinished: {
             method: 'GET',
             isArray: true,
-            headers: { 'Authorization': 'TaskRooAuth realm="taskroo@aetas.pl",tokenKey="' + tokenId + '"'},
             params: {finished: true}
         },
         save: {
-            method: 'POST',
-            headers: { 'Authorization': 'TaskRooAuth realm="taskroo@aetas.pl",tokenKey="' + tokenId + '"'}
+            method: 'POST'
         },
         update: {
-            method:'PUT',
-            headers: { 'Authorization': 'TaskRooAuth realm="taskroo@aetas.pl",tokenKey="' + tokenId + '"'}
+            method:'PUT'
         },
         delete: {
-            method: 'DELETE',
-            headers: { 'Authorization': 'TaskRooAuth realm="taskroo@aetas.pl",tokenKey="' + tokenId + '"'}
+            method: 'DELETE'
         },
         moveToTopLevel: {
             method: 'POST',
-            headers: { 'Authorization': 'TaskRooAuth realm="taskroo@aetas.pl",tokenKey="' + tokenId + '"'},
             params: {taskId: '@taskId'}
         }
     });
@@ -69,7 +57,6 @@ app.factory("TasksService", function ($resource, $cookies) {
     var subtaskService = $resource("/api/tasks/:taskId/subtasks/:subtaskId", {}, {
         add: {
             method:'POST',
-            headers: { 'Authorization': 'TaskRooAuth realm="taskroo@aetas.pl",tokenKey="' + tokenId + '"'},
             params: {taskId: '@taskId', subtaskId: '@subtaskId'}
         }
     });
@@ -110,25 +97,17 @@ app.factory("HintsService", function() {
     }
 });
 
-// error handling
-app.factory('unauthorizedInterceptor', ['$q', '$cookies', '$cookieStore', '$log', 'growlNotifications',
-                                function($q, $cookies, $cookieStore, $log, growlNotifications) {
+app.factory('ErrorResponseNotification', ['$q', '$cookies', '$cookieStore', '$log', '$injector', 'growlNotifications',
+                                function($q, $cookies, $cookieStore, $log, $injector, growlNotifications) {
+
     return {
         responseError: function (response) {
-            if (response.status == 403) {
-                $cookieStore.remove("sid");
-                $log.info("Authorization failed. Redirecting to login page.");
-                window.location.href = "login.html"
-            } else {
-                growlNotifications.add('Sorry, we could not handle this request. Please report this if this problem will occur again.', 'danger', 10000);
+            if (response.status != 403) {
+                growlNotifications.add(response.status + ': Sorry, we could not handle this request. Please report this if this problem will occur again.', 'danger', 10000);
             }
             return $q.reject(response);
         }
     };
-}]);
-
-app.config(['$httpProvider', function($httpProvider) {
-    $httpProvider.interceptors.push('unauthorizedInterceptor');
 }]);
 
 app.directive("splashScreen", function($log) {
@@ -146,3 +125,7 @@ app.directive("splashScreen", function($log) {
         }
     }
 });
+
+app.config(['$httpProvider', function($httpProvider) {
+    $httpProvider.interceptors.push('ErrorResponseNotification');
+}]);

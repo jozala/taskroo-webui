@@ -43,11 +43,11 @@
 }
 
 .tabular-list .expanded {
-    background-image: url('../bower_components/tabularlist/static/img/treetable/collapse.png');
+    background-image: url('../bower_components/angular-tablist/dist/static/img/treetable/collapse.png');
 }
 
 .tabular-list .collapsed {
-    background-image: url('../bower_components/tabularlist/static/img/treetable/expand.png');
+    background-image: url('../bower_components/angular-tablist/dist/static/img/treetable/expand.png');
 }
 
 .tabular-list .main-column {

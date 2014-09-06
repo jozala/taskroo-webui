@@ -27,10 +27,12 @@ module.exports = function(config) {
         cfg.bowerComponents + '/angular-cookies/angular-cookies.js',
         cfg.bowerComponents + '/angular-mocks/angular-mocks.js',
         cfg.bowerComponents + '/angular-resource/angular-resource.js',
+        cfg.bowerComponents + '/angular-sanitize/angular-sanitize.js',
         cfg.bowerComponents + '/momentjs/min/moment.min.js',
-        cfg.bowerComponents + '/tabularlist/js/tablist.js',
+        cfg.bowerComponents + '/angular-tablist/dist/angular-tablist.js',
         cfg.bowerComponents + '/angular-bootstrap/ui-bootstrap-tpls.min.js',
         cfg.bowerComponents + '/angular-bootstrap-switch/dist/angular-bootstrap-switch.min.js',
+        cfg.bowerComponents + '/angular-growl-notifications/dist/growl-notifications.min.js',
 
       'js/*.js',
       'test/testdata.js',
