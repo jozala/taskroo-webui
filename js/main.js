@@ -1,6 +1,6 @@
 "use strict";
 
-var app = angular.module("taskroo", ["angular-tablist", "ui.bootstrap", 'frapontillo.bootstrap-switch', 'ngResource', 'ngCookies', 'ngSanitize', 'growlNotifications']);
+var app = angular.module("taskroo", ["angular-tablist", "ui.bootstrap", 'frapontillo.bootstrap-switch', 'ngResource', 'ngCookies', 'ngSanitize', 'growlNotifications', 'ngRoute']);
 
 app.factory("TagsService", function ($resource) {
     var tags = [];
@@ -27,7 +27,6 @@ app.factory("TagsService", function ($resource) {
 });
 
     app.factory("TasksService", function ($resource) {
-    var tasks = [];
     var service = $resource("/api/tasks/:taskId", {}, {
         getUnfinished: {
             method: 'GET',
@@ -62,7 +61,8 @@ app.factory("TagsService", function ($resource) {
     });
 
     return {
-        tasks: tasks,
+        tasks: [],
+        finishedTasks: [],
         service: service,
         subtaskService: subtaskService,
         hasUnfinishedTasks: true

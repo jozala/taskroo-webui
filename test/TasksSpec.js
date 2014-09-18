@@ -21,6 +21,39 @@ describe("Tasks", function() {
         Tasks.replaceTaskOrSubtask(threeLevelUnfinishedTasks, threeLevelUnfinishedTasks[0].subtasks[0], updatedTask);
         expect(threeLevelUnfinishedTasks[0].subtasks[0]).toBe(updatedTask);
     });
+
+    describe('Checking if task match search phrase', function() {
+        it('should always return true when when search phrase is empty', function () {
+            var match = Tasks.doesTaskMatchSearchPhrase({id: 100, titie: 'test task'}, '');
+            expect(match).toBeTruthy();
+        });
+
+        it("should return true when task's title contains string from search phrase independently of case", function () {
+            var match = Tasks.doesTaskMatchSearchPhrase({id: 1, title: 'this is test of the search'}, 'sEar');
+            expect(match).toBeTruthy();
+        });
+
+        it("should return true when task's description contains string from search phrase independently of case", function () {
+            var task = {id: 1, title: 'this is test of the search', description: 'test driven development is cool'};
+            var match = Tasks.doesTaskMatchSearchPhrase(task, 'dEvELoP');
+            expect(match).toBeTruthy();
+        });
+
+        it("should return false when task does not match search phrase in any way", function () {
+            var match = Tasks.doesTaskMatchSearchPhrase({id: 1, title: 'this is test of the search'}, 'unknownPhrase');
+            expect(match).toBeFalsy();
+        });
+
+        it("should return true when any of task's subtask match search phrase", function () {
+            var taskWithSubtasks = {id: 1, title: 'this is test of the search', subtasks: [
+                {id: 2, title: 'subtask1', description: 'first subtask'},
+                {id: 3, title: 'subtask2', description: 'second subtask'}
+            ]};
+            var match = Tasks.doesTaskMatchSearchPhrase(taskWithSubtasks, 'eConD');
+            expect(match).toBeTruthy();
+        });
+    });
+
 });
 
 

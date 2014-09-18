@@ -28,6 +28,7 @@ module.exports = function(config) {
         cfg.bowerComponents + '/angular-mocks/angular-mocks.js',
         cfg.bowerComponents + '/angular-resource/angular-resource.js',
         cfg.bowerComponents + '/angular-sanitize/angular-sanitize.js',
+        cfg.bowerComponents + '/angular-route/angular-route.js',
         cfg.bowerComponents + '/momentjs/min/moment.min.js',
         cfg.bowerComponents + '/angular-tablist/dist/angular-tablist.js',
         cfg.bowerComponents + '/angular-bootstrap/ui-bootstrap-tpls.min.js',

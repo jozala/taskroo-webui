@@ -157,38 +157,33 @@ var CreateSubtaskModalCtrl = function($scope, $modalInstance) {
     };
 };
 
-function TasksCtrl($scope, TasksService, TagsService, SearchService, TagsFilteringService, HintsService, $modal, $log, growlNotifications) {
-    TasksService.service.getUnfinished(function(result) {
-        TasksService.tasks = result;
-        $scope.tasks = TasksService.tasks;
-        $scope.$broadcast("hideSplash");
-    });
+function TasksCtrl($scope, TasksService, TagsService, SearchService, TagsFilteringService, HintsService, $modal, $log, growlNotifications, $location) {
+    if ($location.path() == '/finishedTasks') {
+        $scope.showUnfinished = false;
+        TasksService.service.getFinished(function (result) {
+            TasksService.finishedTasks = result;
+            $scope.finishedTasks = TasksService.finishedTasks;
+            $scope.$broadcast("hideSplash");
+        });
+    } else {
+        $scope.showUnfinished = true;
+        TasksService.service.getUnfinished(function (result) {
+            TasksService.tasks = result;
+            $scope.unfinishedTasks = TasksService.tasks;
+            $scope.$broadcast("hideSplash");
+        });
+    }
+
+    $scope.tagFilter = TagsFilteringService;
+    $scope.workview = false;
+    $scope.tasksOrderPredicate = "dueDate";
+    $scope.magicInputHint = HintsService.getRandom();
+    $scope.filterTasksBySearchPhrase = function(task) {return Tasks.doesTaskMatchSearchPhrase(task, SearchService.searchString)};
 
     var tasksFilter = new TasksMultiFilter();
 
-    $scope.getAllTasks = function() {
-        return tasksFilter.filter(TasksService.tasks);
-    };
-    $scope.search = SearchService;
-    $scope.tagFilter = TagsFilteringService;
-    $scope.workview = false;
-    $scope.showUnfinished = true;
-    $scope.tasksOrderPredicate = "dueDate";
-
-    $scope.searchTask = function(task) {
-        return searchInTaskAndSubtasks(task, $scope.search.searchString.toLowerCase());
-    };
-
-    $scope.magicInputHint = HintsService.getRandom();
-
-    var searchInTaskAndSubtasks = function(task, searchPhrase) {
-        if (task.finished == $scope.showUnfinished) return false;
-        if (task.title.toLowerCase().indexOf(searchPhrase) != -1 ||
-            (task.description != null && task.description.toLowerCase().indexOf(searchPhrase) != -1)) {
-            return true;
-        }
-        if (task.subtasks.length == 0) return false;
-        return task.subtasks.some(function(task) {return searchInTaskAndSubtasks(task, searchPhrase)})
+    $scope.getFilteredTasks = function(tasks) {
+        return tasksFilter.filter(tasks);
     };
 
 
@@ -217,7 +212,11 @@ function TasksCtrl($scope, TasksService, TagsService, SearchService, TagsFilteri
         } else {
             tasksFilter.removeFilter('workviewFilter');
         }
-        $scope.tasks = $scope.getAllTasks();
+        if ($location.path() == '/finishedTasks') {
+            $scope.finishedTasks = $scope.getFilteredTasks(TasksService.finishedTasks);
+        } else {
+            $scope.unfinishedTasks = $scope.getFilteredTasks(TasksService.tasks);
+        }
     });
 
     $scope.$watch('tagFilter.selectedTag', function(newSelectedTag, oldValue) {
@@ -229,7 +228,11 @@ function TasksCtrl($scope, TasksService, TagsService, SearchService, TagsFilteri
         } else {
             tasksFilter.addFilter('tagFilter', function(tasks) {return filterTasksByTag(tasks, newSelectedTag)});
         }
-        $scope.tasks = $scope.getAllTasks();
+        if ($location.path() == '/finishedTasks') {
+            $scope.finishedTasks = $scope.getFilteredTasks(TasksService.finishedTasks);
+        } else {
+            $scope.unfinishedTasks = $scope.getFilteredTasks(TasksService.tasks);
+        }
     });
 
     var getWorkViewTasks = function (tasks) {
@@ -246,29 +249,20 @@ function TasksCtrl($scope, TasksService, TagsService, SearchService, TagsFilteri
         return timestamp <= moment().endOf('day')
     };
 
-    var getFinishedTasks = function(tasks) {
-        return tasks.reduce(function(previousValue, currentTask) {
-            previousValue.push(currentTask);
-            return previousValue.concat(getFinishedTasks(currentTask.subtasks));
-        }, []);
-    };
-
     $scope.$watch("showUnfinished", function(newShowUnfinished, oldShowUnfinished) {
        if (oldShowUnfinished == newShowUnfinished) return;
        TasksService.hasUnfinishedTasks = newShowUnfinished;
        if (newShowUnfinished) {
-           $scope.tasksOrderPredicate = ["dueDate", "createdDate"];
            TasksService.service.getUnfinished(function(tasks) {
+               $location.path("/");
                TasksService.tasks = tasks;
-               tasksFilter.removeFilter('finishedFilter');
-               $scope.tasks = $scope.getAllTasks();
+               $scope.unfinishedTasks = $scope.getFilteredTasks(TasksService.tasks);
            });
        } else {
-           $scope.tasksOrderPredicate = "-closedDate";
            TasksService.service.getFinished(function (tasks) {
-               TasksService.tasks = tasks;
-               tasksFilter.addFilter('finishedFilter', getFinishedTasks);
-               $scope.tasks = $scope.getAllTasks();
+               $location.url("/finishedTasks");
+               TasksService.finishedTasks = tasks;
+               $scope.finishedTasks = $scope.getFilteredTasks(TasksService.finishedTasks);
            });
 
        }
@@ -276,7 +270,16 @@ function TasksCtrl($scope, TasksService, TagsService, SearchService, TagsFilteri
 
     $scope.taskFinished = function(task) {
         task.finished = !task.finished;
-        $scope.updateTask(task);
+        var updatedTask = new TasksService.service(task);
+        updatedTask.$update({taskId: task.id}, function(taskAfterUpdate) {
+            findTaskRecursivelyAndRemoveIt(task, $scope.unfinishedTasks);
+            findTaskRecursivelyAndRemoveIt(task, $scope.finishedTasks);
+            var shortedTitle = taskAfterUpdate.title.substr(0, 15) + "...";
+            var newStatusMessage = taskAfterUpdate.finished ? 'finished' : 'set as unfinished';
+            growlNotifications.add('Task "' + shortedTitle + '" has been ' + newStatusMessage, 'success', 5000);
+        });
+
+
     };
 
     $scope.removeTask = function(task) {
@@ -287,7 +290,8 @@ function TasksCtrl($scope, TasksService, TagsService, SearchService, TagsFilteri
                 var shortedTitle = task.title.substr(0, 15) + "...";
                 growlNotifications.add('Task "' + shortedTitle + '" has been removed.', 'warning', 10000);
             });
-            findTaskRecursivelyAndRemoveIt(task, $scope.tasks);
+            findTaskRecursivelyAndRemoveIt(task, $scope.unfinishedTasks);
+            findTaskRecursivelyAndRemoveIt(task, $scope.finishedTasks);
         }
     };
 
@@ -304,10 +308,10 @@ function TasksCtrl($scope, TasksService, TagsService, SearchService, TagsFilteri
     $scope.updateTask = function(task) {
         var updatedTask = new TasksService.service(task);
         updatedTask.$update({taskId: task.id}, function(taskAfterUpdate) {
-            var index = $scope.tasks.indexOf(task);
-            if (index != -1) {
-                $log.debug("Replacing task with id: " + task.id + " with updated data task")
-                $scope.tasks[index] = taskAfterUpdate;
+            if (taskAfterUpdate.finished) {
+                Tasks.replaceTaskOrSubtask($scope.finishedTasks, task, taskAfterUpdate);
+            } else {
+                Tasks.replaceTaskOrSubtask($scope.unfinishedTasks, task, taskAfterUpdate);
             }
             var shortedTitle = taskAfterUpdate.title.substr(0, 15) + "...";
             growlNotifications.add('Task "' + shortedTitle + '" has been updated.', 'success', 5000);
@@ -320,7 +324,7 @@ function TasksCtrl($scope, TasksService, TagsService, SearchService, TagsFilteri
         var newTask = new TasksService.service(task);
         newTask.$save(function(addedTask) {
             TasksService.tasks.push(addedTask);
-            $scope.tasks = $scope.getAllTasks();
+            $scope.unfinishedTasks = $scope.getFilteredTasks(TasksService.tasks);
             $scope.magicInput = "";
             var shortedTitle = addedTask.title.substr(0, 15) + "...";
             growlNotifications.add('Task "' + shortedTitle + '" has been created.', 'success', 3000);
@@ -390,7 +394,7 @@ function TasksCtrl($scope, TasksService, TagsService, SearchService, TagsFilteri
     $scope.draggedTaskIndex = null;
     $scope.setDraggedTask = function(task) {
         $scope.draggedTask = task;
-        $scope.draggedTaskPosition = findTaskPosition(task, $scope.tasks);
+        $scope.draggedTaskPosition = findTaskPosition(task, $scope.unfinishedTasks);
         if ($scope.draggedTaskPosition == -1) {
             throw "Dragged task's position not found" + task;
         }
@@ -420,7 +424,7 @@ function TasksCtrl($scope, TasksService, TagsService, SearchService, TagsFilteri
     };
 
     $scope.removeDraggedTaskFromPreviousPosition = function() {
-        removeTaskOnPosition($scope.draggedTaskPosition, $scope.tasks);
+        removeTaskOnPosition($scope.draggedTaskPosition, $scope.unfinishedTasks);
     };
 
     $scope.magicInputSubmit = function() {
@@ -488,7 +492,7 @@ function TasksCtrl($scope, TasksService, TagsService, SearchService, TagsFilteri
     $scope.moveSubtaskTopLevel = function(movedTask) {
         $log.debug("Task " + movedTask.id + " moved to top level");
         TasksService.service.moveToTopLevel({taskId: movedTask.id}, function() {
-            $scope.tasks.push($scope.draggedTask);
+            $scope.unfinishedTasks.push($scope.draggedTask);
             $scope.removeDraggedTaskFromPreviousPosition();
             var taskShortedTitle = movedTask.title.substr(0, 15) + "...";
             growlNotifications.add('Task "' + taskShortedTitle + '" has been moved to top level.', 'success', 5000);

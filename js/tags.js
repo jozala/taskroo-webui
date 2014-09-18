@@ -59,9 +59,9 @@ function TagsCtrl($scope, TagsService, TasksService, TagsFilteringService, $moda
             });
         } else {
             TasksService.service.getFinished(function (newTasks) {
-                TasksService.tasks.length = 0;
+                TasksService.finishedTasks.length = 0;
                 newTasks.forEach(function (refreshedTask) {
-                    TasksService.tasks.push(refreshedTask);
+                    TasksService.finishedTasks.push(refreshedTask);
                 });
                 $scope.selectTag('ALL');
             });

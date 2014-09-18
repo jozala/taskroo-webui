@@ -3,12 +3,4 @@
 *.iws
 .idea/
 node_modules/
-nbproject/
-bower_components/angular-bootstrap/
-bower_components/angular/
-bower_components/bootstrap/
-bower_components/jquery/
-bower_components/momentjs/
-bower_components/bootstrap-switch/
-bower_components/angular-bootstrap-switch/
-bower_components/angular-tablist/
+bower_components/

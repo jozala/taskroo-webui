@@ -33,6 +33,18 @@ var Tasks = {
         } else {
             tasks[index] = newTask;
         }
+    },
+
+    doesTaskMatchSearchPhrase: function(task, searchPhrase) {
+        if (searchPhrase.length == 0) { return true; }
+
+        var searchPhraseLowercase = searchPhrase.toLowerCase();
+        if (task.title.toLowerCase().indexOf(searchPhraseLowercase) != -1 ||
+            (task.description != null && task.description.toLowerCase().indexOf(searchPhraseLowercase) != -1)) {
+            return true;
+        }
+        if (task.subtasks == undefined) return false;
+        return task.subtasks.some(function(task) {return Tasks.doesTaskMatchSearchPhrase(task, searchPhrase)})
     }
 };
 

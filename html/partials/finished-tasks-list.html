@@ -1,0 +1,14 @@
+<ol class="tabular-list">
+    <li class="row taskFinished" ng-repeat="task in finishedTasks | orderBy:'-closedDate':false | filter:filterTasksBySearchPhrase">
+    <span>
+        <span class="cell taskTick" ng-click="taskFinished(task)"></span>
+        <span class='cell taskTags'><tag-icon ng-repeat='tag in task.tags' ng-model="tag"></tag-icon></span>
+        <span class="cell taskTitle">{{task.title}}</span>
+        <span class="cell taskDueDate">{{ task.closedDate | date: 'dd-MM-yyyy' }}</span>
+        <span class="cell taskAction taskEdit" ng-click="openEdit(task)"></span>
+        <span class="cell taskAction taskDel" ng-click="removeTask(task)"></span>
+    </span>
+    </li>
+
+
+</ol>

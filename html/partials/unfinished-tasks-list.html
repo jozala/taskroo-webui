@@ -1,0 +1,28 @@
+<!-- Nested list template -->
+<script type="text/ng-template" id="table_renderer.html">
+    <span>
+                    <cell class="taskTick" ng-click="taskFinished(task)"></cell>
+                    <cell class='taskTags'><tag-icon ng-repeat='tag in task.tags' ng-model="tag"></tag-icon></cell>
+                    <cell class="taskTitle main-column" quick-edit ng-model="task.title" ng-change="updateTask(task)"></cell>
+                    <cell class="taskDueDate">{{ task.dueDate | date: 'dd-MM-yyyy' }}</cell>
+                    <cell class="taskAction taskEdit" ng-click="openEdit(task)"></cell>
+                    <cell class="taskAction taskSubtask" ng-click="openCreateSubtask(task); expand()"></cell>
+                    <cell class="taskAction taskDel" ng-click="removeTask(task)"></cell>
+                </span>
+    <div class="subtasks">
+        <tablist>
+            <row ng-repeat="task in task.subtasks | orderBy:['dueDate', 'createdDate']:false" ng-include="'table_renderer.html'"
+                 droppable="{targetCollection: task.subtasks, target: task, onDrop: moveSubtaskToTask }" draggable="task">
+            </row>
+        </tablist>
+    </div>
+</script>
+
+
+<tablist indent="15" expanded="false">
+    <li droppable="{targetCollection: null, target: task, onDrop: moveSubtaskTopLevel }" style="height: 10px;"></li>
+    <row ng-repeat="task in unfinishedTasks | orderBy:['dueDate', 'createdDate']:false | filter:filterTasksBySearchPhrase"
+         droppable="{targetCollection: task.subtasks, target: task, onDrop: moveSubtaskToTask }" draggable="task" ng-include="'table_renderer.html'">
+    </row>
+    <li droppable="{targetCollection: null, target: task, onDrop: moveSubtaskTopLevel }" style="height: 10px;"></li>
+</tablist>
