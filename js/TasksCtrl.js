@@ -321,9 +321,11 @@ function TasksCtrl($scope, TasksService, TagsService, SearchService, TagsFilteri
         var updatedTask = new TasksService.service(task);
         updatedTask.$update({taskId: task.id}, function(taskAfterUpdate) {
             if (taskAfterUpdate.finished) {
-                Tasks.replaceTaskOrSubtask($scope.finishedTasks, task, taskAfterUpdate);
+                Tasks.replaceTaskOrSubtask(TasksService.finishedTasks, task, taskAfterUpdate);
+                $scope.finishedTasks = $scope.getFilteredTasks(TasksService.finishedTasks);
             } else {
-                Tasks.replaceTaskOrSubtask($scope.unfinishedTasks, task, taskAfterUpdate);
+                Tasks.replaceTaskOrSubtask(TasksService.tasks, task, taskAfterUpdate);
+                $scope.unfinishedTasks = $scope.getFilteredTasks(TasksService.tasks);
             }
             var shortedTitle = taskAfterUpdate.title.substr(0, 15) + "...";
             growlNotifications.add('Task "' + shortedTitle + '" has been updated.', 'success', 5000);
