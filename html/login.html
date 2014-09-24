@@ -11,7 +11,8 @@
     <div class="notifications" growl-notifications></div>
     <div id="logo" class="shaker" shaker></div>
     <form ng-submit="login(form)">
-        <input placeholder="Login" type="text" ng-model="form.username" autofill required />
+        <a href="signup.html" style="float:right; font-weight: bold">Create new account</a>
+        <input placeholder="Login" type="text" ng-model="form.username" style="margin-top: 5px;" autofill required />
         <input placeholder="Password" type="password" ng-model="form.password" autofill required />
         <input type="submit" class="btn btn-warning" value="Sign in" />
 
