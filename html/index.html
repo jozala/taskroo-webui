@@ -16,7 +16,7 @@
     <div class="notifications" growl-notifications></div>
     <nav id="left-sidebar" >
         <form id="search-form" ng-controller="SearchCtrl">
-            <input type="text" placeholder="Search" id="search-field" class="input" ng-model="search.searchString"/>
+            <input type="text" placeholder="Search" ui-keyup="{'esc': 'clearSearch($event)'}" id="search-field" class="input" ng-model="search.searchString"/>
             <input type="submit" id="search-button" class="input" value="" />
         </form>
         <div style="clear: both;"></div>
@@ -95,6 +95,7 @@
 <script type="text/javascript" src="../js/bootstrap-contextmenu.js"></script>
 <script type="text/javascript" src="../bower_components/bootstrap-switch/dist/js/bootstrap-switch.min.js"></script>
 <script type="text/javascript" src="../bower_components/angular-bootstrap-switch/dist/angular-bootstrap-switch.min.js"></script>
+<script type="text/javascript" src="../bower_components/angular-ui-utils/keypress.min.js"></script>
 
 </body>
 </html>

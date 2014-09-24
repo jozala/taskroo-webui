@@ -1,6 +1,7 @@
 "use strict";
 
-var app = angular.module("taskroo", ["angular-tablist", "ui.bootstrap", 'frapontillo.bootstrap-switch', 'ngResource', 'ngCookies', 'ngSanitize', 'growlNotifications', 'ngRoute']);
+var app = angular.module("taskroo", ["angular-tablist", "ui.bootstrap", 'frapontillo.bootstrap-switch', 'ngResource',
+    'ngCookies', 'ngSanitize', 'growlNotifications', 'ngRoute', 'ui.keypress']);
 
 app.factory("TagsService", function ($resource) {
     var tags = [];
