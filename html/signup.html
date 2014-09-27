@@ -67,39 +67,45 @@
     </div>
 </div>
 
-<div class="container" style="margin-top: 60px; max-width: 600px;">
+<div class="container" style="margin-top: 60px; max-width: 600px;" ng-app="taskroo-signup" ng-controller="SignUpCtrl">
     <h3 style="margin-bottom: 30px;">Create account in TaskRoo.</h3>
     <div class="alert alert-warning" role="alert">
         Please be aware that TaskRoo is currently in early beta testing.
         It is currently available <strong>only for users with invitations</strong>.
     </div>
-    <form>
+    <form ng-submit="createAccount(form)" ng-if="!accountCreated">
         <label>
             Invitation code
-            <input name="invitationCode" type="text" class="form-control" required />
+            <input ng-model="form.invitationCode" type="text" class="form-control" required />
         </label>
         <label>
             First name
-            <input name="firstName" type="text" class="form-control" required />
+            <input ng-model="form.firstName" type="text" class="form-control" required />
         </label>
         <label>
             Last name
-            <input name="lastName" type="text" class="form-control" required />
+            <input ng-model="form.lastName" type="text" class="form-control" required />
         </label>
         <label>
             Email address
-            <input name="email" type="email" class="form-control" required />
+            <input ng-model="form.email" type="email" class="form-control" required />
         </label>
         <label>
             Choose your username
-            <input name="username" type="text" class="form-control" required />
+            <input ng-model="form.username" type="text" class="form-control" required />
         </label>
         <label>
             Create a password
-            <input name="password" type="password" class="form-control" required />
+            <input ng-model="form.password" type="password" class="form-control" required />
         </label>
         <input type="submit" class="btn-block btn btn-warning" value="Create my account" />
     </form>
+    <div class="alert alert-danger" role="alert" ng-if="showErrorMessage">
+        Unfortunately, account could not been created. Do you have correct invitation code?
+    </div>
+    <div class="alert alert-success" role="alert" ng-if="accountCreated">
+        Welcome {{username}}! Your TaskRoo account has been created. <a href="/">Sign In</a>.
+    </div>
 
 </div>
 <div class="footer">
@@ -109,5 +115,9 @@
 </div>
 <script src="../bower_components/jquery/dist/jquery.min.js"></script>
 <script src="../bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
+<script type="text/javascript" src="../bower_components/angular/angular.min.js"></script>
+<script type="text/javascript" src="../bower_components/angular-resource/angular-resource.min.js"></script>
+<script type="text/javascript" src="../js/login/signup.js"></script>
+
 </body>
 </html>
