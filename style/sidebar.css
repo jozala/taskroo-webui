@@ -85,6 +85,10 @@ ul.tags-list .tagIcon {
     margin-right: 10px
 }
 
+ul.tags-list .tagIcon .glyphicon {
+    font-size: 9px;
+    margin-left: 8px;
+}
 
 .active-tag {
     background-color: #f5af39;

@@ -115,7 +115,8 @@ app.directive("tagIcon", function () {
     return {
         restrict: "E",
         replace: true,
-        template: "<div class='tagIcon' style='background-color: {{tag.color}}' title='{{tag.name}}'></div>"
+        template: "<div class='tagIcon' style='background-color: {{tag.color}}' title='{{tag.name}}'>" +
+            "<div ng-if='tag.visibleInWorkView' class='glyphicon glyphicon-tasks'></div></div>"
     };
 });
 

@@ -153,6 +153,10 @@
     vertical-align: middle;
 }
 
+.tabular-list .taskTags .tagIcon .glyphicon {
+    display: none;
+}
+
 .tabular-list .taskFinished {
     text-decoration: line-through;
 }
