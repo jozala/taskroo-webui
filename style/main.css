@@ -71,3 +71,9 @@ body>footer {
     left: 45%;
     z-index: 100;
 }
+
+.tasklist-info {
+    display: block;
+    color: gray;
+    text-align: center;
+}

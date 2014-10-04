@@ -19,6 +19,11 @@
 </script>
 
 
+<span class="tasklist-info" ng-if="unfinishedTasks.length == 0">
+    No tasks here<span ng-if="tagFilter.selectedTag != 'ALL' && tagFilter.selectedTag != 'NONE'"> (tag: {{tagFilter.selectedTag.name}})</span>.
+    You can add one using the box above.
+</span>
+
 <tablist indent="15" expanded="false">
     <li droppable="{targetCollection: null, target: task, onDrop: moveSubtaskTopLevel }" style="height: 10px;"></li>
     <row ng-repeat="task in unfinishedTasks | orderBy:['dueDate', 'createdDate']:false | filter:filterTasksBySearchPhrase"
@@ -26,3 +31,4 @@
     </row>
     <li droppable="{targetCollection: null, target: task, onDrop: moveSubtaskTopLevel }" style="height: 10px;"></li>
 </tablist>
+

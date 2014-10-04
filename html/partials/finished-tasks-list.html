@@ -12,3 +12,7 @@
 
 
 </ol>
+
+<span class="tasklist-info" ng-if="finishedTasks.length == 0">
+    No finished tasks yet<span ng-if="tagFilter.selectedTag != 'ALL' && tagFilter.selectedTag != 'NONE'"> (tag: {{tagFilter.selectedTag.name}})</span>.
+</span>
