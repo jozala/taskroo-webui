@@ -7,12 +7,12 @@
         <input type="text" placeholder="Task title" ng-model="task.title" focus-element />
         <textarea placeholder="You can put additional description here" ng-model="task.description"></textarea>
         <input type="text" placeholder="space separated tags" ng-model="task.tags" ng-value="name" />
-        <div style="display: flex; flex-flow: row wrap; justify-content: space-around;">
-            <div style="flex: 1; padding-right: 15px;">
+        <div style="display: -webkit-flex; display: flex; -webkit-flex-flow: row wrap; flex-flow: row wrap; justify-content: space-around;">
+            <div style="flex: 1; -webkit-flex: 1; padding-right: 15px;">
                 <label for="startDate">Starting on</label>
                 <input id="startDate" name="startDate" type="text" datepicker-popup class="form-control" ng-model="task.startDate" />
             </div>
-            <div style="flex: 1; padding-right: 9px;">
+            <div style="flex: 1; -webkit-flex: 1; padding-right: 9px;">
                 <label for="dueDate">Due for</label>
                 <input id="dueDate" name="dueDate" type="text" datepicker-popup class="form-control" ng-model="task.dueDate" close-text="Close" />
             </div>

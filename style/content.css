@@ -13,12 +13,14 @@
 
 /* Top bar  */
 #top-bar {
+    display: -webkit-flex;
     display: flex;
     flex-flow: row;
     justify-content: space-between;
 }
 
 .top-box {
+    display: -webkit-flex;
     display: flex;
     align-items: stretch;
     flex-direction: row;
@@ -37,6 +39,7 @@
 #add-task-form {
     margin-right: 12px;
     flex: 1;
+    -webkit-flex: 1;
 }
 
 #add-task-form input[type=text] {
@@ -47,6 +50,7 @@
     height: 30px;
     border: 1px solid #c7c7c7;
     flex: 1;
+    -webkit-flex: 1;
 }
 
 #add-task-form input[type=submit] {
@@ -84,6 +88,7 @@
 
 .tabular-list .taskTitle {
     flex: 1;
+    -webkit-flex: 1;
     white-space: nowrap;
     width: 100%;
     overflow: hidden;
