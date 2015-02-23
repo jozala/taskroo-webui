@@ -9,7 +9,7 @@ function TagsCtrl($scope, TagsService, TasksService, TagsFilteringService, $moda
 
     $scope.editTag = function(tag) {
         var editTaskModalInstance = $modal.open({
-            templateUrl: 'editTagModalContent.html',
+            templateUrl: 'html/editTagModalContent.html',
             backdrop: 'static',
             controller: EditTagModalCtrl,
             resolve: {

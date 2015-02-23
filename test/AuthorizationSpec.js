@@ -170,7 +170,7 @@ describe('LoginRedirect interceptor responsible for redirecting to login when th
         $httpBackend.flush();
         // then
         $httpBackend.verifyNoOutstandingRequest();
-        expect($window.location.href).toBe('login.html');
+        expect($window.location.href).toBe('html/login.html');
     });
 
 });

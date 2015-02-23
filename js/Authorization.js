@@ -77,7 +77,7 @@ app.factory('LoginRedirect', ['$q', '$cookieStore', '$window', function($q, $coo
             if (response.status == 403 || response.status == 401) {
                 $cookieStore.remove("sid");
                 $cookieStore.remove("rememberMeToken");
-                $window.location.href = 'login.html';
+                $window.location.href = 'html/login.html';
                 return $q.reject(response);
             }
             return $q.reject(response);

@@ -374,7 +374,7 @@ function TasksCtrl($scope, TasksService, TagsService, SearchService, TagsFilteri
 
     $scope.openEdit = function(task) {
         var editTaskModalInstance = $modal.open({
-            templateUrl: 'editTaskModalContent.html',
+            templateUrl: 'html/editTaskModalContent.html',
             backdrop: 'static',
             controller: EditTaskModalCtrl,
             resolve: {
@@ -391,7 +391,7 @@ function TasksCtrl($scope, TasksService, TagsService, SearchService, TagsFilteri
 
     $scope.openCreateSubtask = function(task) {
         var createSubtaskModalInstance = $modal.open({
-            templateUrl: 'createSubtaskModalContent.html',
+            templateUrl: 'html/createSubtaskModalContent.html',
             backdrop: 'static',
             controller: CreateSubtaskModalCtrl
         });
