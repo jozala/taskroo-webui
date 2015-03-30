@@ -11,6 +11,7 @@ script:
   - wrapdocker &
   - sleep 5
   - docker login -u $DOCKER_LOGIN -p $DOCKER_PASSWORD -e $DOCKER_EMAIL
+  - docker build -t taskroo/taskroo-webui .
   - docker push taskroo/taskroo-webui
   - start-stop-daemon --stop --pidfile "/var/run/docker.pid"
 notify:
