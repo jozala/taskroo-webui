@@ -1,13 +1,14 @@
-image: taskroo/taskroo-dev
+image: taskroo/webui-dev
 env:
   - DOCKER_LOGIN=$$dockerHubLogin
   - DOCKER_PASSWORD=$$dockerHubPassword
   - DOCKER_EMAIL=$$emailMariusz
 script:
   - set -e
-  - npm install -g karma
-  - wrapdocker &
+  - npm install
+  - bower install --allow-root
   - node_modules/karma/bin/karma start my.conf.js --single-run
+  - wrapdocker &
   - docker login -u $DOCKER_LOGIN -p $DOCKER_PASSWORD -e $DOCKER_EMAIL
   - docker push taskroo/taskroo-webui
   - start-stop-daemon --stop --pidfile "/var/run/docker.pid"
