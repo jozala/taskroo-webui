@@ -7,7 +7,7 @@ script:
   - set -e
   - npm install
   - bower install --allow-root
-  - node_modules/karma/bin/karma start my.conf.js --single-run
+#  - node_modules/karma/bin/karma start my.conf.js --single-run
   - wrapdocker &
   - docker login -u $DOCKER_LOGIN -p $DOCKER_PASSWORD -e $DOCKER_EMAIL
   - docker push taskroo/taskroo-webui
