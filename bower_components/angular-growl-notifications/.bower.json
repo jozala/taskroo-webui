@@ -48,7 +48,6 @@
     "commit": "9220100749c5b125df500ddb28de89c71e5ad02a"
   },
   "_source": "git://github.com/jvandemo/angular-growl-notifications.git",
-  "_target": "~0.7.0",
-  "_originalSource": "angular-growl-notifications",
-  "_direct": true
+  "_target": "0.7.0",
+  "_originalSource": "angular-growl-notifications"
 }

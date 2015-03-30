@@ -17,12 +17,18 @@
   ],
   "dependencies": {
     "angular": "1.3.0-beta.2",
-    "momentjs": "~2.5.1",
     "angular-bootstrap": "~0.10.0",
-    "bootstrap": "3.1.1",
-    "angular-tablist": "~1.1.0",
+    "angular-bootstrap-switch": "0.3.0",
+    "angular-cookies": "1.2.19",
+    "angular-growl-notifications": "0.7.0",
+    "angular-mocks": "1.2.18",
+    "angular-resource": "1.2.18",
     "angular-route": "~1.2.23",
-    "angular-ui-utils": "bower-keypress"
+    "angular-sanitize": "1.2.21",
+    "angular-tablist": "~1.1.0",
+    "angular-ui-utils": "bower-keypress",
+    "momentjs": "~2.5.1",
+    "bootstrap": "3.1.1"
   },
   "resolutions": {
     "angular": "1.3.0-beta.2"
