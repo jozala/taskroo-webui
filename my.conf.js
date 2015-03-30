@@ -34,6 +34,7 @@ module.exports = function(config) {
         cfg.bowerComponents + '/angular-bootstrap/ui-bootstrap-tpls.min.js',
         cfg.bowerComponents + '/angular-bootstrap-switch/dist/angular-bootstrap-switch.min.js',
         cfg.bowerComponents + '/angular-growl-notifications/dist/growl-notifications.min.js',
+        cfg.bowerComponents + '/angular-ui-utils/keypress.min.js',
 
       'js/*.js',
       'test/testdata.js',
