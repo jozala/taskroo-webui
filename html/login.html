@@ -5,6 +5,9 @@
     <link rel="stylesheet" href="../style/login.css"/>
     <link rel="stylesheet" href="../bower_components/bootstrap/dist/css/bootstrap.min.css" />
     <title>TaskRoo - Productivity Jump</title>
+
+    <!-- Workaround for https://github.com/angular/angular.js/issues/1786 - set cookie path-->
+    <base href="/">
 </head>
 <body>
 <div id="login-box" class="blur" ng-app="taskroo-login" ng-controller="LoginCtrl">
