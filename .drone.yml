@@ -1,0 +1,16 @@
+image: buildpack-deps:sid-scm
+env:
+  - DOCKER_LOGIN=$$dockerHubLogin
+  - DOCKER_PASSWORD=$$dockerHubPassword
+  - DOCKER_EMAIL=$$emailMariusz
+script:
+  - set -e
+  - wrapdocker &
+  - node_modules/karma/bin/karma start my.conf.js --single-run
+  - docker login -u $DOCKER_LOGIN -p $DOCKER_PASSWORD -e $DOCKER_EMAIL
+  - docker push taskroo/taskroo-webui
+  - start-stop-daemon --stop --pidfile "/var/run/docker.pid"
+notify:
+  email:
+    recipients:
+      - {{emailMariusz}}
