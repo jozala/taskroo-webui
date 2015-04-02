@@ -82,4 +82,9 @@ server {
         rewrite  ^/auth/(.*)  /$1 break;
         proxy_pass http://auth.taskroo.local;
     }
+
+    location /user/ {
+        rewrite  ^/user/(.*)  /$1 break;
+        proxy_pass http://user.taskroo.local;
+    }
 }
