@@ -14,3 +14,4 @@ deployment:
       - docker login -u $DOCKER_HUB_LOGIN -p $DOCKER_HUB_PASSWORD -e $DOCKER_EMAIL
       - docker build -t taskroo/taskroo-webui .
       - docker push taskroo/taskroo-webui
+      - ssh admin@taskroo.com '/home/admin/taskroo/scripts/redeploy.sh'
