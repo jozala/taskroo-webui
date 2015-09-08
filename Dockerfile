@@ -10,7 +10,7 @@ RUN rm /app/nginx.tmpl
 ADD nginx.tmpl /app/
 
 # Remove nginx.tmpl from html directory
-CMD rm /usr/share/nginx/html/nginx.templ
+CMD rm /usr/share/nginx/html/nginx.tmpl
 
 # Expose ports
 EXPOSE 80
