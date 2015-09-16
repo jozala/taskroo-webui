@@ -107,6 +107,30 @@ app.directive('dateInput', function (dateFilter) {
     };
 });
 
+app.directive("whenScrolled", function () {
+    return {
+        scope: {
+            whenScrolled: '&',
+            whenScrollDisabled: '='
+        },restrict: 'A',
+        link: function (scope, elem) {
+
+            raw = elem[0];
+            elem.scroll(function () {
+                if (scope.whenScrollDisabled == true) {
+                    return;
+                }
+                if (raw.scrollTop + raw.offsetHeight + 5 >= raw.scrollHeight) {
+                    scope.whenScrollDisabled = true;
+                    scope.whenScrolled()
+                        .then(function() { scope.whenScrollDisabled = false });
+                }
+            });
+
+        }
+    }
+});
+
 var EditTaskModalCtrl = function($scope, $modalInstance, task) {
     $scope.task = angular.copy(task);
 
@@ -157,10 +181,13 @@ var CreateSubtaskModalCtrl = function($scope, $modalInstance) {
     };
 };
 
-function TasksCtrl($scope, TasksService, TagsService, SearchService, TagsFilteringService, HintsService, $modal, $log, growlNotifications, $location) {
+function TasksCtrl($scope, TasksService, TagsService, SearchService, TagsFilteringService, HintsService, $modal, $log, growlNotifications, $location, $q) {
+
+    var NUMBER_OF_FINISHED_TASK_TO_LOAD = 30;
+
     if ($location.path() == '/finishedTasks') {
         $scope.showUnfinished = false;
-        TasksService.service.getFinished(function (result) {
+        TasksService.service.getFinished({limit: NUMBER_OF_FINISHED_TASK_TO_LOAD, offset: 0}, function (result) {
             TasksService.finishedTasks = result;
             $scope.finishedTasks = TasksService.finishedTasks;
             $scope.$broadcast("hideSplash");
@@ -259,7 +286,7 @@ function TasksCtrl($scope, TasksService, TagsService, SearchService, TagsFilteri
                $scope.unfinishedTasks = $scope.getFilteredTasks(TasksService.tasks);
            });
        } else {
-           TasksService.service.getFinished(function (tasks) {
+           TasksService.service.getFinished({limit: NUMBER_OF_FINISHED_TASK_TO_LOAD, offset: 0}, function (tasks) {
                $location.url("/finishedTasks");
                TasksService.finishedTasks = tasks;
                $scope.finishedTasks = $scope.getFilteredTasks(TasksService.finishedTasks);
@@ -306,6 +333,28 @@ function TasksCtrl($scope, TasksService, TagsService, SearchService, TagsFilteri
 
         }
     };
+
+    $scope.loadMoreTasks = function() {
+        if ($scope.showUnfinished) {
+            // loading more dynamically - only for unfinished
+            return;
+        }
+
+        $log.debug("Loading more finished tasks");
+        var currentOffset = TasksService.finishedTasks.length;
+        var defer = $q.defer();
+        TasksService.service.getFinished({limit: NUMBER_OF_FINISHED_TASK_TO_LOAD, offset: currentOffset}, function (tasks) {
+            $location.url("/finishedTasks");
+            tasks.forEach(function (task) {
+                TasksService.finishedTasks.push(task);
+            });
+            $scope.finishedTasks = $scope.getFilteredTasks(TasksService.finishedTasks);
+            defer.resolve();
+        });
+        return defer.promise;
+    };
+
+    $scope.loading = {finishedTasks: false};
 
     var findTaskRecursivelyAndRemoveIt = function(task, tasksArray) {
         for (var i in tasksArray) {

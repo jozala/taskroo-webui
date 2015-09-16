@@ -37,7 +37,7 @@
             </ul>
         </div>
     </nav>
-    <section id="body" ng-controller="TasksCtrl">
+    <section id="body" ng-controller="TasksCtrl" when-scrolled="loadMoreTasks()" when-scroll-disabled="loading.finishedTasks">
         <div>
             <div id="top-bar">
                 <form id="add-task-form" class="top-box" name="task" action="" method="POST" accept-charset="utf-8"
@@ -96,6 +96,7 @@
 <script type="text/javascript" src="bower_components/bootstrap-switch/dist/js/bootstrap-switch.min.js"></script>
 <script type="text/javascript" src="bower_components/angular-bootstrap-switch/dist/angular-bootstrap-switch.min.js"></script>
 <script type="text/javascript" src="bower_components/angular-ui-utils/keypress.min.js"></script>
+<script type='text/javascript' src='bower_components/lrInfiniteScroll/lrInfiniteScroll.js'></script>
 
 </body>
 </html>

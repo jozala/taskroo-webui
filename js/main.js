@@ -27,7 +27,7 @@ app.factory("TagsService", function ($resource) {
     }
 });
 
-    app.factory("TasksService", function ($resource) {
+app.factory("TasksService", function ($resource) {
     var service = $resource("/api/tasks/:taskId", {}, {
         getUnfinished: {
             method: 'GET',
